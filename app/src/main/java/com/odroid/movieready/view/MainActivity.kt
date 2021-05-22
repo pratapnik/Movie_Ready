@@ -25,7 +25,7 @@ class MainActivity : BaseMVIActivityWithEffect<
 
     override fun onViewReady() {
         super.onViewReady()
-        viewBinder.btnChangeText.setOnClickListener {
+        viewBinder.btnGetMovie.setOnClickListener {
             viewModel.processEvent(MainActivityViewIntent.ViewEvent.UpdateClicked(screenNumber))
         }
     }

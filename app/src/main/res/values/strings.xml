@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Movie Ready</string>
+    <string name="get_movie_button_label">GET A MOVIE</string>
 </resources>
