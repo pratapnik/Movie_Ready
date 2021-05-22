@@ -11,8 +11,7 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
     override fun processEvent(event: MainActivityViewIntent.ViewEvent) {
         when (event) {
             is MainActivityViewIntent.ViewEvent.UpdateClicked -> {
-                val updatedNumber = (event.number + 1).toString()
-                viewEffect = MainActivityViewIntent.ViewEffect.UpdateText(updatedNumber)
+                viewEffect = MainActivityViewIntent.ViewEffect.UpdateText
             }
         }
     }

@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/main_card_color"
-    app:cardCornerRadius="12dp"
+    app:cardCornerRadius="@dimen/margin_20dp"
     app:cardElevation="10dp"
     app:contentPadding="40dp">
 
@@ -13,10 +13,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/font_bold"
-        android:text="3 Idiots"
+        android:text="Gangs of Wasseypur"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="32sp"
+        android:textSize="28sp"
+        android:lineSpacingExtra="2dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

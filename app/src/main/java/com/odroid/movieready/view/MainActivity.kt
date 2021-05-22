@@ -16,8 +16,6 @@ class MainActivity : BaseMVIActivityWithEffect<
 
     private val mainActivityViewModel: MainActivityViewModel by viewModels()
 
-    private var screenNumber = 0
-
     override fun getMainLayout() = R.layout.activity_main
 
     override val viewModel: MainActivityViewModel
@@ -26,7 +24,7 @@ class MainActivity : BaseMVIActivityWithEffect<
     override fun onViewReady() {
         super.onViewReady()
         viewBinder.btnGetMovie.setOnClickListener {
-            viewModel.processEvent(MainActivityViewIntent.ViewEvent.UpdateClicked(screenNumber))
+            viewModel.processEvent(MainActivityViewIntent.ViewEvent.UpdateClicked)
         }
     }
 
@@ -37,13 +35,5 @@ class MainActivity : BaseMVIActivityWithEffect<
     }
 
     override fun renderEffect(effect: MainActivityViewIntent.ViewEffect) {
-        when (effect) {
-            is MainActivityViewIntent.ViewEffect.UpdateText -> updateText(effect.updatedNumber)
-        }
-    }
-
-    private fun updateText(updatedNumber: String) {
-        screenNumber = updatedNumber.toInt()
-        viewBinder.tvText.text = "After adding 1 to the number: ".plus(updatedNumber)
     }
 }
