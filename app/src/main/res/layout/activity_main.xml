@@ -8,13 +8,33 @@
         android:layout_height="match_parent"
         tools:context=".view.MainActivity">
 
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="@dimen/match_constraint_dimen"
+            android:layout_height="wrap_content"
+            android:text="@string/main_activity_title"
+            android:textAlignment="center"
+            android:layout_marginTop="@dimen/margin_28dp"
+            android:layout_marginStart="@dimen/margin_16dp"
+            android:layout_marginEnd="@dimen/margin_16dp"
+            android:textSize="@dimen/text_size_20sp"
+            android:fontFamily="@font/font_bold"
+            android:lineSpacingExtra="6dp"
+            android:textColor="@color/main_card_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
         <include
+            android:id="@+id/layoutMovieCard"
             layout="@layout/movie_display_card_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="75dp"
             android:layout_marginRight="75dp"
             android:layout_marginBottom="100dp"
+            android:layout_marginTop="@dimen/margin_60dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -33,10 +53,21 @@
             android:padding="@dimen/margin_10dp"
             android:text="@string/get_movie_button_label"
             android:textAllCaps="false"
-            android:textSize="@dimen/text_size_16sp"
+            android:minHeight="@dimen/margin_60dp"
+            android:textSize="@dimen/text_size_20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:indicatorColor="@color/primary_app_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
