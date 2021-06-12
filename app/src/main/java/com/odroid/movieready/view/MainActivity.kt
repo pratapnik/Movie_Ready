@@ -1,15 +1,17 @@
 package com.odroid.movieready.view
 
 import android.media.MediaPlayer
+import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.TextView
 import androidx.activity.viewModels
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.odroid.movieready.R
 import com.odroid.movieready.base.BaseMVIActivityWithEffect
 import com.odroid.movieready.databinding.ActivityMainBinding
 import com.odroid.movieready.view_intent.MainActivityViewIntent
 import com.odroid.movieready.view_model.MainActivityViewModel
+
 
 class MainActivity : BaseMVIActivityWithEffect<
         MainActivityViewModel,
@@ -19,6 +21,7 @@ class MainActivity : BaseMVIActivityWithEffect<
         MainActivityViewIntent.ViewEffect>() {
 
     private val mainActivityViewModel: MainActivityViewModel by viewModels()
+    private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
     override fun getMainLayout() = R.layout.activity_main
 
@@ -28,6 +31,7 @@ class MainActivity : BaseMVIActivityWithEffect<
     override fun onViewReady() {
         super.onViewReady()
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         showNoMovieView()
         viewModel.processEvent(MainActivityViewIntent.ViewEvent.LoadMovies)
 
@@ -70,8 +74,15 @@ class MainActivity : BaseMVIActivityWithEffect<
                 hideNoMovieView()
                 val movieText = viewBinder.layoutMovieCard.tvMovieName
                 movieText.text = effect.movieName
+                trackMovieUpdatedEvent(effect.movieName)
             }
         }
+    }
+
+    private fun trackMovieUpdatedEvent(movieName: String) {
+        val bundle = Bundle()
+        bundle.putString("movie_name", movieName)
+        mFirebaseAnalytics?.logEvent("displayed_movie_name", bundle)
     }
 
     private fun showNoMovieView() {
