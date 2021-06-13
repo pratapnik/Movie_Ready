@@ -42,7 +42,6 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
                         moviesList = response.body()
                         viewState = MainActivityViewIntent.ViewState.MoviesLoaded
                     } else {
-                        Log.d("nikhil", "erroorrrrr  Dispatchers.Main ")
                         viewState = MainActivityViewIntent.ViewState.MoviesLoadingFailed
                     }
                 }

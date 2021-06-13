@@ -2,10 +2,8 @@ package com.odroid.movieready.view
 
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.facebook.ads.*
@@ -17,7 +15,6 @@ import com.odroid.movieready.view_intent.MainActivityViewIntent
 import com.odroid.movieready.view_model.MainActivityViewModel
 import com.skydoves.balloon.BalloonAnimation
 import com.skydoves.balloon.createBalloon
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -160,28 +157,22 @@ class MainActivity : BaseMVIActivityWithEffect<
         if (interstitialAdCount % 5 == 0) {
             val interstitialAdListener: InterstitialAdListener = object : InterstitialAdListener {
                 override fun onInterstitialDisplayed(ad: Ad) {
-                    Log.e(TAG, "Interstitial ad displayed.")
                 }
 
                 override fun onInterstitialDismissed(ad: Ad) {
-                    Log.e(TAG, "Interstitial ad dismissed.")
                 }
 
                 override fun onError(ad: Ad, adError: AdError) {
-                    Log.e(TAG, "Interstitial ad failed to load: " + adError.errorMessage)
                 }
 
                 override fun onAdLoaded(ad: Ad) {
-                    Log.d(TAG, "Interstitial ad is loaded and ready to be displayed!")
                     interstitialAd.show()
                 }
 
                 override fun onAdClicked(ad: Ad) {
-                    Log.d(TAG, "Interstitial ad clicked!")
                 }
 
                 override fun onLoggingImpression(ad: Ad) {
-                    Log.d(TAG, "Interstitial ad impression logged!")
                 }
             }
             interstitialAd.loadAd(
@@ -214,37 +205,31 @@ class MainActivity : BaseMVIActivityWithEffect<
             R.raw.movie_generation_sound
         )
         try {
-            //define a new mediaplayer with your local wav file
-
-
-            if (mediaPlayer == null) {//check if it's been already initialized.
+            if (mediaPlayer == null) {
                 mediaPlayer = MediaPlayer.create(
                     applicationContext,
                     R.raw.movie_generation_sound
-                ); // this method is expensive on cpu and memory
+                )
             }
 
             mediaPlayer?.setOnCompletionListener {
-                Log.d(
-                    "TestRing",
-                    "play wav finished"
-                ); //when the play completes, print a log
+
             }
 
-            mediaPlayer?.start(); //start play the wav!
+            mediaPlayer?.start()
 
         } catch (ex: java.lang.Exception) {
             if (mediaPlayer != null) {
 
-                mediaPlayer.release();// if error occurs, reinitialize the MediaPlayer
+                mediaPlayer.release()
 
-                mediaPlayer = null; // ready to be garbage collected.
+                mediaPlayer = null
             }
         }
     }
 
     private fun showTooltipOnButton() {
-        if(shouldShowButtonTooltip) {
+        if (shouldShowButtonTooltip) {
             lifecycleScope.launch {
                 delay(400)
                 val balloon = createBalloon(baseContext) {
