@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clError"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ivErrorIcon"
+            android:layout_width="@dimen/margin_150dp"
+            android:layout_height="@dimen/margin_150dp"
+            android:layout_marginBottom="@dimen/margin_60dp"
+            android:src="@drawable/ic_error"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvErrorTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_16dp"
+            android:fontFamily="@font/font_bold"
+            android:text="@string/error_title"
+            android:textColor="@color/red_color"
+            android:textSize="@dimen/text_size_28sp"
+            app:layout_constraintEnd_toEndOf="@id/ivErrorIcon"
+            app:layout_constraintStart_toStartOf="@id/ivErrorIcon"
+            app:layout_constraintTop_toBottomOf="@id/ivErrorIcon" />
+
+        <TextView
+            android:id="@+id/tvErrorSubtitle"
+            android:layout_width="@dimen/match_constraint_dimen"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_28dp"
+            android:layout_marginTop="@dimen/padding_8dp"
+            android:layout_marginEnd="@dimen/margin_28dp"
+            android:fontFamily="@font/font_regular"
+            android:text="@string/error_subtitle"
+            android:textAlignment="center"
+            android:textColor="@color/main_card_color"
+            android:textSize="@dimen/text_size_16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvErrorTitle" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRetry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_20dp"
+            android:layout_marginRight="@dimen/margin_20dp"
+            android:layout_marginBottom="@dimen/margin_14dp"
+            android:fontFamily="@font/font_bold"
+            android:letterSpacing="0.1"
+            android:minHeight="@dimen/margin_60dp"
+            android:padding="@dimen/margin_10dp"
+            android:text="@string/retry_button_label"
+            android:textAllCaps="false"
+            android:textSize="@dimen/text_size_20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

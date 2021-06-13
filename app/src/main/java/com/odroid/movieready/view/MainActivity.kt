@@ -67,7 +67,6 @@ class MainActivity : BaseMVIActivityWithEffect<
 
         interstitialAd = InterstitialAd(this, "523149145395752_523176515393015")
 
-        showNoMovieView()
         viewModel.processEvent(MainActivityViewIntent.ViewEvent.LoadMovies)
 
         viewBinder.btnGetMovie.setOnClickListener {
@@ -78,7 +77,7 @@ class MainActivity : BaseMVIActivityWithEffect<
 
     override fun onDestroy() {
         super.onDestroy()
-        if(adView!=null) {
+        if (adView != null) {
             adView.destroy()
         }
         if (interstitialAd != null) {
@@ -95,14 +94,37 @@ class MainActivity : BaseMVIActivityWithEffect<
             MainActivityViewIntent.ViewState.MoviesInFlight -> {
                 viewBinder.layoutMovieCard.llCard.visibility = View.GONE
                 viewBinder.btnGetMovie.visibility = View.GONE
+                viewBinder.tvTitle.visibility = View.GONE
                 showProgressBar()
+                hideErrorView()
             }
             MainActivityViewIntent.ViewState.MoviesLoaded -> {
                 viewBinder.layoutMovieCard.llCard.visibility = View.VISIBLE
                 viewBinder.btnGetMovie.visibility = View.VISIBLE
+                viewBinder.tvTitle.visibility = View.VISIBLE
+                showNoMovieView()
                 hideProgressBar()
+                hideErrorView()
+            }
+            MainActivityViewIntent.ViewState.MoviesLoadingFailed -> {
+                showErrorView()
+                hideProgressBar()
+                viewBinder.layoutMovieCard.llCard.visibility = View.GONE
+                viewBinder.btnGetMovie.visibility = View.GONE
+                viewBinder.tvTitle.visibility = View.GONE
             }
         }
+    }
+
+    private fun showErrorView() {
+        viewBinder.errorView.btnRetry.setOnClickListener {
+            viewModel.processEvent(MainActivityViewIntent.ViewEvent.LoadMovies)
+        }
+        viewBinder.errorView.clError.visibility = View.VISIBLE
+    }
+
+    private fun hideErrorView() {
+        viewBinder.errorView.clError.visibility = View.GONE
     }
 
     private fun hideProgressBar() {
@@ -128,7 +150,7 @@ class MainActivity : BaseMVIActivityWithEffect<
     }
 
     private fun showInterstitialAd() {
-        if(interstitialAdCount%5 == 0) {
+        if (interstitialAdCount % 5 == 0) {
             val interstitialAdListener: InterstitialAdListener = object : InterstitialAdListener {
                 override fun onInterstitialDisplayed(ad: Ad) {
                     Log.e(TAG, "Interstitial ad displayed.")
@@ -162,6 +184,7 @@ class MainActivity : BaseMVIActivityWithEffect<
             )
         }
     }
+
     private fun trackMovieUpdatedEvent(movieName: String) {
         val bundle = Bundle()
         bundle.putString("movie_name", movieName)

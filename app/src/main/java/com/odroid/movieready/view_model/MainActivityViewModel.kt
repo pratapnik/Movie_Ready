@@ -6,10 +6,8 @@ import com.odroid.movieready.base.BaseMVIViewModelWithEffect
 import com.odroid.movieready.model.BollywoodMovieService
 import com.odroid.movieready.model.MovieResponse
 import com.odroid.movieready.view_intent.MainActivityViewIntent
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import java.lang.Exception
 
 class MainActivityViewModel : BaseMVIViewModelWithEffect<
         MainActivityViewIntent.ViewEvent,
@@ -17,6 +15,7 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
         MainActivityViewIntent.ViewEffect>() {
 
     private var moviesList: List<MovieResponse>? = null
+    var job: Job? = null
 
     override fun processEvent(event: MainActivityViewIntent.ViewEvent) {
         when (event) {
@@ -24,6 +23,7 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
                 updateRandomMovie()
             }
             MainActivityViewIntent.ViewEvent.LoadMovies -> {
+                viewState = MainActivityViewIntent.ViewState.MoviesInFlight
                 viewModelScope.launch {
                     getAllMov()
                 }
@@ -31,17 +31,25 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
         }
     }
 
-    suspend fun getAllMov() {
+    private suspend fun getAllMov() {
         val bollywoodMovieApi = BollywoodMovieService.getBollywoodMovieService()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = bollywoodMovieApi.getAllMovies()
-
-            withContext(Dispatchers.Main) {
-                if (response.isSuccessful) {
-                    moviesList = response.body()
-                    viewState = MainActivityViewIntent.ViewState.MoviesLoaded
-                } else {
+        job = CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = bollywoodMovieApi.getAllMovies()
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        moviesList = response.body()
+                        viewState = MainActivityViewIntent.ViewState.MoviesLoaded
+                    } else {
+                        Log.d("nikhil", "erroorrrrr  Dispatchers.Main ")
+                        viewState = MainActivityViewIntent.ViewState.MoviesLoadingFailed
+                    }
+                }
+            }
+            catch (e: Exception) {
+                withContext(Dispatchers.Main){
+                    viewState = MainActivityViewIntent.ViewState.MoviesLoadingFailed
                 }
             }
         }

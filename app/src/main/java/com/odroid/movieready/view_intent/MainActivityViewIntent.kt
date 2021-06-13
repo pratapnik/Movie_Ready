@@ -13,6 +13,7 @@ class MainActivityViewIntent {
     sealed class ViewState : BaseMVIViewState {
         object MoviesLoaded: ViewState()
         object MoviesInFlight: ViewState()
+        object MoviesLoadingFailed: ViewState()
     }
 
     sealed class ViewEffect : BaseMVIViewEffect {

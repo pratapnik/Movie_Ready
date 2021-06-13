@@ -8,6 +8,12 @@
         android:layout_height="match_parent"
         tools:context=".view.MainActivity">
 
+        <include layout="@layout/error_view"
+            android:id="@+id/errorView"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            />
+
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="@dimen/match_constraint_dimen"
@@ -59,7 +65,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
+        <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
