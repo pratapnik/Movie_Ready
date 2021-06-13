@@ -31,7 +31,7 @@ class MainActivity : BaseMVIActivityWithEffect<
     override fun onViewReady() {
         super.onViewReady()
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         showNoMovieView()
         viewModel.processEvent(MainActivityViewIntent.ViewEvent.LoadMovies)
 
