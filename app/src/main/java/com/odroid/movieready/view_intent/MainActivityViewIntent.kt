@@ -6,11 +6,17 @@ import com.odroid.movieready.base.BaseMVIViewState
 
 class MainActivityViewIntent {
     sealed class ViewEvent : BaseMVIEvent {
-        class UpdateClicked(val number: Int): ViewEvent()
+        object UpdateClicked : ViewEvent()
+        object LoadMovies: ViewEvent()
     }
 
-    sealed class ViewState : BaseMVIViewState
+    sealed class ViewState : BaseMVIViewState {
+        object MoviesLoaded: ViewState()
+        object MoviesInFlight: ViewState()
+        object MoviesLoadingFailed: ViewState()
+    }
+
     sealed class ViewEffect : BaseMVIViewEffect {
-        class UpdateText(val updatedNumber: String): ViewEffect()
+        class UpdateText(val movieName: String) : ViewEffect()
     }
 }

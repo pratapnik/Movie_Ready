@@ -1,19 +1,74 @@
 package com.odroid.movieready.view_model
 
+import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.odroid.movieready.base.BaseMVIViewModelWithEffect
+import com.odroid.movieready.model.BollywoodMovieService
+import com.odroid.movieready.model.MovieResponse
 import com.odroid.movieready.view_intent.MainActivityViewIntent
+import kotlinx.coroutines.*
+import java.lang.Exception
 
 class MainActivityViewModel : BaseMVIViewModelWithEffect<
         MainActivityViewIntent.ViewEvent,
         MainActivityViewIntent.ViewState,
         MainActivityViewIntent.ViewEffect>() {
 
+    private var moviesList: List<MovieResponse>? = null
+    var job: Job? = null
+
     override fun processEvent(event: MainActivityViewIntent.ViewEvent) {
         when (event) {
             is MainActivityViewIntent.ViewEvent.UpdateClicked -> {
-                val updatedNumber = (event.number + 1).toString()
-                viewEffect = MainActivityViewIntent.ViewEffect.UpdateText(updatedNumber)
+                updateRandomMovie()
             }
+            MainActivityViewIntent.ViewEvent.LoadMovies -> {
+                viewState = MainActivityViewIntent.ViewState.MoviesInFlight
+                viewModelScope.launch {
+                    getAllMov()
+                }
+            }
+        }
+    }
+
+    private suspend fun getAllMov() {
+        val bollywoodMovieApi = BollywoodMovieService.getBollywoodMovieService()
+
+        job = CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val response = bollywoodMovieApi.getAllMovies()
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful) {
+                        moviesList = response.body()
+                        viewState = MainActivityViewIntent.ViewState.MoviesLoaded
+                    } else {
+                        viewState = MainActivityViewIntent.ViewState.MoviesLoadingFailed
+                    }
+                }
+            }
+            catch (e: Exception) {
+                withContext(Dispatchers.Main){
+                    viewState = MainActivityViewIntent.ViewState.MoviesLoadingFailed
+                }
+            }
+        }
+    }
+
+    private fun updateRandomMovie() {
+        val randomNumber = getRandomNumber()
+        if (!moviesList.isNullOrEmpty()) {
+            viewEffect = MainActivityViewIntent.ViewEffect.UpdateText(
+                moviesList?.get(randomNumber)?.title ?: ""
+            )
+        }
+    }
+
+    private fun getRandomNumber(): Int {
+        return if (!moviesList.isNullOrEmpty()) {
+            val movieListSize = moviesList?.size ?: 1 - 1
+            (0..movieListSize).random()
+        } else {
+            0
         }
     }
 }

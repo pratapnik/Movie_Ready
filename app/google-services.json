@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "759670959729",
+    "project_id": "movie-ready",
+    "storage_bucket": "movie-ready.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759670959729:android:cc179968b4d8187c1235d0",
+        "android_client_info": {
+          "package_name": "com.odroid.movieready"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "759670959729-5a9chtuosp8ojqocjbbapc4r6c0quga3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA23B7RofCPSwRwO_pWMYKfh8WspXgCxb4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "759670959729-5a9chtuosp8ojqocjbbapc4r6c0quga3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
