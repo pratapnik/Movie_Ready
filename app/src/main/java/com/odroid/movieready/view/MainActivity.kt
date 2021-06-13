@@ -4,7 +4,10 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.viewModels
+import com.facebook.ads.*
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.odroid.movieready.R
 import com.odroid.movieready.base.BaseMVIActivityWithEffect
@@ -23,6 +26,12 @@ class MainActivity : BaseMVIActivityWithEffect<
     private val mainActivityViewModel: MainActivityViewModel by viewModels()
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
+    private val TAG = "FB_ADS"
+
+    private lateinit var adView: AdView
+    private var interstitialAdCount = 1
+    private lateinit var interstitialAd: InterstitialAd
+
     override fun getMainLayout() = R.layout.activity_main
 
     override val viewModel: MainActivityViewModel
@@ -31,7 +40,33 @@ class MainActivity : BaseMVIActivityWithEffect<
     override fun onViewReady() {
         super.onViewReady()
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        AudienceNetworkAds.initialize(this)
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
+
+        adView = AdView(this, "523149145395752_523153555395311", AdSize.BANNER_HEIGHT_50)
+        val adContainer = findViewById<View>(R.id.banner_container) as LinearLayout
+        adContainer.addView(adView)
+        val adListener: AdListener = object : AdListener {
+            override fun onError(ad: Ad, adError: AdError) {
+                // Ad error callback
+            }
+
+            override fun onAdLoaded(ad: Ad) {
+                // Ad loaded callback
+            }
+
+            override fun onAdClicked(ad: Ad) {
+                // Ad clicked callback
+            }
+
+            override fun onLoggingImpression(ad: Ad) {
+                // Ad impression logged callback
+            }
+        }
+        adView.loadAd(adView.buildLoadAdConfig().withAdListener(adListener).build())
+
+        interstitialAd = InterstitialAd(this, "523149145395752_523176515393015")
+
         showNoMovieView()
         viewModel.processEvent(MainActivityViewIntent.ViewEvent.LoadMovies)
 
@@ -41,11 +76,22 @@ class MainActivity : BaseMVIActivityWithEffect<
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if(adView!=null) {
+            adView.destroy()
+        }
+        if (interstitialAd != null) {
+            interstitialAd.destroy();
+        }
+    }
+
     override fun onBindViewData(viewBinder: ActivityMainBinding) {
+        //Nothing here
     }
 
     override fun renderState(state: MainActivityViewIntent.ViewState) {
-        when(state) {
+        when (state) {
             MainActivityViewIntent.ViewState.MoviesInFlight -> {
                 viewBinder.layoutMovieCard.llCard.visibility = View.GONE
                 viewBinder.btnGetMovie.visibility = View.GONE
@@ -72,6 +118,8 @@ class MainActivity : BaseMVIActivityWithEffect<
             is MainActivityViewIntent.ViewEffect.UpdateText -> {
                 triggerSound()
                 hideNoMovieView()
+                showInterstitialAd()
+                interstitialAdCount++
                 val movieText = viewBinder.layoutMovieCard.tvMovieName
                 movieText.text = effect.movieName
                 trackMovieUpdatedEvent(effect.movieName)
@@ -79,6 +127,41 @@ class MainActivity : BaseMVIActivityWithEffect<
         }
     }
 
+    private fun showInterstitialAd() {
+        if(interstitialAdCount%5 == 0) {
+            val interstitialAdListener: InterstitialAdListener = object : InterstitialAdListener {
+                override fun onInterstitialDisplayed(ad: Ad) {
+                    Log.e(TAG, "Interstitial ad displayed.")
+                }
+
+                override fun onInterstitialDismissed(ad: Ad) {
+                    Log.e(TAG, "Interstitial ad dismissed.")
+                }
+
+                override fun onError(ad: Ad, adError: AdError) {
+                    Log.e(TAG, "Interstitial ad failed to load: " + adError.errorMessage)
+                }
+
+                override fun onAdLoaded(ad: Ad) {
+                    Log.d(TAG, "Interstitial ad is loaded and ready to be displayed!")
+                    interstitialAd.show()
+                }
+
+                override fun onAdClicked(ad: Ad) {
+                    Log.d(TAG, "Interstitial ad clicked!")
+                }
+
+                override fun onLoggingImpression(ad: Ad) {
+                    Log.d(TAG, "Interstitial ad impression logged!")
+                }
+            }
+            interstitialAd.loadAd(
+                interstitialAd.buildLoadAdConfig()
+                    .withAdListener(interstitialAdListener)
+                    .build()
+            )
+        }
+    }
     private fun trackMovieUpdatedEvent(movieName: String) {
         val bundle = Bundle()
         bundle.putString("movie_name", movieName)
@@ -87,7 +170,8 @@ class MainActivity : BaseMVIActivityWithEffect<
 
     private fun showNoMovieView() {
         viewBinder.layoutMovieCard.llCard.setCardBackgroundColor(resources.getColor(R.color.red_color))
-        viewBinder.layoutMovieCard.tvMovieName.text = resources.getString(R.string.card_description_label)
+        viewBinder.layoutMovieCard.tvMovieName.text =
+            resources.getString(R.string.card_description_label)
     }
 
     private fun hideNoMovieView() {
