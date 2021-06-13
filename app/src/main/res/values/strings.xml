@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name">Movie Ready</string>
+    <string name="app_name">Film Cave</string>
     <string name="get_movie_button_label">GET A MOVIE</string>
-    <string name="main_activity_title">Click button at bottom to get new MOVIE</string>
+    <string name="main_activity_title">DUMB CHARADES</string>
+    <string name="tooltip_label">Tap this button for new movie</string>
     <string name="card_description_label">Movie name will be displayed here</string>
     <string name="error_title">Oops!</string>
     <string name="error_subtitle">Please check your internet connection</string>

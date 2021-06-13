@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.facebook.ads.*
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.odroid.movieready.R
@@ -14,6 +15,11 @@ import com.odroid.movieready.base.BaseMVIActivityWithEffect
 import com.odroid.movieready.databinding.ActivityMainBinding
 import com.odroid.movieready.view_intent.MainActivityViewIntent
 import com.odroid.movieready.view_model.MainActivityViewModel
+import com.skydoves.balloon.BalloonAnimation
+import com.skydoves.balloon.createBalloon
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class MainActivity : BaseMVIActivityWithEffect<
@@ -27,6 +33,7 @@ class MainActivity : BaseMVIActivityWithEffect<
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
     private val TAG = "FB_ADS"
+    private var shouldShowButtonTooltip = true
 
     private lateinit var adView: AdView
     private var interstitialAdCount = 1
@@ -39,7 +46,6 @@ class MainActivity : BaseMVIActivityWithEffect<
 
     override fun onViewReady() {
         super.onViewReady()
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         AudienceNetworkAds.initialize(this)
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
@@ -105,6 +111,7 @@ class MainActivity : BaseMVIActivityWithEffect<
                 showNoMovieView()
                 hideProgressBar()
                 hideErrorView()
+                showTooltipOnButton()
             }
             MainActivityViewIntent.ViewState.MoviesLoadingFailed -> {
                 showErrorView()
@@ -232,6 +239,31 @@ class MainActivity : BaseMVIActivityWithEffect<
                 mediaPlayer.release();// if error occurs, reinitialize the MediaPlayer
 
                 mediaPlayer = null; // ready to be garbage collected.
+            }
+        }
+    }
+
+    private fun showTooltipOnButton() {
+        if(shouldShowButtonTooltip) {
+            lifecycleScope.launch {
+                delay(400)
+                val balloon = createBalloon(baseContext) {
+                    setArrowSize(9)
+                    setWidthRatio(0.7f)
+                    setHeight(50)
+                    setArrowPosition(0.5f)
+                    setCornerRadius(8f)
+                    setAlpha(0.9f)
+                    setText(resources.getString(R.string.tooltip_label))
+                    setTextColorResource(R.color.main_card_color)
+                    setTextSize(16F)
+                    setBackgroundColorResource(R.color.tooltip_color)
+                    onBalloonClickListener?.let { setOnBalloonClickListener(it) }
+                    setBalloonAnimation(BalloonAnimation.OVERSHOOT)
+                    setLifecycleOwner(lifecycleOwner)
+                }
+                balloon.showAlignTop(viewBinder.btnGetMovie)
+                shouldShowButtonTooltip = false
             }
         }
     }
