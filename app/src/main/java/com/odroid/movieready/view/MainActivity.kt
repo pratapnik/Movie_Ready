@@ -7,14 +7,13 @@ import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.facebook.ads.*
+import com.google.android.material.tooltip.TooltipDrawable
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.odroid.movieready.R
 import com.odroid.movieready.base.BaseMVIActivityWithEffect
 import com.odroid.movieready.databinding.ActivityMainBinding
 import com.odroid.movieready.view_intent.MainActivityViewIntent
 import com.odroid.movieready.view_model.MainActivityViewModel
-import com.skydoves.balloon.BalloonAnimation
-import com.skydoves.balloon.createBalloon
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -232,24 +231,13 @@ class MainActivity : BaseMVIActivityWithEffect<
         if (shouldShowButtonTooltip) {
             lifecycleScope.launch {
                 delay(400)
-                val balloon = createBalloon(baseContext) {
-                    setArrowSize(9)
-                    setWidthRatio(0.7f)
-                    setHeight(50)
-                    setArrowPosition(0.5f)
-                    setCornerRadius(8f)
-                    setAlpha(0.9f)
-                    setText(resources.getString(R.string.tooltip_label))
-                    setTextColorResource(R.color.main_card_color)
-                    setTextSize(16F)
-                    setBackgroundColorResource(R.color.tooltip_color)
-                    onBalloonClickListener?.let { setOnBalloonClickListener(it) }
-                    setBalloonAnimation(BalloonAnimation.OVERSHOOT)
-                    setLifecycleOwner(lifecycleOwner)
-                }
-                balloon.showAlignTop(viewBinder.btnGetMovie)
+                launchTooltip()
                 shouldShowButtonTooltip = false
             }
         }
+    }
+
+    private fun launchTooltip() {
+        //todo
     }
 }
