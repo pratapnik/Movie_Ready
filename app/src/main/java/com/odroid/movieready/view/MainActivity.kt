@@ -6,7 +6,9 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.facebook.ads.*
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.odroid.movieready.R
 import com.odroid.movieready.base.BaseMVIActivityWithEffect
@@ -29,12 +31,12 @@ class MainActivity : BaseMVIActivityWithEffect<
     private val mainActivityViewModel: MainActivityViewModel by viewModels()
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
-    private val TAG = "FB_ADS"
+    private final var TAG = "MainActivity"
     private var shouldShowButtonTooltip = true
 
-    private lateinit var adView: AdView
+    private lateinit var mAdView: AdView
     private var interstitialAdCount = 1
-    private lateinit var interstitialAd: InterstitialAd
+    private var mInterstitialAd: InterstitialAd? = null
 
     override fun getMainLayout() = R.layout.activity_main
 
@@ -43,32 +45,61 @@ class MainActivity : BaseMVIActivityWithEffect<
 
     override fun onViewReady() {
         super.onViewReady()
-        AudienceNetworkAds.initialize(this)
+        MobileAds.initialize(this)
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
-        adView = AdView(this, "523149145395752_523153555395311", AdSize.BANNER_HEIGHT_50)
-        val adContainer = findViewById<View>(R.id.banner_container) as LinearLayout
-        adContainer.addView(adView)
-        val adListener: AdListener = object : AdListener {
-            override fun onError(ad: Ad, adError: AdError) {
-                // Ad error callback
+        mAdView = findViewById(R.id.banner_container)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
+
+        mAdView.adListener = object: AdListener() {
+            override fun onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
             }
 
-            override fun onAdLoaded(ad: Ad) {
-                // Ad loaded callback
+            override fun onAdFailedToLoad(adError : LoadAdError) {
+                // Code to be executed when an ad request fails.
             }
 
-            override fun onAdClicked(ad: Ad) {
-                // Ad clicked callback
+            override fun onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
             }
 
-            override fun onLoggingImpression(ad: Ad) {
-                // Ad impression logged callback
+            override fun onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            override fun onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
             }
         }
-        adView.loadAd(adView.buildLoadAdConfig().withAdListener(adListener).build())
 
-        interstitialAd = InterstitialAd(this, "523149145395752_523176515393015")
+        var interAdRequest = AdRequest.Builder().build()
+
+        InterstitialAd.load(this,"ca-app-pub-1519112618002676/9466278282", interAdRequest,
+            object : InterstitialAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                mInterstitialAd = null
+            }
+
+            override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                mInterstitialAd = interstitialAd
+            }
+        })
+
+        mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+            override fun onAdDismissedFullScreenContent() {
+            }
+
+            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
+            }
+
+            override fun onAdShowedFullScreenContent() {
+                mInterstitialAd = null;
+            }
+        }
 
         viewModel.processEvent(MainActivityViewIntent.ViewEvent.LoadMovies)
 
@@ -80,11 +111,8 @@ class MainActivity : BaseMVIActivityWithEffect<
 
     override fun onDestroy() {
         super.onDestroy()
-        if (adView != null) {
-            adView.destroy()
-        }
-        if (interstitialAd != null) {
-            interstitialAd.destroy();
+        if (mAdView != null) {
+            mAdView.destroy()
         }
     }
 
@@ -155,31 +183,10 @@ class MainActivity : BaseMVIActivityWithEffect<
 
     private fun showInterstitialAd() {
         if (interstitialAdCount % 5 == 0) {
-            val interstitialAdListener: InterstitialAdListener = object : InterstitialAdListener {
-                override fun onInterstitialDisplayed(ad: Ad) {
-                }
-
-                override fun onInterstitialDismissed(ad: Ad) {
-                }
-
-                override fun onError(ad: Ad, adError: AdError) {
-                }
-
-                override fun onAdLoaded(ad: Ad) {
-                    interstitialAd.show()
-                }
-
-                override fun onAdClicked(ad: Ad) {
-                }
-
-                override fun onLoggingImpression(ad: Ad) {
-                }
+            if (mInterstitialAd != null) {
+                mInterstitialAd?.show(this)
+            } else {
             }
-            interstitialAd.loadAd(
-                interstitialAd.buildLoadAdConfig()
-                    .withAdListener(interstitialAdListener)
-                    .build()
-            )
         }
     }
 
