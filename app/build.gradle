@@ -15,7 +15,6 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -62,6 +61,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics:18.0.1'
     implementation 'androidx.annotation:annotation:1.2.0'
     implementation 'com.facebook.android:audience-network-sdk:6.5.0'
+    implementation "com.github.skydoves:balloon:1.2.3"
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
