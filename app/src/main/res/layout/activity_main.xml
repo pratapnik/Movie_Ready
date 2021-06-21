@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin_20dp"
             android:layout_marginRight="@dimen/margin_20dp"
-            android:layout_marginBottom="@dimen/margin_14dp"
+            android:layout_marginBottom="@dimen/padding_8dp"
             android:fontFamily="@font/font_bold"
             android:letterSpacing="0.1"
             android:minHeight="@dimen/margin_60dp"
@@ -74,13 +74,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/banner_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-1519112618002676/9802208252"
+            ads:layout_constraintBottom_toBottomOf="parent"
+            >
+        </com.google.android.gms.ads.AdView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
