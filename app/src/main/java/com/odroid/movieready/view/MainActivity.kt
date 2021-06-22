@@ -202,7 +202,7 @@ class MainActivity : BaseMVIActivityWithEffect<
     }
 
     private fun showNoMovieView() {
-        viewBinder.layoutMovieCard.llCard.setCardBackgroundColor(resources.getColor(com.odroid.movieready.R.color.red_color))
+        viewBinder.layoutMovieCard.llCard.setCardBackgroundColor(resources.getColor(com.odroid.movieready.R.color.primary_error_color))
         viewBinder.layoutMovieCard.tvMovieName.text =
             resources.getString(com.odroid.movieready.R.string.card_description_label)
     }
