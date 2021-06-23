@@ -20,7 +20,7 @@
             android:layout_width="@dimen/match_constraint_dimen"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_16dp"
-            android:layout_marginTop="@dimen/margin_80dp"
+            android:layout_marginTop="@dimen/margin_36dp"
             android:layout_marginEnd="@dimen/margin_16dp"
             android:fontFamily="@font/font_bold"
             android:lineSpacingExtra="6dp"
@@ -30,7 +30,7 @@
             android:textSize="@dimen/text_size_32sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/switch_poster" />
 
         <include
             android:id="@+id/layoutMovieCard"
@@ -40,12 +40,11 @@
             android:layout_marginLeft="@dimen/margin_60dp"
             android:layout_marginTop="@dimen/margin_60dp"
             android:layout_marginRight="@dimen/margin_60dp"
-            android:layout_marginBottom="@dimen/margin_100dp"
+            android:layout_marginBottom="@dimen/margin_80dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGetMovie"
@@ -86,5 +85,30 @@
             ads:adUnitId="ca-app-pub-1519112618002676/9802208252"
             ads:layout_constraintBottom_toBottomOf="parent" />
 
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/switch_poster"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_8dp"
+            android:checked="false"
+            android:fontFamily="@font/font_regular"
+            android:text="@string/label_poster_switch"
+            android:textColor="@color/primary_text_color"
+            android:textSize="@dimen/text_size_14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:switchPadding="@dimen/padding_8dp" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_app_icon"
+            android:layout_width="@dimen/margin_36dp"
+            android:layout_height="@dimen/margin_36dp"
+            android:layout_margin="@dimen/margin_16dp"
+            app:civ_border_width="1dp"
+            app:civ_border_color="@color/primary_app_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@mipmap/ic_launcher_round"
+             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

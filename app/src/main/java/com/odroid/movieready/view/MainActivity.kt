@@ -30,7 +30,6 @@ class MainActivity : BaseMVIActivityWithEffect<
     private val mainActivityViewModel: MainActivityViewModel by viewModels()
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
-    private final var TAG = "MainActivity"
     private var shouldShowButtonTooltip = true
 
     private lateinit var mAdView: AdView
@@ -105,7 +104,16 @@ class MainActivity : BaseMVIActivityWithEffect<
         viewBinder.btnGetMovie.setOnClickListener {
             viewModel.processEvent(MainActivityViewIntent.ViewEvent.UpdateClicked)
         }
+        viewModel.processEvent(MainActivityViewIntent.ViewEvent.CheckPosterSwitch(this))
 
+        registerSwitchChangeListener()
+    }
+
+    private fun registerSwitchChangeListener() {
+        viewBinder.switchPoster.setOnCheckedChangeListener { buttonView, isChecked ->
+            viewModel.processEvent(MainActivityViewIntent.ViewEvent.PosterSwitchChanged(isChecked,
+                this))
+        }
     }
 
     override fun onDestroy() {
@@ -177,6 +185,9 @@ class MainActivity : BaseMVIActivityWithEffect<
                 val movieText = viewBinder.layoutMovieCard.tvMovieName
                 movieText.text = effect.movieName
                 trackMovieUpdatedEvent(effect.movieName)
+            }
+            is MainActivityViewIntent.ViewEffect.UpdatePosterSwitch -> {
+                viewBinder.switchPoster.isChecked = effect.isChecked
             }
         }
     }
