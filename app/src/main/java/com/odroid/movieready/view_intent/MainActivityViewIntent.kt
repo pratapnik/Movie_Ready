@@ -8,19 +8,19 @@ import com.odroid.movieready.base.BaseMVIViewState
 class MainActivityViewIntent {
     sealed class ViewEvent : BaseMVIEvent {
         object UpdateClicked : ViewEvent()
-        object LoadMovies: ViewEvent()
-        class CheckPosterSwitch(val context: Context): ViewEvent()
-        class PosterSwitchChanged(val isChecked: Boolean, val context: Context): ViewEvent()
+        object LoadMovies : ViewEvent()
+        object CheckPosterSwitch : ViewEvent()
+        class PosterSwitchChanged(val isChecked: Boolean) : ViewEvent()
     }
 
     sealed class ViewState : BaseMVIViewState {
-        object MoviesLoaded: ViewState()
-        object MoviesInFlight: ViewState()
-        object MoviesLoadingFailed: ViewState()
+        object MoviesLoaded : ViewState()
+        object MoviesInFlight : ViewState()
+        object MoviesLoadingFailed : ViewState()
     }
 
     sealed class ViewEffect : BaseMVIViewEffect {
         class UpdateText(val movieName: String) : ViewEffect()
-        class UpdatePosterSwitch(val isChecked: Boolean): ViewEffect()
+        class UpdatePosterSwitch(val isChecked: Boolean) : ViewEffect()
     }
 }

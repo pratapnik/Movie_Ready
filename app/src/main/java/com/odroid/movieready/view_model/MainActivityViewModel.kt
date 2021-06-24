@@ -1,6 +1,5 @@
 package com.odroid.movieready.view_model
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.odroid.movieready.base.BaseMVIViewModelWithEffect
 import com.odroid.movieready.model.BollywoodMovieService
@@ -8,7 +7,6 @@ import com.odroid.movieready.model.MovieResponse
 import com.odroid.movieready.util.PreferenceUtils
 import com.odroid.movieready.view_intent.MainActivityViewIntent
 import kotlinx.coroutines.*
-import java.lang.Exception
 
 class MainActivityViewModel : BaseMVIViewModelWithEffect<
         MainActivityViewIntent.ViewEvent,
@@ -30,10 +28,10 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
                 }
             }
             is MainActivityViewIntent.ViewEvent.PosterSwitchChanged -> {
-                PreferenceUtils(event.context).setPosterEnabled(event.isChecked)
+                PreferenceUtils.setPosterEnabled(event.isChecked)
             }
             is MainActivityViewIntent.ViewEvent.CheckPosterSwitch -> {
-                val isPosterEnabled = PreferenceUtils(event.context).isPosterEnabled()
+                val isPosterEnabled = PreferenceUtils.isPosterEnabled()
                 viewEffect = MainActivityViewIntent.ViewEffect.UpdatePosterSwitch(isPosterEnabled)
             }
         }
@@ -53,9 +51,8 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
                         viewState = MainActivityViewIntent.ViewState.MoviesLoadingFailed
                     }
                 }
-            }
-            catch (e: Exception) {
-                withContext(Dispatchers.Main){
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
                     viewState = MainActivityViewIntent.ViewState.MoviesLoadingFailed
                 }
             }

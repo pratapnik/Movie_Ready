@@ -2,8 +2,9 @@ package com.odroid.movieready.util
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.odroid.movieready.MovieReadyApplication
 
-class PreferenceUtils(val context: Context) {
+object PreferenceUtils {
     private val PREF_FILE_NAME = "XmppPref"
 
     private val IS_POSTER_ON = "is_poster_on"
@@ -11,15 +12,18 @@ class PreferenceUtils(val context: Context) {
     private var prefs: SharedPreferences? = null
 
     init {
-        prefs = context.getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE)
+        prefs = MovieReadyApplication.context?.getSharedPreferences(
+            PREF_FILE_NAME,
+            Context.MODE_PRIVATE
+        )
     }
 
     fun setPosterEnabled(isPosterEnabled: Boolean) {
-       setBooleanPreference(IS_POSTER_ON, isPosterEnabled)
+        setBooleanPreference(IS_POSTER_ON, isPosterEnabled)
     }
 
     fun isPosterEnabled(): Boolean {
-        return getBooleanPreference(IS_POSTER_ON, false)
+        return getBooleanPreference(IS_POSTER_ON, true)
     }
 
     private fun getBooleanPreference(key: String, defValue: Boolean): Boolean {

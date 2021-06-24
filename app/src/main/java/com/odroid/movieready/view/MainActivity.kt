@@ -50,12 +50,12 @@ class MainActivity : BaseMVIActivityWithEffect<
         val adRequest = AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
 
-        mAdView.adListener = object: AdListener() {
+        mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 // Code to be executed when an ad finishes loading.
             }
 
-            override fun onAdFailedToLoad(adError : LoadAdError) {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
                 // Code to be executed when an ad request fails.
             }
 
@@ -76,18 +76,18 @@ class MainActivity : BaseMVIActivityWithEffect<
 
         var interAdRequest = AdRequest.Builder().build()
 
-        InterstitialAd.load(this,"ca-app-pub-1519112618002676/9466278282", interAdRequest,
+        InterstitialAd.load(this, "ca-app-pub-1519112618002676/9466278282", interAdRequest,
             object : InterstitialAdLoadCallback() {
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                mInterstitialAd = null
-            }
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    mInterstitialAd = null
+                }
 
-            override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                mInterstitialAd = interstitialAd
-            }
-        })
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    mInterstitialAd = interstitialAd
+                }
+            })
 
-        mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+        mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
             }
 
@@ -104,15 +104,14 @@ class MainActivity : BaseMVIActivityWithEffect<
         viewBinder.btnGetMovie.setOnClickListener {
             viewModel.processEvent(MainActivityViewIntent.ViewEvent.UpdateClicked)
         }
-        viewModel.processEvent(MainActivityViewIntent.ViewEvent.CheckPosterSwitch(this))
+        viewModel.processEvent(MainActivityViewIntent.ViewEvent.CheckPosterSwitch)
 
         registerSwitchChangeListener()
     }
 
     private fun registerSwitchChangeListener() {
         viewBinder.switchPoster.setOnCheckedChangeListener { buttonView, isChecked ->
-            viewModel.processEvent(MainActivityViewIntent.ViewEvent.PosterSwitchChanged(isChecked,
-                this))
+            viewModel.processEvent(MainActivityViewIntent.ViewEvent.PosterSwitchChanged(isChecked))
         }
     }
 
@@ -193,8 +192,9 @@ class MainActivity : BaseMVIActivityWithEffect<
     }
 
     private fun animateCardView() {
-        val animation: Animation = AnimationUtils.loadAnimation(this, com.odroid.movieready.R.anim.zoom_in_anim)
-        viewBinder.layoutMovieCard.llCard.startAnimation(animation);
+        val animation: Animation =
+            AnimationUtils.loadAnimation(this, com.odroid.movieready.R.anim.zoom_in_anim)
+        viewBinder.layoutMovieCard.llCard.startAnimation(animation)
     }
 
     private fun showInterstitialAd() {
