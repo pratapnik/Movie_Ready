@@ -20,7 +20,7 @@ class MainActivityViewIntent {
     }
 
     sealed class ViewEffect : BaseMVIViewEffect {
-        class UpdateText(val movieName: String) : ViewEffect()
+        class UpdateText(val movieName: String, val posterPath: String) : ViewEffect()
         class UpdatePosterSwitch(val isChecked: Boolean) : ViewEffect()
     }
 }

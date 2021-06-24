@@ -9,25 +9,40 @@
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/main_card_color"
         app:cardCornerRadius="@dimen/margin_20dp"
-        app:cardElevation="@dimen/margin_10dp"
-        app:contentPadding="40dp">
+        app:cardElevation="@dimen/margin_10dp">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvMovieName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/font_bold"
-            android:lineSpacingExtra="@dimen/padding_8dp"
-            tools:text="Gangs of Wasseypur"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_28sp"
-            android:letterSpacing="0.03"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
+            <ImageView
+                android:id="@+id/ivPoster"
+                android:layout_width="@dimen/margin_150dp"
+                android:layout_height="200dp"
+                android:layout_marginEnd="@dimen/margin_16dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/ic_launcher" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvMovieName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/font_bold"
+                android:gravity="center_horizontal"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding_8dp"
+                android:padding="@dimen/margin_16dp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Gangs of Wasseypur" />
+
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

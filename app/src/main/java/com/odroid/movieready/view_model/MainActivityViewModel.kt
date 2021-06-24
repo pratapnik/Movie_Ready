@@ -63,7 +63,8 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
         val randomNumber = getRandomNumber()
         if (!moviesList.isNullOrEmpty()) {
             viewEffect = MainActivityViewIntent.ViewEffect.UpdateText(
-                moviesList?.get(randomNumber)?.title ?: ""
+                moviesList?.get(randomNumber)?.title ?: "",
+                moviesList?.get(randomNumber)?.posterUrl ?: ""
             )
         }
     }
