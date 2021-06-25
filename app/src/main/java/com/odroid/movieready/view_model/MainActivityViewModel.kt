@@ -29,6 +29,7 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
             }
             is MainActivityViewIntent.ViewEvent.PosterSwitchChanged -> {
                 PreferenceUtils.setPosterEnabled(event.isChecked)
+                viewEffect = MainActivityViewIntent.ViewEffect.UpdatePosterVisibility
             }
             is MainActivityViewIntent.ViewEvent.CheckPosterSwitch -> {
                 val isPosterEnabled = PreferenceUtils.isPosterEnabled()
@@ -60,12 +61,34 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
     }
 
     private fun updateRandomMovie() {
-        val randomNumber = getRandomNumber()
         if (!moviesList.isNullOrEmpty()) {
+            val movie = getMovie()
             viewEffect = MainActivityViewIntent.ViewEffect.UpdateText(
-                moviesList?.get(randomNumber)?.title ?: "",
-                moviesList?.get(randomNumber)?.posterUrl ?: ""
+                movie?.title ?: "",
+                movie?.posterUrl ?: ""
             )
+        }
+    }
+
+    private fun getMovie(): MovieResponse? {
+        val randomNumber = getRandomNumber()
+        val isPosterEnabled = PreferenceUtils.isPosterEnabled()
+        if (isPosterEnabled) {
+            var movieNumber = randomNumber
+            var posterUrl = moviesList?.get(movieNumber)?.posterUrl
+            var movieEntity: MovieResponse? = moviesList?.get(movieNumber)
+            while (posterUrl.isNullOrEmpty()) {
+                if (movieNumber >= moviesList?.size!! - 1) {
+                    movieNumber = getRandomNumber()
+                } else {
+                    movieNumber++
+                }
+                movieEntity = moviesList?.get(movieNumber)
+                posterUrl = movieEntity?.posterUrl ?: ""
+            }
+            return movieEntity
+        } else {
+            return moviesList?.get(randomNumber)
         }
     }
 

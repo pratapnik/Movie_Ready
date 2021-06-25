@@ -22,7 +22,7 @@
                 android:layout_height="200dp"
                 android:layout_marginEnd="@dimen/margin_16dp"
                 android:scaleType="fitXY"
-                android:src="@mipmap/ic_launcher" />
+                android:visibility="gone" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvMovieName"

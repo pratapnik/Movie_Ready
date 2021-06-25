@@ -1,5 +1,6 @@
 package com.odroid.movieready.view
 
+import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.load
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -184,16 +186,37 @@ class MainActivity : BaseMVIActivityWithEffect<
             is MainActivityViewIntent.ViewEffect.UpdatePosterSwitch -> {
                 viewBinder.layoutMovieMain.switchPoster.isChecked = effect.isChecked
             }
+            MainActivityViewIntent.ViewEffect.UpdatePosterVisibility -> setPosterVisibility()
         }
     }
 
-    private fun loadPoster(posterPath: String) {
-        if (posterPath.isNotEmpty()) {
+    private fun setPosterVisibility() {
+        if (viewBinder.layoutMovieMain.switchPoster.isChecked)
             viewBinder.layoutMovieMain.layoutMovieCard.ivPoster.visibility = View.VISIBLE
-            viewBinder.layoutMovieMain.layoutMovieCard.ivPoster.load(posterPath)
-        } else {
+        else
             viewBinder.layoutMovieMain.layoutMovieCard.ivPoster.visibility = View.GONE
+    }
+
+    private fun loadPoster(posterPath: String) {
+        val circularProgressDrawable = getProgressDrawable() as CircularProgressDrawable
+        circularProgressDrawable.start()
+        setPosterVisibility()
+        if (posterPath.isNotEmpty()) {
+            viewBinder.layoutMovieMain.layoutMovieCard.ivPoster.load(posterPath) {
+                error(com.odroid.movieready.R.drawable.ic_unavailable)
+                placeholder(circularProgressDrawable)
+            }
+        } else {
+            viewBinder.layoutMovieMain.layoutMovieCard.ivPoster.load(com.odroid.movieready.R.drawable.ic_unavailable)
         }
+    }
+
+    private fun getProgressDrawable(): Drawable {
+        val circularProgressDrawable = CircularProgressDrawable(this)
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.backgroundColor = com.odroid.movieready.R.color.primary_app_color
+        return circularProgressDrawable
     }
 
     private fun animateCardView() {

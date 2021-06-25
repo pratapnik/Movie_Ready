@@ -22,5 +22,6 @@ class MainActivityViewIntent {
     sealed class ViewEffect : BaseMVIViewEffect {
         class UpdateText(val movieName: String, val posterPath: String) : ViewEffect()
         class UpdatePosterSwitch(val isChecked: Boolean) : ViewEffect()
+        object UpdatePosterVisibility : ViewEffect()
     }
 }
