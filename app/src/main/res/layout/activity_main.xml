@@ -15,55 +15,6 @@
             android:layout_height="match_parent"
             tools:visibility="gone" />
 
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="@dimen/match_constraint_dimen"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_16dp"
-            android:layout_marginEnd="@dimen/margin_16dp"
-            android:layout_marginTop="@dimen/margin_80dp"
-            android:fontFamily="@font/font_bold"
-            android:lineSpacingExtra="6dp"
-            android:text="@string/main_activity_title"
-            android:textAlignment="center"
-            android:textColor="@color/main_card_color"
-            android:textSize="@dimen/text_size_32sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <include
-            android:id="@+id/layoutMovieCard"
-            layout="@layout/movie_display_card_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="75dp"
-            android:layout_marginTop="@dimen/margin_60dp"
-            android:layout_marginRight="75dp"
-            android:layout_marginBottom="@dimen/margin_100dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnGetMovie"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_20dp"
-            android:layout_marginRight="@dimen/margin_20dp"
-            android:layout_marginBottom="@dimen/padding_8dp"
-            android:fontFamily="@font/font_bold"
-            android:letterSpacing="0.1"
-            android:minHeight="@dimen/margin_60dp"
-            android:padding="@dimen/margin_10dp"
-            android:text="@string/get_movie_button_label"
-            android:textAllCaps="false"
-            android:textSize="@dimen/text_size_20sp"
-            app:layout_constraintBottom_toTopOf="@id/banner_container"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
-
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
@@ -74,18 +25,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/banner_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             ads:adSize="BANNER"
             ads:adUnitId="ca-app-pub-1519112618002676/9802208252"
-            ads:layout_constraintBottom_toBottomOf="parent"
-            >
-        </com.google.android.gms.ads.AdView>
+            ads:layout_constraintBottom_toBottomOf="parent" />
+
+        <include layout="@layout/movie_layout_main"
+            android:id="@+id/layout_movie_main"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/match_constraint_dimen"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/banner_container"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

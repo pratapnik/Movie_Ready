@@ -5,28 +5,47 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/llCard"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/main_card_color"
         app:cardCornerRadius="@dimen/margin_20dp"
-        app:cardElevation="10dp"
-        app:contentPadding="40dp">
+        app:cardElevation="@dimen/margin_10dp">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvMovieName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/font_bold"
-            android:lineSpacingExtra="@dimen/padding_8dp"
-            android:text="Gangs of Wasseypur"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_28sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            >
 
+            <ImageView
+                android:id="@+id/ivPoster"
+                android:layout_width="@dimen/margin_150dp"
+                android:layout_height="@dimen/poster_height_200dp"
+                android:scaleType="fitXY"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvMovieName"
+                android:layout_width="@dimen/match_constraint_dimen"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/font_bold"
+                android:letterSpacing="0.03"
+                android:lineSpacingExtra="@dimen/padding_8dp"
+                android:padding="@dimen/margin_16dp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ivPoster"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Gangs of dsdsd Gangs of dsdsd Gangs of dsdsd" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

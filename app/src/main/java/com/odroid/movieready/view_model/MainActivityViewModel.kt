@@ -1,13 +1,12 @@
 package com.odroid.movieready.view_model
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.odroid.movieready.base.BaseMVIViewModelWithEffect
 import com.odroid.movieready.model.BollywoodMovieService
 import com.odroid.movieready.model.MovieResponse
+import com.odroid.movieready.util.PreferenceUtils
 import com.odroid.movieready.view_intent.MainActivityViewIntent
 import kotlinx.coroutines.*
-import java.lang.Exception
 
 class MainActivityViewModel : BaseMVIViewModelWithEffect<
         MainActivityViewIntent.ViewEvent,
@@ -28,6 +27,14 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
                     getAllMov()
                 }
             }
+            is MainActivityViewIntent.ViewEvent.PosterSwitchChanged -> {
+                PreferenceUtils.setPosterEnabled(event.isChecked)
+                viewEffect = MainActivityViewIntent.ViewEffect.UpdatePosterVisibility
+            }
+            is MainActivityViewIntent.ViewEvent.CheckPosterSwitch -> {
+                val isPosterEnabled = PreferenceUtils.isPosterEnabled()
+                viewEffect = MainActivityViewIntent.ViewEffect.UpdatePosterSwitch(isPosterEnabled)
+            }
         }
     }
 
@@ -45,9 +52,8 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
                         viewState = MainActivityViewIntent.ViewState.MoviesLoadingFailed
                     }
                 }
-            }
-            catch (e: Exception) {
-                withContext(Dispatchers.Main){
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
                     viewState = MainActivityViewIntent.ViewState.MoviesLoadingFailed
                 }
             }
@@ -55,11 +61,34 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
     }
 
     private fun updateRandomMovie() {
-        val randomNumber = getRandomNumber()
         if (!moviesList.isNullOrEmpty()) {
+            val movie = getMovie()
             viewEffect = MainActivityViewIntent.ViewEffect.UpdateText(
-                moviesList?.get(randomNumber)?.title ?: ""
+                movie?.title ?: "",
+                movie?.posterUrl ?: ""
             )
+        }
+    }
+
+    private fun getMovie(): MovieResponse? {
+        val randomNumber = getRandomNumber()
+        val isPosterEnabled = PreferenceUtils.isPosterEnabled()
+        if (isPosterEnabled) {
+            var movieNumber = randomNumber
+            var posterUrl = moviesList?.get(movieNumber)?.posterUrl
+            var movieEntity: MovieResponse? = moviesList?.get(movieNumber)
+            while (posterUrl.isNullOrEmpty()) {
+                if (movieNumber >= moviesList?.size!! - 1) {
+                    movieNumber = getRandomNumber()
+                } else {
+                    movieNumber++
+                }
+                movieEntity = moviesList?.get(movieNumber)
+                posterUrl = movieEntity?.posterUrl ?: ""
+            }
+            return movieEntity
+        } else {
+            return moviesList?.get(randomNumber)
         }
     }
 

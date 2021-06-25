@@ -1,16 +1,20 @@
 package com.odroid.movieready.view
 
+import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import coil.ImageLoader
+import coil.load
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.odroid.movieready.R
 import com.odroid.movieready.base.BaseMVIActivityWithEffect
 import com.odroid.movieready.databinding.ActivityMainBinding
 import com.odroid.movieready.view_intent.MainActivityViewIntent
@@ -19,7 +23,6 @@ import com.skydoves.balloon.BalloonAnimation
 import com.skydoves.balloon.createBalloon
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 
 class MainActivity : BaseMVIActivityWithEffect<
         MainActivityViewModel,
@@ -31,14 +34,13 @@ class MainActivity : BaseMVIActivityWithEffect<
     private val mainActivityViewModel: MainActivityViewModel by viewModels()
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
-    private final var TAG = "MainActivity"
     private var shouldShowButtonTooltip = true
 
     private lateinit var mAdView: AdView
     private var interstitialAdCount = 1
     private var mInterstitialAd: InterstitialAd? = null
 
-    override fun getMainLayout() = R.layout.activity_main
+    override fun getMainLayout() = com.odroid.movieready.R.layout.activity_main
 
     override val viewModel: MainActivityViewModel
         get() = mainActivityViewModel
@@ -48,16 +50,16 @@ class MainActivity : BaseMVIActivityWithEffect<
         MobileAds.initialize(this)
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
-        mAdView = findViewById(R.id.banner_container)
+        mAdView = findViewById(com.odroid.movieready.R.id.banner_container)
         val adRequest = AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
 
-        mAdView.adListener = object: AdListener() {
+        mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 // Code to be executed when an ad finishes loading.
             }
 
-            override fun onAdFailedToLoad(adError : LoadAdError) {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
                 // Code to be executed when an ad request fails.
             }
 
@@ -78,18 +80,18 @@ class MainActivity : BaseMVIActivityWithEffect<
 
         var interAdRequest = AdRequest.Builder().build()
 
-        InterstitialAd.load(this,"ca-app-pub-1519112618002676/9466278282", interAdRequest,
+        InterstitialAd.load(this, "ca-app-pub-1519112618002676/9466278282", interAdRequest,
             object : InterstitialAdLoadCallback() {
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                mInterstitialAd = null
-            }
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    mInterstitialAd = null
+                }
 
-            override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                mInterstitialAd = interstitialAd
-            }
-        })
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    mInterstitialAd = interstitialAd
+                }
+            })
 
-        mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+        mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdDismissedFullScreenContent() {
             }
 
@@ -103,10 +105,18 @@ class MainActivity : BaseMVIActivityWithEffect<
 
         viewModel.processEvent(MainActivityViewIntent.ViewEvent.LoadMovies)
 
-        viewBinder.btnGetMovie.setOnClickListener {
+        viewBinder.layoutMovieMain.btnGetMovie.setOnClickListener {
             viewModel.processEvent(MainActivityViewIntent.ViewEvent.UpdateClicked)
         }
+        viewModel.processEvent(MainActivityViewIntent.ViewEvent.CheckPosterSwitch)
 
+        registerSwitchChangeListener()
+    }
+
+    private fun registerSwitchChangeListener() {
+        viewBinder.layoutMovieMain.switchPoster.setOnCheckedChangeListener { buttonView, isChecked ->
+            viewModel.processEvent(MainActivityViewIntent.ViewEvent.PosterSwitchChanged(isChecked))
+        }
     }
 
     override fun onDestroy() {
@@ -123,16 +133,12 @@ class MainActivity : BaseMVIActivityWithEffect<
     override fun renderState(state: MainActivityViewIntent.ViewState) {
         when (state) {
             MainActivityViewIntent.ViewState.MoviesInFlight -> {
-                viewBinder.layoutMovieCard.llCard.visibility = View.GONE
-                viewBinder.btnGetMovie.visibility = View.GONE
-                viewBinder.tvTitle.visibility = View.GONE
+                viewBinder.layoutMovieMain.clMovieLayoutMain.visibility = View.GONE
                 showProgressBar()
                 hideErrorView()
             }
             MainActivityViewIntent.ViewState.MoviesLoaded -> {
-                viewBinder.layoutMovieCard.llCard.visibility = View.VISIBLE
-                viewBinder.btnGetMovie.visibility = View.VISIBLE
-                viewBinder.tvTitle.visibility = View.VISIBLE
+                viewBinder.layoutMovieMain.clMovieLayoutMain.visibility = View.VISIBLE
                 showNoMovieView()
                 hideProgressBar()
                 hideErrorView()
@@ -141,9 +147,7 @@ class MainActivity : BaseMVIActivityWithEffect<
             MainActivityViewIntent.ViewState.MoviesLoadingFailed -> {
                 showErrorView()
                 hideProgressBar()
-                viewBinder.layoutMovieCard.llCard.visibility = View.GONE
-                viewBinder.btnGetMovie.visibility = View.GONE
-                viewBinder.tvTitle.visibility = View.GONE
+                viewBinder.layoutMovieMain.clMovieLayoutMain.visibility = View.GONE
             }
         }
     }
@@ -174,11 +178,53 @@ class MainActivity : BaseMVIActivityWithEffect<
                 hideNoMovieView()
                 showInterstitialAd()
                 interstitialAdCount++
-                val movieText = viewBinder.layoutMovieCard.tvMovieName
+                animateCardView()
+                loadPoster(effect.posterPath)
+                val movieText = viewBinder.layoutMovieMain.layoutMovieCard.tvMovieName
                 movieText.text = effect.movieName
                 trackMovieUpdatedEvent(effect.movieName)
             }
+            is MainActivityViewIntent.ViewEffect.UpdatePosterSwitch -> {
+                viewBinder.layoutMovieMain.switchPoster.isChecked = effect.isChecked
+            }
+            MainActivityViewIntent.ViewEffect.UpdatePosterVisibility -> setPosterVisibility()
         }
+    }
+
+    private fun setPosterVisibility() {
+        if (viewBinder.layoutMovieMain.switchPoster.isChecked)
+            viewBinder.layoutMovieMain.layoutMovieCard.ivPoster.visibility = View.VISIBLE
+        else
+            viewBinder.layoutMovieMain.layoutMovieCard.ivPoster.visibility = View.GONE
+    }
+
+    private fun loadPoster(posterPath: String) {
+        val circularProgressDrawable = getProgressDrawable() as CircularProgressDrawable
+        circularProgressDrawable.start()
+        setPosterVisibility()
+        if (posterPath.isNotEmpty()) {
+            viewBinder.layoutMovieMain.layoutMovieCard.ivPoster.load(posterPath) {
+                error(com.odroid.movieready.R.drawable.ic_unavailable)
+                crossfade(true)
+            }
+        } else {
+            viewBinder.layoutMovieMain.layoutMovieCard.ivPoster.load(com.odroid.movieready.R.drawable.ic_unavailable)
+        }
+    }
+
+    private fun getProgressDrawable(): Drawable {
+        val circularProgressDrawable = CircularProgressDrawable(this)
+        circularProgressDrawable.strokeWidth = 5f
+        circularProgressDrawable.centerRadius = 30f
+        circularProgressDrawable.backgroundColor = com.odroid.movieready.R.color.primary_button_color
+        circularProgressDrawable.setColorSchemeColors(com.odroid.movieready.R.color.primary_app_color)
+        return circularProgressDrawable
+    }
+
+    private fun animateCardView() {
+        val animation: Animation =
+            AnimationUtils.loadAnimation(this, com.odroid.movieready.R.anim.zoom_in_anim)
+        viewBinder.layoutMovieMain.layoutMovieCard.llCard.startAnimation(animation)
     }
 
     private fun showInterstitialAd() {
@@ -197,25 +243,33 @@ class MainActivity : BaseMVIActivityWithEffect<
     }
 
     private fun showNoMovieView() {
-        viewBinder.layoutMovieCard.llCard.setCardBackgroundColor(resources.getColor(R.color.red_color))
-        viewBinder.layoutMovieCard.tvMovieName.text =
-            resources.getString(R.string.card_description_label)
+        viewBinder.layoutMovieMain.layoutMovieCard.llCard.setCardBackgroundColor(
+            resources.getColor(
+                com.odroid.movieready.R.color.primary_error_color
+            )
+        )
+        viewBinder.layoutMovieMain.layoutMovieCard.tvMovieName.text =
+            resources.getString(com.odroid.movieready.R.string.card_description_label)
     }
 
     private fun hideNoMovieView() {
-        viewBinder.layoutMovieCard.llCard.setCardBackgroundColor(resources.getColor(R.color.main_card_color))
+        viewBinder.layoutMovieMain.layoutMovieCard.llCard.setCardBackgroundColor(
+            resources.getColor(
+                com.odroid.movieready.R.color.main_card_color
+            )
+        )
     }
 
     private fun triggerSound() {
         var mediaPlayer: MediaPlayer? = MediaPlayer.create(
             applicationContext,
-            R.raw.movie_generation_sound
+            com.odroid.movieready.R.raw.movie_generation_sound
         )
         try {
             if (mediaPlayer == null) {
                 mediaPlayer = MediaPlayer.create(
                     applicationContext,
-                    R.raw.movie_generation_sound
+                    com.odroid.movieready.R.raw.movie_generation_sound
                 )
             }
 
@@ -246,15 +300,15 @@ class MainActivity : BaseMVIActivityWithEffect<
                     setArrowPosition(0.5f)
                     setCornerRadius(8f)
                     setAlpha(0.9f)
-                    setText(resources.getString(R.string.tooltip_label))
-                    setTextColorResource(R.color.main_card_color)
+                    setText(resources.getString(com.odroid.movieready.R.string.tooltip_label))
+                    setTextColorResource(com.odroid.movieready.R.color.main_card_color)
                     setTextSize(16F)
-                    setBackgroundColorResource(R.color.tooltip_color)
+                    setBackgroundColorResource(com.odroid.movieready.R.color.tooltip_color)
                     onBalloonClickListener?.let { setOnBalloonClickListener(it) }
                     setBalloonAnimation(BalloonAnimation.OVERSHOOT)
                     setLifecycleOwner(lifecycleOwner)
                 }
-                balloon.showAlignTop(viewBinder.btnGetMovie)
+                balloon.showAlignTop(viewBinder.layoutMovieMain.btnGetMovie)
                 shouldShowButtonTooltip = false
             }
         }

@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">Film Cave</string>
-    <string name="get_movie_button_label">GET A MOVIE</string>
+    <string name="get_movie_button_label">NEW MOVIE</string>
     <string name="main_activity_title">DUMB CHARADES</string>
     <string name="tooltip_label">Tap this button for new movie</string>
     <string name="card_description_label">Movie name will be displayed here</string>
     <string name="error_title">Oops!</string>
     <string name="error_subtitle">Please check your internet connection</string>
     <string name="retry_button_label">Retry</string>
+    <string name="label_poster_switch">Show Movie Poster</string>
 </resources>
