@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import coil.ImageLoader
 import coil.load
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -204,7 +205,7 @@ class MainActivity : BaseMVIActivityWithEffect<
         if (posterPath.isNotEmpty()) {
             viewBinder.layoutMovieMain.layoutMovieCard.ivPoster.load(posterPath) {
                 error(com.odroid.movieready.R.drawable.ic_unavailable)
-                placeholder(circularProgressDrawable)
+                crossfade(true)
             }
         } else {
             viewBinder.layoutMovieMain.layoutMovieCard.ivPoster.load(com.odroid.movieready.R.drawable.ic_unavailable)
@@ -215,7 +216,8 @@ class MainActivity : BaseMVIActivityWithEffect<
         val circularProgressDrawable = CircularProgressDrawable(this)
         circularProgressDrawable.strokeWidth = 5f
         circularProgressDrawable.centerRadius = 30f
-        circularProgressDrawable.backgroundColor = com.odroid.movieready.R.color.primary_app_color
+        circularProgressDrawable.backgroundColor = com.odroid.movieready.R.color.primary_button_color
+        circularProgressDrawable.setColorSchemeColors(com.odroid.movieready.R.color.primary_app_color)
         return circularProgressDrawable
     }
 
