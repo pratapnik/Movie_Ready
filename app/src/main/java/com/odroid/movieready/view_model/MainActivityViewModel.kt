@@ -94,7 +94,7 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
 
     private fun getRandomNumber(): Int {
         return if (!moviesList.isNullOrEmpty()) {
-            val movieListSize = moviesList?.size ?: 1 - 1
+            val movieListSize = moviesList!!.size - 1
             (0..movieListSize).random()
         } else {
             0
