@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Film Cave</string>
+    <string name="app_name">Ishaara</string>
     <string name="get_movie_button_label">NEW MOVIE</string>
     <string name="main_activity_title">DUMB CHARADES</string>
     <string name="tooltip_label">Tap this button for new movie</string>

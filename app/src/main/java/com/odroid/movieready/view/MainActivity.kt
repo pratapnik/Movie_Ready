@@ -1,6 +1,5 @@
 package com.odroid.movieready.view
 
-import android.graphics.drawable.Drawable
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.View
@@ -8,12 +7,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import coil.ImageLoader
 import coil.load
-import com.google.android.gms.ads.*
-import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.odroid.movieready.base.BaseMVIActivityWithEffect
 import com.odroid.movieready.databinding.ActivityMainBinding
@@ -36,10 +30,6 @@ class MainActivity : BaseMVIActivityWithEffect<
 
     private var shouldShowButtonTooltip = true
 
-    private lateinit var mAdView: AdView
-    private var interstitialAdCount = 1
-    private var mInterstitialAd: InterstitialAd? = null
-
     override fun getMainLayout() = com.odroid.movieready.R.layout.activity_main
 
     override val viewModel: MainActivityViewModel
@@ -47,61 +37,7 @@ class MainActivity : BaseMVIActivityWithEffect<
 
     override fun onViewReady() {
         super.onViewReady()
-        MobileAds.initialize(this)
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
-
-        mAdView = findViewById(com.odroid.movieready.R.id.banner_container)
-        val adRequest = AdRequest.Builder().build()
-        mAdView.loadAd(adRequest)
-
-        mAdView.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-            }
-
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                // Code to be executed when an ad request fails.
-            }
-
-            override fun onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-            }
-
-            override fun onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-            }
-
-            override fun onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        }
-
-        var interAdRequest = AdRequest.Builder().build()
-
-        InterstitialAd.load(this, "ca-app-pub-1519112618002676/9466278282", interAdRequest,
-            object : InterstitialAdLoadCallback() {
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    mInterstitialAd = null
-                }
-
-                override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                    mInterstitialAd = interstitialAd
-                }
-            })
-
-        mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-            override fun onAdDismissedFullScreenContent() {
-            }
-
-            override fun onAdFailedToShowFullScreenContent(adError: AdError?) {
-            }
-
-            override fun onAdShowedFullScreenContent() {
-                mInterstitialAd = null;
-            }
-        }
 
         viewModel.processEvent(MainActivityViewIntent.ViewEvent.LoadMovies)
 
@@ -116,13 +52,6 @@ class MainActivity : BaseMVIActivityWithEffect<
     private fun registerSwitchChangeListener() {
         viewBinder.layoutMovieMain.switchPoster.setOnCheckedChangeListener { buttonView, isChecked ->
             viewModel.processEvent(MainActivityViewIntent.ViewEvent.PosterSwitchChanged(isChecked))
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (mAdView != null) {
-            mAdView.destroy()
         }
     }
 
@@ -176,8 +105,6 @@ class MainActivity : BaseMVIActivityWithEffect<
             is MainActivityViewIntent.ViewEffect.UpdateText -> {
                 triggerSound()
                 hideNoMovieView()
-                showInterstitialAd()
-                interstitialAdCount++
                 animateCardView()
                 loadPoster(effect.posterPath)
                 val movieText = viewBinder.layoutMovieMain.layoutMovieCard.tvMovieName
@@ -199,8 +126,6 @@ class MainActivity : BaseMVIActivityWithEffect<
     }
 
     private fun loadPoster(posterPath: String) {
-        val circularProgressDrawable = getProgressDrawable() as CircularProgressDrawable
-        circularProgressDrawable.start()
         setPosterVisibility()
         if (posterPath.isNotEmpty()) {
             viewBinder.layoutMovieMain.layoutMovieCard.ivPoster.load(posterPath) {
@@ -212,28 +137,10 @@ class MainActivity : BaseMVIActivityWithEffect<
         }
     }
 
-    private fun getProgressDrawable(): Drawable {
-        val circularProgressDrawable = CircularProgressDrawable(this)
-        circularProgressDrawable.strokeWidth = 5f
-        circularProgressDrawable.centerRadius = 30f
-        circularProgressDrawable.backgroundColor = com.odroid.movieready.R.color.primary_button_color
-        circularProgressDrawable.setColorSchemeColors(com.odroid.movieready.R.color.primary_app_color)
-        return circularProgressDrawable
-    }
-
     private fun animateCardView() {
         val animation: Animation =
             AnimationUtils.loadAnimation(this, com.odroid.movieready.R.anim.zoom_in_anim)
         viewBinder.layoutMovieMain.layoutMovieCard.llCard.startAnimation(animation)
-    }
-
-    private fun showInterstitialAd() {
-        if (interstitialAdCount % 5 == 0) {
-            if (mInterstitialAd != null) {
-                mInterstitialAd?.show(this)
-            } else {
-            }
-        }
     }
 
     private fun trackMovieUpdatedEvent(movieName: String) {
