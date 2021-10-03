@@ -7,5 +7,5 @@
     <string name="error_title">Oops!</string>
     <string name="error_subtitle">Please check your internet connection</string>
     <string name="retry_button_label">Retry</string>
-    <string name="label_poster_switch">Show Movie Poster</string>
+    <string name="label_poster_switch">Movie Poster</string>
 </resources>

@@ -11,12 +11,16 @@ import coil.load
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.odroid.movieready.base.BaseMVIActivityWithEffect
 import com.odroid.movieready.databinding.ActivityMainBinding
+import com.odroid.movieready.util.Constants
+import com.odroid.movieready.util.DateUtil
 import com.odroid.movieready.view_intent.MainActivityViewIntent
 import com.odroid.movieready.view_model.MainActivityViewModel
 import com.skydoves.balloon.BalloonAnimation
 import com.skydoves.balloon.createBalloon
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : BaseMVIActivityWithEffect<
         MainActivityViewModel,
@@ -39,6 +43,7 @@ class MainActivity : BaseMVIActivityWithEffect<
         super.onViewReady()
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
+        setDayAndDate()
         viewModel.processEvent(MainActivityViewIntent.ViewEvent.LoadMovies)
 
         viewBinder.layoutMovieMain.btnGetMovie.setOnClickListener {
@@ -116,6 +121,19 @@ class MainActivity : BaseMVIActivityWithEffect<
             }
             MainActivityViewIntent.ViewEffect.UpdatePosterVisibility -> setPosterVisibility()
         }
+    }
+
+    private fun setDayAndDate() {
+        val c = Calendar.getInstance().time
+        val df = SimpleDateFormat(Constants.NORMAL_DATE_FORMAT, Locale.getDefault())
+        val formattedDate = df.format(c)
+        val day = DateUtil.getFormattedDate(
+            formattedDate,
+            Constants.NORMAL_DATE_FORMAT,
+            Constants.ONLY_DAY_OF_WEEK_FORMAT
+        )
+        viewBinder.layoutMovieMain.tvDateTitle.text = formattedDate
+        viewBinder.layoutMovieMain.tvDayTitle.text = day
     }
 
     private fun setPosterVisibility() {
