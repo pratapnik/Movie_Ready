@@ -6,7 +6,6 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
-import androidx.lifecycle.lifecycleScope
 import coil.load
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.odroid.movieready.base.BaseMVIActivityWithEffect
@@ -15,10 +14,6 @@ import com.odroid.movieready.util.Constants
 import com.odroid.movieready.util.DateUtil
 import com.odroid.movieready.view_intent.MainActivityViewIntent
 import com.odroid.movieready.view_model.MainActivityViewModel
-import com.skydoves.balloon.BalloonAnimation
-import com.skydoves.balloon.createBalloon
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,8 +26,6 @@ class MainActivity : BaseMVIActivityWithEffect<
 
     private val mainActivityViewModel: MainActivityViewModel by viewModels()
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
-
-    private var shouldShowButtonTooltip = true
 
     override fun getMainLayout() = com.odroid.movieready.R.layout.activity_main
 
@@ -76,7 +69,6 @@ class MainActivity : BaseMVIActivityWithEffect<
                 showNoMovieView()
                 hideProgressBar()
                 hideErrorView()
-                showTooltipOnButton()
             }
             MainActivityViewIntent.ViewState.MoviesLoadingFailed -> {
                 showErrorView()
@@ -210,31 +202,6 @@ class MainActivity : BaseMVIActivityWithEffect<
                 mediaPlayer.release()
 
                 mediaPlayer = null
-            }
-        }
-    }
-
-    private fun showTooltipOnButton() {
-        if (shouldShowButtonTooltip) {
-            lifecycleScope.launch {
-                delay(400)
-                val balloon = createBalloon(baseContext) {
-                    setArrowSize(9)
-                    setWidthRatio(0.7f)
-                    setHeight(50)
-                    setArrowPosition(0.5f)
-                    setCornerRadius(8f)
-                    setAlpha(0.9f)
-                    setText(resources.getString(com.odroid.movieready.R.string.tooltip_label))
-                    setTextColorResource(com.odroid.movieready.R.color.main_card_color)
-                    setTextSize(16F)
-                    setBackgroundColorResource(com.odroid.movieready.R.color.tooltip_color)
-                    onBalloonClickListener?.let { setOnBalloonClickListener(it) }
-                    setBalloonAnimation(BalloonAnimation.OVERSHOOT)
-                    setLifecycleOwner(lifecycleOwner)
-                }
-                balloon.showAlignTop(viewBinder.layoutMovieMain.btnGetMovie)
-                shouldShowButtonTooltip = false
             }
         }
     }
