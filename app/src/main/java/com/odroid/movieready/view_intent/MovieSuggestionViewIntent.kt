@@ -1,11 +1,10 @@
 package com.odroid.movieready.view_intent
 
-import android.content.Context
 import com.odroid.movieready.base.BaseMVIEvent
 import com.odroid.movieready.base.BaseMVIViewEffect
 import com.odroid.movieready.base.BaseMVIViewState
 
-class MainActivityViewIntent {
+class MovieSuggestionViewIntent {
     sealed class ViewEvent : BaseMVIEvent {
         object UpdateClicked : ViewEvent()
         object LoadMovies : ViewEvent()

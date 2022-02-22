@@ -5,35 +5,36 @@ import com.odroid.movieready.base.BaseMVIViewModelWithEffect
 import com.odroid.movieready.model.BollywoodMovieService
 import com.odroid.movieready.model.MovieResponse
 import com.odroid.movieready.util.PreferenceUtils
-import com.odroid.movieready.view_intent.MainActivityViewIntent
+import com.odroid.movieready.view_intent.MovieSuggestionViewIntent
 import kotlinx.coroutines.*
 
-class MainActivityViewModel : BaseMVIViewModelWithEffect<
-        MainActivityViewIntent.ViewEvent,
-        MainActivityViewIntent.ViewState,
-        MainActivityViewIntent.ViewEffect>() {
+class MovieSuggestionViewModel : BaseMVIViewModelWithEffect<
+        MovieSuggestionViewIntent.ViewEvent,
+        MovieSuggestionViewIntent.ViewState,
+        MovieSuggestionViewIntent.ViewEffect>() {
 
     private var moviesList: List<MovieResponse>? = null
     var job: Job? = null
 
-    override fun processEvent(event: MainActivityViewIntent.ViewEvent) {
+    override fun processEvent(event: MovieSuggestionViewIntent.ViewEvent) {
         when (event) {
-            is MainActivityViewIntent.ViewEvent.UpdateClicked -> {
+            is MovieSuggestionViewIntent.ViewEvent.UpdateClicked -> {
                 updateRandomMovie()
             }
-            MainActivityViewIntent.ViewEvent.LoadMovies -> {
-                viewState = MainActivityViewIntent.ViewState.MoviesInFlight
+            MovieSuggestionViewIntent.ViewEvent.LoadMovies -> {
+                viewState = MovieSuggestionViewIntent.ViewState.MoviesInFlight
                 viewModelScope.launch {
                     getAllMov()
                 }
             }
-            is MainActivityViewIntent.ViewEvent.PosterSwitchChanged -> {
+            is MovieSuggestionViewIntent.ViewEvent.PosterSwitchChanged -> {
                 PreferenceUtils.setPosterEnabled(event.isChecked)
-                viewEffect = MainActivityViewIntent.ViewEffect.UpdatePosterVisibility
+                viewEffect = MovieSuggestionViewIntent.ViewEffect.UpdatePosterVisibility
             }
-            is MainActivityViewIntent.ViewEvent.CheckPosterSwitch -> {
+            is MovieSuggestionViewIntent.ViewEvent.CheckPosterSwitch -> {
                 val isPosterEnabled = PreferenceUtils.isPosterEnabled()
-                viewEffect = MainActivityViewIntent.ViewEffect.UpdatePosterSwitch(isPosterEnabled)
+                viewEffect =
+                    MovieSuggestionViewIntent.ViewEffect.UpdatePosterSwitch(isPosterEnabled)
             }
         }
     }
@@ -47,14 +48,14 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         moviesList = response.body()
-                        viewState = MainActivityViewIntent.ViewState.MoviesLoaded
+                        viewState = MovieSuggestionViewIntent.ViewState.MoviesLoaded
                     } else {
-                        viewState = MainActivityViewIntent.ViewState.MoviesLoadingFailed
+                        viewState = MovieSuggestionViewIntent.ViewState.MoviesLoadingFailed
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    viewState = MainActivityViewIntent.ViewState.MoviesLoadingFailed
+                    viewState = MovieSuggestionViewIntent.ViewState.MoviesLoadingFailed
                 }
             }
         }
@@ -63,7 +64,7 @@ class MainActivityViewModel : BaseMVIViewModelWithEffect<
     private fun updateRandomMovie() {
         if (!moviesList.isNullOrEmpty()) {
             val movie = getMovie()
-            viewEffect = MainActivityViewIntent.ViewEffect.UpdateText(
+            viewEffect = MovieSuggestionViewIntent.ViewEffect.UpdateText(
                 movie?.title ?: "",
                 movie?.posterUrl ?: ""
             )
