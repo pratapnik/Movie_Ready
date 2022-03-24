@@ -1,4 +1,4 @@
-package com.odroid.movieready.model
+package com.odroid.movieready.entity
 
 import com.google.gson.annotations.SerializedName
 

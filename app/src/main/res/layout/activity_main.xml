@@ -9,14 +9,33 @@
         tools:context=".view.activity.MainActivity">
 
         <FrameLayout
-            android:id="@+id/suggestionHoldingFragment"
+            android:id="@+id/categoriesFragment"
             android:layout_width="@dimen/match_constraint_dimen"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/match_constraint_dimen"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/suggestionHoldingFragment"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.20"
+            />
+
+        <FrameLayout
+            android:id="@+id/suggestionHoldingFragment"
+            android:layout_width="@dimen/match_constraint_dimen"
+            android:layout_height="@dimen/match_constraint_dimen"
+            android:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

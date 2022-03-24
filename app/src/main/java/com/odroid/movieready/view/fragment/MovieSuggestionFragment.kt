@@ -30,6 +30,7 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
 
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
+
     override val viewModel: MovieSuggestionViewModel
         get() = movieSuggestionViewModel
 
@@ -37,13 +38,11 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
 
     override fun initializeViews() {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(requireContext())
-        setDayAndDate()
         viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.LoadMovies)
         binding.layoutMovieMain.btnGetMovie.setOnClickListener {
             viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
         }
         viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.CheckPosterSwitch)
-
         registerSwitchChangeListener()
     }
 
@@ -109,19 +108,6 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
             }
             MovieSuggestionViewIntent.ViewEffect.UpdatePosterVisibility -> setPosterVisibility()
         }
-    }
-
-    private fun setDayAndDate() {
-        val c = Calendar.getInstance().time
-        val df = SimpleDateFormat(Constants.NORMAL_DATE_FORMAT, Locale.getDefault())
-        val formattedDate = df.format(c)
-        val day = DateUtil.getFormattedDate(
-            formattedDate,
-            Constants.NORMAL_DATE_FORMAT,
-            Constants.ONLY_DAY_OF_WEEK_FORMAT
-        )
-        binding.layoutMovieMain.tvDateTitle.text = formattedDate
-        binding.layoutMovieMain.tvDayTitle.text = day
     }
 
     private fun setPosterVisibility() {
@@ -204,6 +190,8 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
             }
         }
     }
+
+
 
     override fun onDestroyView() {
         requireActivity().finish()
