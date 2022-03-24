@@ -6,18 +6,14 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import coil.load
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.odroid.movieready.R
 import com.odroid.movieready.base.BaseMVIFragmentWithEffect
 import com.odroid.movieready.databinding.MovieSuggestionFragmentBinding
-import com.odroid.movieready.util.Constants
-import com.odroid.movieready.util.DateUtil
+import com.odroid.movieready.util.CommonUtils
 import com.odroid.movieready.view_intent.MovieSuggestionViewIntent
 import com.odroid.movieready.view_model.MovieSuggestionViewModel
-import java.text.SimpleDateFormat
-import java.util.*
 
 class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
         MovieSuggestionViewModel,
@@ -95,7 +91,7 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
     override fun renderEffect(effect: MovieSuggestionViewIntent.ViewEffect) {
         when (effect) {
             is MovieSuggestionViewIntent.ViewEffect.UpdateText -> {
-                triggerSound()
+                CommonUtils.triggerSound(requireContext())
                 hideNoMovieView()
                 animateCardView()
                 loadPoster(effect.posterPath)
@@ -161,36 +157,6 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
             )
         )
     }
-
-    private fun triggerSound() {
-        var mediaPlayer: MediaPlayer? = MediaPlayer.create(
-            requireContext(),
-            R.raw.movie_generation_sound
-        )
-        try {
-            if (mediaPlayer == null) {
-                mediaPlayer = MediaPlayer.create(
-                    requireContext(),
-                    R.raw.movie_generation_sound
-                )
-            }
-
-            mediaPlayer?.setOnCompletionListener {
-
-            }
-
-            mediaPlayer?.start()
-
-        } catch (ex: java.lang.Exception) {
-            if (mediaPlayer != null) {
-
-                mediaPlayer.release()
-
-                mediaPlayer = null
-            }
-        }
-    }
-
 
 
     override fun onDestroyView() {
