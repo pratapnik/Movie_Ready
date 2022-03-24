@@ -20,9 +20,9 @@ class CategoriesAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bindView(position: Int) {
-            binding.tvCategoryTitle.text = categoryList[position].category
+            binding.tvCategoryTitle.text = categoryList[position].categoryTitle
             binding.root.setOnClickListener {
-                categoryItemListener.onCategoryClick()
+                categoryItemListener.onCategoryClick(categoryList[position])
             }
         }
     }
@@ -46,7 +46,7 @@ class CategoriesAdapter(
     override fun getItemCount(): Int = categoryList.size
 
     interface CategoryItemListener {
-        fun onCategoryClick()
+        fun onCategoryClick(category: Category)
     }
 
 }

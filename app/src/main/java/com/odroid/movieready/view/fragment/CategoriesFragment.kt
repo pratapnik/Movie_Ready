@@ -1,5 +1,6 @@
 package com.odroid.movieready.view.fragment
 
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -58,6 +59,7 @@ class CategoriesFragment : BaseMVIFragmentWithEffect<
         }
     }
 
-    override fun onCategoryClick() {
+    override fun onCategoryClick(category: Category) {
+        Toast.makeText(requireContext(), "Category ${category.categoryTitle} clicked", Toast.LENGTH_LONG).show()
     }
 }
