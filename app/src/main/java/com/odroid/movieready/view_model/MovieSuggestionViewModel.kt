@@ -1,5 +1,7 @@
 package com.odroid.movieready.view_model
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.odroid.movieready.base.BaseMVIViewModelWithEffect
 import com.odroid.movieready.data.BollywoodMovieService

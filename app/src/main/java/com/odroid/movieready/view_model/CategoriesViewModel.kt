@@ -18,7 +18,8 @@ class CategoriesViewModel : BaseMVIViewModelWithEffect<
         CategoriesViewIntent.ViewState,
         CategoriesViewIntent.ViewEffect>() {
 
-    private val firebaseRealtimeDb = Firebase.database("https://movie-ready-default-rtdb.firebaseio.com/").reference
+    private val firebaseRealtimeDb =
+        Firebase.database("https://movie-ready-default-rtdb.firebaseio.com/").reference
 
     override fun processEvent(event: CategoriesViewIntent.ViewEvent) {
         when (event) {
@@ -28,26 +29,28 @@ class CategoriesViewModel : BaseMVIViewModelWithEffect<
         }
     }
 
-    private fun getCategoryList(){
+    private fun getCategoryList() {
         viewModelScope.launch {
             fetchGameCategories()
         }
     }
 
-    private fun fetchGameCategories(){
+    private fun fetchGameCategories() {
         val tempCatList = arrayListOf<Category>()
         firebaseRealtimeDb.child("categories").get().addOnSuccessListener { dataSnapshot ->
             dataSnapshot.children.forEach {
                 val map = it.value as HashMap<String, Any>
-                val category = Category(map["categoryId"] as Long,
+                val categoryUrl = map["url"] as String
+                val category = Category(
+                    map["categoryId"] as Long,
                     map["categoryTitle"] as String,
                     map["priority"] as Long,
-                    map["url"] as String
+                    categoryUrl
                 )
                 tempCatList.add(category)
             }
             viewEffect = CategoriesViewIntent.ViewEffect.UpdateUiWithCategories(tempCatList)
-        }.addOnFailureListener{
+        }.addOnFailureListener {
             Log.e("firebase", "Error getting data", it)
         }
     }
