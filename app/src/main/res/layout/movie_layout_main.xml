@@ -40,7 +40,7 @@
             android:id="@+id/layoutMovieCard"
             layout="@layout/movie_display_card_layout"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="400dp"
             android:layout_marginLeft="@dimen/margin_36dp"
             android:layout_marginRight="@dimen/margin_36dp"
             app:layout_constraintBottom_toTopOf="@id/btnGetMovie"
