@@ -1,8 +1,8 @@
-package com.odroid.movieready
+package com.odroid.movieready.base
 
 import android.app.Application
 
-class MovieReadyApplication : Application() {
+class IshaaraApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -10,7 +10,7 @@ class MovieReadyApplication : Application() {
     }
 
     companion object {
-        var context: MovieReadyApplication? = null
+        var context: IshaaraApplication? = null
             private set
     }
 }

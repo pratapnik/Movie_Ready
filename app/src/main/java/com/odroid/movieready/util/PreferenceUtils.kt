@@ -2,7 +2,7 @@ package com.odroid.movieready.util
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.odroid.movieready.MovieReadyApplication
+import com.odroid.movieready.base.IshaaraApplication
 
 object PreferenceUtils {
     private val PREF_FILE_NAME = "XmppPref"
@@ -12,7 +12,7 @@ object PreferenceUtils {
     private var prefs: SharedPreferences? = null
 
     init {
-        prefs = MovieReadyApplication.context?.getSharedPreferences(
+        prefs = IshaaraApplication.context?.getSharedPreferences(
             PREF_FILE_NAME,
             Context.MODE_PRIVATE
         )
