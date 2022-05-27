@@ -114,11 +114,11 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
     private fun loadPoster(posterPath: String) {
         if (posterPath.isNotEmpty()) {
             binding.layoutMovieMain.layoutMovieCard.ivPoster.load(posterPath) {
-                error(R.drawable.no_poster_available)
+                error(R.drawable.app_icon_img)
                 crossfade(true)
             }
         } else {
-            binding.layoutMovieMain.layoutMovieCard.ivPoster.load(R.drawable.no_poster_available)
+            binding.layoutMovieMain.layoutMovieCard.ivPoster.load(R.drawable.app_icon_img)
         }
     }
 
@@ -138,21 +138,18 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
     }
 
     private fun showNoMovieView() {
-        binding.layoutMovieMain.layoutMovieCard.llCard.setCardBackgroundColor(
-            resources.getColor(
-                R.color.primary_error_color
-            )
-        )
-        binding.layoutMovieMain.layoutMovieCard.tvMovieName.text =
-            resources.getString(R.string.card_description_label)
+        binding.layoutMovieMain.layoutMovieCard.llCard.visibility = View.GONE
+        binding.layoutMovieMain.tvNoMovieText.visibility = View.VISIBLE
     }
 
     private fun hideNoMovieView() {
+        binding.layoutMovieMain.layoutMovieCard.llCard.visibility = View.VISIBLE
         binding.layoutMovieMain.layoutMovieCard.llCard.setCardBackgroundColor(
             resources.getColor(
                 R.color.main_card_color
             )
         )
+        binding.layoutMovieMain.tvNoMovieText.visibility = View.GONE
     }
 
     private fun triggerSound() {
