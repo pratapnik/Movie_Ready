@@ -36,19 +36,11 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
 
     override fun initializeViews() {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(requireContext())
+
         setDayAndDate()
         viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.LoadMovies)
         binding.layoutMovieMain.btnGetMovie.setOnClickListener {
             viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
-        }
-        viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.CheckPosterSwitch)
-
-        registerSwitchChangeListener()
-    }
-
-    private fun registerSwitchChangeListener() {
-        binding.layoutMovieMain.switchPoster.setOnCheckedChangeListener { buttonView, isChecked ->
-            viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.PosterSwitchChanged(isChecked))
         }
     }
 
@@ -103,10 +95,6 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
                 movieText.text = effect.movieName
                 trackMovieUpdatedEvent(effect.movieName)
             }
-            is MovieSuggestionViewIntent.ViewEffect.UpdatePosterSwitch -> {
-                binding.layoutMovieMain.switchPoster.isChecked = effect.isChecked
-            }
-            MovieSuggestionViewIntent.ViewEffect.UpdatePosterVisibility -> setPosterVisibility()
         }
     }
 
@@ -120,25 +108,17 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
             Constants.ONLY_DAY_OF_WEEK_FORMAT
         )
         binding.layoutMovieMain.tvDateTitle.text = formattedDate
-        binding.layoutMovieMain.tvDayTitle.text = day
-    }
-
-    private fun setPosterVisibility() {
-        if (binding.layoutMovieMain.switchPoster.isChecked)
-            binding.layoutMovieMain.layoutMovieCard.ivPoster.visibility = View.VISIBLE
-        else
-            binding.layoutMovieMain.layoutMovieCard.ivPoster.visibility = View.GONE
+        binding.layoutMovieMain.tvDayTitle.text = DateUtil.getDayTextForHomeScreen(day)
     }
 
     private fun loadPoster(posterPath: String) {
-        setPosterVisibility()
         if (posterPath.isNotEmpty()) {
             binding.layoutMovieMain.layoutMovieCard.ivPoster.load(posterPath) {
-                error(R.drawable.ic_unavailable)
+                error(R.drawable.no_poster_available)
                 crossfade(true)
             }
         } else {
-            binding.layoutMovieMain.layoutMovieCard.ivPoster.load(R.drawable.ic_unavailable)
+            binding.layoutMovieMain.layoutMovieCard.ivPoster.load(R.drawable.no_poster_available)
         }
     }
 

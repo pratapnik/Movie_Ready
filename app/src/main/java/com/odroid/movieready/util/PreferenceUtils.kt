@@ -7,8 +7,6 @@ import com.odroid.movieready.base.IshaaraApplication
 object PreferenceUtils {
     private val PREF_FILE_NAME = "XmppPref"
 
-    private val IS_POSTER_ON = "is_poster_on"
-
     private var prefs: SharedPreferences? = null
 
     init {
@@ -16,14 +14,6 @@ object PreferenceUtils {
             PREF_FILE_NAME,
             Context.MODE_PRIVATE
         )
-    }
-
-    fun setPosterEnabled(isPosterEnabled: Boolean) {
-        setBooleanPreference(IS_POSTER_ON, isPosterEnabled)
-    }
-
-    fun isPosterEnabled(): Boolean {
-        return getBooleanPreference(IS_POSTER_ON, true)
     }
 
     private fun getBooleanPreference(key: String, defValue: Boolean): Boolean {

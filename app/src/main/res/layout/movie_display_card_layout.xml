@@ -22,7 +22,7 @@
                 android:layout_width="@dimen/margin_150dp"
                 android:layout_height="@dimen/poster_height_200dp"
                 android:scaleType="fitXY"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

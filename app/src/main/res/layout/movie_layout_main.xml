@@ -10,31 +10,31 @@
         android:animateLayoutChanges="true">
 
         <TextView
-            android:id="@+id/tv_day_title"
+            android:id="@+id/tv_date_title"
             android:layout_width="@dimen/match_constraint_dimen"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_28dp"
+            android:layout_margin="@dimen/margin_16dp"
             android:layout_marginEnd="@dimen/margin_48dp"
             android:fontFamily="@font/font_regular"
-            tools:text="Sunday"
             android:textColor="@color/primary_text_color"
             android:textSize="@dimen/text_size_20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="28th May 2022" />
 
         <TextView
-            android:id="@+id/tv_date_title"
+            android:id="@+id/tv_day_title"
             android:layout_width="@dimen/match_constraint_dimen"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_4dp"
             android:fontFamily="@font/font_bold"
-            tools:text="4th October 2021"
             android:textColor="@color/primary_text_color"
             android:textSize="@dimen/text_size_28sp"
-            app:layout_constraintEnd_toEndOf="@id/tv_day_title"
-            app:layout_constraintStart_toStartOf="@id/tv_day_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_day_title" />
+            app:layout_constraintEnd_toEndOf="@id/tv_date_title"
+            app:layout_constraintStart_toStartOf="@id/tv_date_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_date_title"
+            tools:text="Yayy! it's Saturday" />
 
         <include
             android:id="@+id/layoutMovieCard"
@@ -67,21 +67,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/switch_poster"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_16dp"
-            android:checked="false"
-            android:fontFamily="@font/font_regular"
-            android:text="@string/label_poster_switch"
-            android:textColor="@color/primary_text_color"
-            android:textSize="@dimen/text_size_14sp"
-            app:layout_constraintEnd_toEndOf="@id/layoutMovieCard"
-            app:layout_constraintStart_toStartOf="@id/layoutMovieCard"
-            app:layout_constraintTop_toBottomOf="@id/layoutMovieCard" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
