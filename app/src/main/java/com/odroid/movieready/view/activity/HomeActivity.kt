@@ -11,7 +11,7 @@ import com.odroid.movieready.databinding.ActivityMainBinding
 import com.odroid.movieready.notification.NotificationPublisher
 import com.odroid.movieready.view.fragment.MovieSuggestionFragment
 
-class MainActivity : BaseActivity<ActivityMainBinding>() {
+class HomeActivity : BaseActivity<ActivityMainBinding>() {
 
     lateinit var suggestionFragment: MovieSuggestionFragment
 
@@ -46,7 +46,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
             SystemClock.elapsedRealtime() + 60 * 1000,
-            1000 * 60,
+            1000 * 60 * 60 * 12,
             pendingIntent
         )
     }

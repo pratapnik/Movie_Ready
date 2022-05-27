@@ -3,7 +3,7 @@ package com.odroid.movieready.view_model
 import androidx.lifecycle.viewModelScope
 import com.odroid.movieready.base.BaseMVIViewModelWithEffect
 import com.odroid.movieready.model.BollywoodMovieService
-import com.odroid.movieready.model.MovieResponse
+import com.odroid.movieready.entity.MovieResponse
 import com.odroid.movieready.util.PreferenceUtils
 import com.odroid.movieready.view_intent.MovieSuggestionViewIntent
 import kotlinx.coroutines.*

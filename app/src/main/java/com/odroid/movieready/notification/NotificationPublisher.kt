@@ -10,10 +10,13 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.odroid.movieready.R
-import com.odroid.movieready.view.activity.MainActivity
+import com.odroid.movieready.entity.Notification
+import com.odroid.movieready.view.activity.HomeActivity
 
+class NotificationPublisher : BroadcastReceiver() {
 
-class NotificationPublisher: BroadcastReceiver() {
+    private val channelId = "110041"
+    private val channelName = "play"
 
     override fun onReceive(context: Context?, p1: Intent?) {
         p1?.let {
@@ -22,65 +25,68 @@ class NotificationPublisher: BroadcastReceiver() {
     }
 
     private fun handleAlarmData(context: Context?, intent: Intent) {
-
         context?.let {
             createNotificationChannel(context = it)
-
             createNotification(
-                context = it,
-                title = "Let's chill",
-                description = "take a break and play some dumb charades"
+                context = it
             )
-
         }
-
     }
 
     private fun createNotification(
         context: Context,
-        title : String,
-        description : String
     ) {
-        // Create an explicit intent for an Activity in your app
-        val intent = Intent(context, MainActivity::class.java).apply {
+        val intent = Intent(context, HomeActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(
+            context, 0, intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
         val importance = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            NotificationManager.IMPORTANCE_MAX
+            NotificationManager.IMPORTANCE_HIGH
         } else {
             NotificationCompat.PRIORITY_MAX
         }
-        val builder = NotificationCompat.Builder(context, "CHANNEL_ID")
-            .setSmallIcon(R.mipmap.ic_launcher_foreground)
-            .setContentTitle(title)
-            .setContentText(description)
+        val notificationContent = getRandomNotificationContent()
+        val builder = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.drawable.app_icon_img)
+            .setContentTitle(notificationContent.title)
+            .setContentText(notificationContent.description)
             .setPriority(importance)
-            // Set the intent that will fire when the user taps the notification
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
 
         with(NotificationManagerCompat.from(context)) {
-            // notificationId is a unique int for each notification that you must define
             notify(System.currentTimeMillis().toInt(), builder.build())
         }
     }
 
     private fun createNotificationChannel(context: Context) {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("CHANNEL_ID", "CHANNEL_NAME", importance).apply {
-                description = "CHANNEL_DESP"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(channelId, channelName, importance).apply {
+                description = "Remind to play Dumb Charades"
             }
-            // Register the channel with the system
             val notificationManager: NotificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
-
         }
+    }
+
+    private fun getRandomNotificationContent(): Notification {
+        val firstNotification =
+            Notification("Take a chill pill", "Why not take some time out and play dumb charades?")
+        val secondNotification =
+            Notification("Did you forget to take a break?", "Come on! Let's play!")
+        val thirdNotification =
+            Notification("Lighten up your mood", "Let's guess some movies")
+        val notifications = arrayListOf<Notification>()
+        notifications.apply {
+            add(firstNotification)
+            add(secondNotification)
+            add(thirdNotification)
+        }
+        return notifications.random()
     }
 }
