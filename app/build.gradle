@@ -29,7 +29,12 @@ android {
     buildTypes {
         release {
             minifyEnabled true
+            manifestPlaceholders = [crashlyticsCollectionEnabled: "true"]
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            manifestPlaceholders = [crashlyticsCollectionEnabled: "false"]
+            ext.enableCrashlytics = false
         }
     }
     buildFeatures {
