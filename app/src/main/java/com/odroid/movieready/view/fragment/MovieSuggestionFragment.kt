@@ -89,7 +89,7 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
             is MovieSuggestionViewIntent.ViewEffect.UpdateText -> {
                 triggerSound()
                 hideNoMovieView()
-                animateCardView()
+                animateCardEntry()
                 loadPoster(effect.posterPath)
                 val movieText = binding.layoutMovieMain.layoutMovieCard.tvMovieName
                 movieText.text = effect.movieName
@@ -122,11 +122,11 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
         }
     }
 
-    private fun animateCardView() {
+    private fun animateCardEntry() {
         val animation: Animation =
             AnimationUtils.loadAnimation(
                 requireContext(),
-                R.anim.zoom_in_anim
+                R.anim.card_entry_anim
             )
         binding.layoutMovieMain.layoutMovieCard.llCard.startAnimation(animation)
     }
