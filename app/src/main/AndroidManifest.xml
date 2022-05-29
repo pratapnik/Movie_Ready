@@ -17,19 +17,19 @@
         android:theme="@style/Theme.MovieReady">
         <meta-data
             android:name="firebase_crashlytics_collection_enabled"
-            android:value="${crashlyticsCollectionEnabled}"/>
-        <activity android:name=".view.activity.HomeActivity"
+            android:value="${crashlyticsCollectionEnabled}" />
+        <activity
+            android:name=".view.activity.HomeActivity"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-1519112618002676~3277114779"/>
-        <receiver android:name= ".notification.NotificationPublisher" />
+            android:value="ca-app-pub-1519112618002676~3277114779" />
+        <receiver android:name=".notification.NotificationPublisher" />
     </application>
 </manifest>

@@ -8,8 +8,6 @@ class MovieSuggestionViewIntent {
     sealed class ViewEvent : BaseMVIEvent {
         object UpdateClicked : ViewEvent()
         object LoadMovies : ViewEvent()
-        object CheckPosterSwitch : ViewEvent()
-        class PosterSwitchChanged(val isChecked: Boolean) : ViewEvent()
     }
 
     sealed class ViewState : BaseMVIViewState {
@@ -20,7 +18,5 @@ class MovieSuggestionViewIntent {
 
     sealed class ViewEffect : BaseMVIViewEffect {
         class UpdateText(val movieName: String, val posterPath: String) : ViewEffect()
-        class UpdatePosterSwitch(val isChecked: Boolean) : ViewEffect()
-        object UpdatePosterVisibility : ViewEffect()
     }
 }

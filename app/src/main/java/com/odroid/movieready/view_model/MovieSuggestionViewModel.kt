@@ -27,15 +27,6 @@ class MovieSuggestionViewModel : BaseMVIViewModelWithEffect<
                     getAllMov()
                 }
             }
-            is MovieSuggestionViewIntent.ViewEvent.PosterSwitchChanged -> {
-                PreferenceUtils.setPosterEnabled(event.isChecked)
-                viewEffect = MovieSuggestionViewIntent.ViewEffect.UpdatePosterVisibility
-            }
-            is MovieSuggestionViewIntent.ViewEvent.CheckPosterSwitch -> {
-                val isPosterEnabled = PreferenceUtils.isPosterEnabled()
-                viewEffect =
-                    MovieSuggestionViewIntent.ViewEffect.UpdatePosterSwitch(isPosterEnabled)
-            }
         }
     }
 
@@ -73,24 +64,19 @@ class MovieSuggestionViewModel : BaseMVIViewModelWithEffect<
 
     private fun getMovie(): MovieResponse? {
         val randomNumber = getRandomNumber()
-        val isPosterEnabled = PreferenceUtils.isPosterEnabled()
-        if (isPosterEnabled) {
-            var movieNumber = randomNumber
-            var posterUrl = moviesList?.get(movieNumber)?.posterUrl
-            var movieEntity: MovieResponse? = moviesList?.get(movieNumber)
-            while (posterUrl.isNullOrEmpty()) {
-                if (movieNumber >= moviesList?.size!! - 1) {
-                    movieNumber = getRandomNumber()
-                } else {
-                    movieNumber++
-                }
-                movieEntity = moviesList?.get(movieNumber)
-                posterUrl = movieEntity?.posterUrl ?: ""
+        var movieNumber = randomNumber
+        var posterUrl = moviesList?.get(movieNumber)?.posterUrl
+        var movieEntity: MovieResponse? = moviesList?.get(movieNumber)
+        while (posterUrl.isNullOrEmpty()) {
+            if (movieNumber >= moviesList?.size!! - 1) {
+                movieNumber = getRandomNumber()
+            } else {
+                movieNumber++
             }
-            return movieEntity
-        } else {
-            return moviesList?.get(randomNumber)
+            movieEntity = moviesList?.get(movieNumber)
+            posterUrl = movieEntity?.posterUrl ?: ""
         }
+        return movieEntity
     }
 
     private fun getRandomNumber(): Int {

@@ -36,19 +36,14 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
 
     override fun initializeViews() {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(requireContext())
+
         setDayAndDate()
         viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.LoadMovies)
         binding.layoutMovieMain.btnGetMovie.setOnClickListener {
             viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
         }
-        viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.CheckPosterSwitch)
-
-        registerSwitchChangeListener()
-    }
-
-    private fun registerSwitchChangeListener() {
-        binding.layoutMovieMain.switchPoster.setOnCheckedChangeListener { buttonView, isChecked ->
-            viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.PosterSwitchChanged(isChecked))
+        binding.layoutMovieMain.btnStartGame.setOnClickListener {
+            viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
         }
     }
 
@@ -97,16 +92,12 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
             is MovieSuggestionViewIntent.ViewEffect.UpdateText -> {
                 triggerSound()
                 hideNoMovieView()
-                animateCardView()
+                animateCardEntry()
                 loadPoster(effect.posterPath)
                 val movieText = binding.layoutMovieMain.layoutMovieCard.tvMovieName
                 movieText.text = effect.movieName
                 trackMovieUpdatedEvent(effect.movieName)
             }
-            is MovieSuggestionViewIntent.ViewEffect.UpdatePosterSwitch -> {
-                binding.layoutMovieMain.switchPoster.isChecked = effect.isChecked
-            }
-            MovieSuggestionViewIntent.ViewEffect.UpdatePosterVisibility -> setPosterVisibility()
         }
     }
 
@@ -120,33 +111,25 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
             Constants.ONLY_DAY_OF_WEEK_FORMAT
         )
         binding.layoutMovieMain.tvDateTitle.text = formattedDate
-        binding.layoutMovieMain.tvDayTitle.text = day
-    }
-
-    private fun setPosterVisibility() {
-        if (binding.layoutMovieMain.switchPoster.isChecked)
-            binding.layoutMovieMain.layoutMovieCard.ivPoster.visibility = View.VISIBLE
-        else
-            binding.layoutMovieMain.layoutMovieCard.ivPoster.visibility = View.GONE
+        binding.layoutMovieMain.tvDayTitle.text = DateUtil.getDayTextForHomeScreen(day)
     }
 
     private fun loadPoster(posterPath: String) {
-        setPosterVisibility()
         if (posterPath.isNotEmpty()) {
             binding.layoutMovieMain.layoutMovieCard.ivPoster.load(posterPath) {
-                error(R.drawable.ic_unavailable)
+                error(R.drawable.app_icon_img)
                 crossfade(true)
             }
         } else {
-            binding.layoutMovieMain.layoutMovieCard.ivPoster.load(R.drawable.ic_unavailable)
+            binding.layoutMovieMain.layoutMovieCard.ivPoster.load(R.drawable.app_icon_img)
         }
     }
 
-    private fun animateCardView() {
+    private fun animateCardEntry() {
         val animation: Animation =
             AnimationUtils.loadAnimation(
                 requireContext(),
-                R.anim.zoom_in_anim
+                R.anim.card_entry_anim
             )
         binding.layoutMovieMain.layoutMovieCard.llCard.startAnimation(animation)
     }
@@ -158,13 +141,9 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
     }
 
     private fun showNoMovieView() {
-        binding.layoutMovieMain.layoutMovieCard.llCard.setCardBackgroundColor(
-            resources.getColor(
-                R.color.primary_error_color
-            )
-        )
-        binding.layoutMovieMain.layoutMovieCard.tvMovieName.text =
-            resources.getString(R.string.card_description_label)
+        binding.layoutMovieMain.btnStartGame.visibility = View.VISIBLE
+        binding.layoutMovieMain.ivNoMovieIcon.visibility = View.VISIBLE
+        binding.layoutMovieMain.movieSuggestionGroupView.visibility = View.GONE
     }
 
     private fun hideNoMovieView() {
@@ -173,6 +152,9 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
                 R.color.main_card_color
             )
         )
+        binding.layoutMovieMain.movieSuggestionGroupView.visibility = View.VISIBLE
+        binding.layoutMovieMain.btnStartGame.visibility = View.GONE
+        binding.layoutMovieMain.ivNoMovieIcon.visibility = View.GONE
     }
 
     private fun triggerSound() {

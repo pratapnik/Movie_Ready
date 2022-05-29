@@ -13,4 +13,11 @@ object DateUtil {
         val formatter = SimpleDateFormat(toPattern, Locale.ENGLISH)
         return formatter.format(parser.parse(fromDate))
     }
+
+    fun getDayTextForHomeScreen(day: String): String {
+        return when(day) {
+            "Sunday", "Friday", "Saturday" -> "Yayy! it's $day"
+            else -> day
+        }
+    }
 }
