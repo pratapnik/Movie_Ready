@@ -13,13 +13,13 @@
             android:id="@+id/tv_date_title"
             android:layout_width="@dimen/match_constraint_dimen"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_20dp"
             android:layout_marginStart="@dimen/margin_28dp"
+            android:layout_marginTop="@dimen/margin_20dp"
             android:layout_marginEnd="@dimen/margin_28dp"
             android:fontFamily="@font/font_regular"
-            android:textColor="@color/primary_text_color"
-            android:textSize="@dimen/text_size_20sp"
             android:letterSpacing="0.03"
+            android:textColor="@color/primary_text_color"
+            android:textSize="@dimen/text_size_14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -29,15 +29,39 @@
             android:id="@+id/tv_day_title"
             android:layout_width="@dimen/match_constraint_dimen"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_8dp"
             android:fontFamily="@font/font_bold"
+            android:letterSpacing="0.03"
             android:textColor="@color/primary_text_color"
             android:textSize="@dimen/text_size_28sp"
-            android:letterSpacing="0.03"
             app:layout_constraintEnd_toEndOf="@id/tv_date_title"
             app:layout_constraintStart_toStartOf="@id/tv_date_title"
             app:layout_constraintTop_toBottomOf="@id/tv_date_title"
             tools:text="Yayy! it's Saturday" />
+
+        <ImageView
+            android:id="@+id/iv_no_movie_icon"
+            android:layout_width="@dimen/match_constraint_dimen"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_80dp"
+            android:src="@drawable/ic_movie_placeholder"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_day_title"
+            app:layout_constraintVertical_bias="0.136" />
+
+        <ImageButton
+            android:id="@+id/btn_start_game"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_16dp"
+            android:src="@drawable/ic_play_button"
+            android:scaleType="fitCenter"
+            app:layout_constraintTop_toBottomOf="@id/iv_no_movie_icon"
+            app:layout_constraintStart_toStartOf="@id/iv_no_movie_icon"
+            app:layout_constraintEnd_toEndOf="@id/iv_no_movie_icon"
+            />
 
         <include
             android:id="@+id/layoutMovieCard"
@@ -45,52 +69,38 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/match_constraint_dimen"
             android:layout_marginLeft="@dimen/margin_28dp"
+            android:layout_marginTop="@dimen/margin_40dp"
             android:layout_marginRight="@dimen/margin_28dp"
-            android:layout_marginTop="@dimen/margin_44dp"
-            android:layout_marginBottom="@dimen/margin_44dp"
-            tools:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@id/btnGetMovie"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_day_title"
-            app:layout_constraintVertical_bias="0.464" />
-
-        <TextView
-            android:id="@+id/tv_no_movie_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/card_description_label"
-            android:textAlignment="center"
-            android:lineSpacingExtra="@dimen/margin_10dp"
-            android:letterSpacing="0.03"
-            android:layout_margin="@dimen/margin_36dp"
-            android:textSize="@dimen/text_size_20sp"
-            android:fontFamily="@font/font_bold"
-            android:textColor="@color/main_card_color"
             app:layout_constraintBottom_toTopOf="@id/btnGetMovie"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_day_title"
-            />
+            app:layout_constraintVertical_bias="0.464"
+            tools:visibility="visible" />
 
-        <com.google.android.material.button.MaterialButton
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/btnGetMovie"
             style="@style/PrimaryButton"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_28dp"
-            android:layout_marginRight="@dimen/margin_28dp"
-            android:layout_marginBottom="@dimen/padding_8dp"
-            android:letterSpacing="0.1"
-            android:minHeight="@dimen/margin_60dp"
-            android:padding="@dimen/margin_10dp"
             android:text="@string/get_movie_button_label"
-            android:textAllCaps="false"
-            android:textSize="@dimen/text_size_20sp"
-            app:cornerRadius="@dimen/margin_16dp"
+            android:padding="@dimen/padding_8dp"
+            android:textSize="@dimen/text_size_24sp"
+            app:icon="@drawable/ic_next"
+            app:iconTint="@color/main_card_color"
+            android:layout_marginTop="@dimen/margin_40dp"
+            android:layout_marginBottom="@dimen/margin_40dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layoutMovieCard"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/movie_suggestion_group_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:constraint_referenced_ids="btnGetMovie, layoutMovieCard"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -50,7 +50,7 @@ class NotificationPublisher : BroadcastReceiver() {
         }
         val notificationContent = getRandomNotificationContent()
         val builder = NotificationCompat.Builder(context, channelId)
-            .setSmallIcon(R.drawable.app_icon_img)
+            .setSmallIcon(R.drawable.ic_next)
             .setContentTitle(notificationContent.title)
             .setContentText(notificationContent.description)
             .setPriority(importance)

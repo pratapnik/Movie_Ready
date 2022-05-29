@@ -42,6 +42,9 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
         binding.layoutMovieMain.btnGetMovie.setOnClickListener {
             viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
         }
+        binding.layoutMovieMain.btnStartGame.setOnClickListener {
+            viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
+        }
     }
 
     override fun renderState(state: MovieSuggestionViewIntent.ViewState) {
@@ -138,18 +141,20 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
     }
 
     private fun showNoMovieView() {
-        binding.layoutMovieMain.layoutMovieCard.llCard.visibility = View.GONE
-        binding.layoutMovieMain.tvNoMovieText.visibility = View.VISIBLE
+        binding.layoutMovieMain.btnStartGame.visibility = View.VISIBLE
+        binding.layoutMovieMain.ivNoMovieIcon.visibility = View.VISIBLE
+        binding.layoutMovieMain.movieSuggestionGroupView.visibility = View.GONE
     }
 
     private fun hideNoMovieView() {
-        binding.layoutMovieMain.layoutMovieCard.llCard.visibility = View.VISIBLE
         binding.layoutMovieMain.layoutMovieCard.llCard.setCardBackgroundColor(
             resources.getColor(
                 R.color.main_card_color
             )
         )
-        binding.layoutMovieMain.tvNoMovieText.visibility = View.GONE
+        binding.layoutMovieMain.movieSuggestionGroupView.visibility = View.VISIBLE
+        binding.layoutMovieMain.btnStartGame.visibility = View.GONE
+        binding.layoutMovieMain.ivNoMovieIcon.visibility = View.GONE
     }
 
     private fun triggerSound() {
