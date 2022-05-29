@@ -6,31 +6,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".view.MainActivity">
+        tools:context=".view.activity.HomeActivity">
 
-        <include
-            android:id="@+id/errorView"
-            layout="@layout/error_view"
-            android:layout_width="match_parent"
+        <FrameLayout
+            android:id="@+id/suggestionHoldingFragment"
+            android:layout_width="@dimen/match_constraint_dimen"
             android:layout_height="match_parent"
-            tools:visibility="gone" />
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:indicatorColor="@color/primary_app_color"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <include
-            android:id="@+id/layout_movie_main"
-            layout="@layout/movie_layout_main"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/match_constraint_dimen"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,8 @@ abstract class BaseMVIFragment<
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.states().observe(viewLifecycleOwner::getLifecycle, ::renderState)
+        initializeViews()
     }
 
+    protected abstract fun initializeViews()
 }
