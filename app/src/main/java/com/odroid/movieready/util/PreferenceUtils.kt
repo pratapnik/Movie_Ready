@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.odroid.movieready.base.IshaaraApplication
 
 object PreferenceUtils {
+
     private val PREF_FILE_NAME = "XmppPref"
 
     private var prefs: SharedPreferences? = null
