@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import androidx.fragment.app.viewModels
 import coil.load
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -44,6 +47,9 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
         }
         binding.layoutMovieMain.btnStartGame.setOnClickListener {
             viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
+        }
+        binding.layoutMovieMain.topComposeView.setContent {
+            TopGreeting(data = "d", day = "f")
         }
     }
 
@@ -110,8 +116,16 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
             Constants.NORMAL_DATE_FORMAT,
             Constants.ONLY_DAY_OF_WEEK_FORMAT
         )
-        binding.layoutMovieMain.tvDateTitle.text = formattedDate
-        binding.layoutMovieMain.tvDayTitle.text = DateUtil.getDayTextForHomeScreen(day)
+//        binding.layoutMovieMain.tvDateTitle.text = formattedDate
+//        binding.layoutMovieMain.tvDayTitle.text = DateUtil.getDayTextForHomeScreen(day)
+    }
+
+    @Composable
+    private fun TopGreeting(data: String, day: String) {
+        Column {
+            Text(text = "17/09/1997")
+            Text(text = "Wednesday")
+        }
     }
 
     private fun loadPoster(posterPath: String) {
