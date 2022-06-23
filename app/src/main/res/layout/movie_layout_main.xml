@@ -9,42 +9,13 @@
         android:layout_height="match_parent"
         android:animateLayoutChanges="true">
 
-<!--        <TextView-->
-<!--            android:id="@+id/tv_date_title"-->
-<!--            android:layout_width="@dimen/match_constraint_dimen"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginStart="@dimen/margin_28dp"-->
-<!--            android:layout_marginTop="@dimen/margin_20dp"-->
-<!--            android:layout_marginEnd="@dimen/margin_28dp"-->
-<!--            android:fontFamily="@font/font_regular"-->
-<!--            android:letterSpacing="0.03"-->
-<!--            android:textColor="@color/primary_text_color"-->
-<!--            android:textSize="@dimen/text_size_14sp"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            tools:text="28th May 2022" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/tv_day_title"-->
-<!--            android:layout_width="@dimen/match_constraint_dimen"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:fontFamily="@font/font_bold"-->
-<!--            android:letterSpacing="0.03"-->
-<!--            android:textColor="@color/primary_text_color"-->
-<!--            android:textSize="@dimen/text_size_28sp"-->
-<!--            app:layout_constraintEnd_toEndOf="@id/tv_date_title"-->
-<!--            app:layout_constraintStart_toStartOf="@id/tv_date_title"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/tv_date_title"-->
-<!--            tools:text="Yayy! it's Saturday" />-->
-
         <androidx.compose.ui.platform.ComposeView
             android:id="@+id/topComposeView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/iv_no_movie_icon"
@@ -64,25 +35,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_16dp"
-            android:src="@drawable/ic_play_button"
             android:scaleType="fitCenter"
-            app:layout_constraintTop_toBottomOf="@id/iv_no_movie_icon"
-            app:layout_constraintStart_toStartOf="@id/iv_no_movie_icon"
+            android:src="@drawable/ic_play_button"
             app:layout_constraintEnd_toEndOf="@id/iv_no_movie_icon"
-            />
+            app:layout_constraintStart_toStartOf="@id/iv_no_movie_icon"
+            app:layout_constraintTop_toBottomOf="@id/iv_no_movie_icon" />
 
-        <include
-            android:id="@+id/layoutMovieCard"
-            layout="@layout/movie_display_card_layout"
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/movieCardComposeView"
             android:layout_width="0dp"
             android:layout_height="@dimen/match_constraint_dimen"
-            android:layout_marginLeft="@dimen/margin_28dp"
-            android:layout_marginTop="@dimen/margin_40dp"
-            android:layout_marginRight="@dimen/margin_28dp"
+            android:padding="@dimen/margin_48dp"
+            app:layout_constraintBottom_toTopOf="@id/btnGetMovie"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/topComposeView"
-            app:layout_constraintBottom_toTopOf="@id/btnGetMovie"
             app:layout_constraintVertical_bias="0.464"
             tools:visibility="visible" />
 
@@ -91,24 +58,24 @@
             style="@style/PrimaryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/get_movie_button_label"
+            android:layout_marginTop="@dimen/margin_40dp"
+            android:layout_marginBottom="@dimen/margin_40dp"
             android:padding="@dimen/padding_8dp"
+            android:text="@string/get_movie_button_label"
             android:textSize="@dimen/text_size_24sp"
             app:icon="@drawable/ic_next"
             app:iconTint="@color/main_card_color"
-            android:layout_marginTop="@dimen/margin_40dp"
-            android:layout_marginBottom="@dimen/margin_40dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layoutMovieCard"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/movieCardComposeView" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/movie_suggestion_group_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="btnGetMovie, layoutMovieCard"
-            tools:visibility="gone" />
+            app:constraint_referenced_ids="btnGetMovie, movieCardComposeView"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

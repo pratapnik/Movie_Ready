@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.odroid.movieready.base.BaseMVIViewModelWithEffect
 import com.odroid.movieready.model.BollywoodMovieService
 import com.odroid.movieready.entity.MovieResponse
+import com.odroid.movieready.util.Analytics
 import com.odroid.movieready.util.PreferenceUtils
 import com.odroid.movieready.view_intent.MovieSuggestionViewIntent
 import kotlinx.coroutines.*
@@ -55,9 +56,10 @@ class MovieSuggestionViewModel : BaseMVIViewModelWithEffect<
     private fun updateRandomMovie() {
         if (!moviesList.isNullOrEmpty()) {
             val movie = getMovie()
+            val movieTitle = movie?.title ?: ""
+            Analytics.trackMovieUpdatedEvent(movieTitle)
             viewEffect = MovieSuggestionViewIntent.ViewEffect.UpdateText(
-                movie?.title ?: "",
-                movie?.posterUrl ?: ""
+                movieTitle, movie?.posterUrl ?: ""
             )
         }
     }

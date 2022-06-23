@@ -1,21 +1,17 @@
 package com.odroid.movieready.view.fragment
 
 import android.media.MediaPlayer
-import android.os.Bundle
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.fragment.app.viewModels
-import coil.load
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.android.material.composethemeadapter.MdcTheme
 import com.odroid.movieready.R
 import com.odroid.movieready.base.BaseMVIFragmentWithEffect
 import com.odroid.movieready.databinding.MovieSuggestionFragmentBinding
 import com.odroid.movieready.util.Constants
 import com.odroid.movieready.util.DateUtil
+import com.odroid.movieready.view.layout.MovieSuggestionCard
+import com.odroid.movieready.view.layout.TopGreeting
 import com.odroid.movieready.view_intent.MovieSuggestionViewIntent
 import com.odroid.movieready.view_model.MovieSuggestionViewModel
 import java.text.SimpleDateFormat
@@ -30,7 +26,10 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
 
     private val movieSuggestionViewModel: MovieSuggestionViewModel by viewModels()
 
-    private var mFirebaseAnalytics: FirebaseAnalytics? = null
+    private var mutableDate = mutableStateOf("")
+    private var mutableDay = mutableStateOf("")
+    private var mutableMovieName = mutableStateOf("")
+    private var posterUrl = mutableStateOf("")
 
     override val viewModel: MovieSuggestionViewModel
         get() = movieSuggestionViewModel
@@ -38,8 +37,6 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
     override fun getLayout(): Int = R.layout.movie_suggestion_fragment
 
     override fun initializeViews() {
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(requireContext())
-
         setDayAndDate()
         viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.LoadMovies)
         binding.layoutMovieMain.btnGetMovie.setOnClickListener {
@@ -49,7 +46,18 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
             viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
         }
         binding.layoutMovieMain.topComposeView.setContent {
-            TopGreeting(data = "d", day = "f")
+            MdcTheme {
+                TopGreeting(mutableDate.value, mutableDay.value)
+            }
+        }
+        binding.layoutMovieMain.movieCardComposeView.setContent {
+            MdcTheme {
+                MovieSuggestionCard(
+                    contentDescription = "Movie Suggestion",
+                    title = mutableMovieName.value,
+                    posterPath = posterUrl.value
+                )
+            }
         }
     }
 
@@ -98,11 +106,8 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
             is MovieSuggestionViewIntent.ViewEffect.UpdateText -> {
                 triggerSound()
                 hideNoMovieView()
-                animateCardEntry()
-                loadPoster(effect.posterPath)
-                val movieText = binding.layoutMovieMain.layoutMovieCard.tvMovieName
-                movieText.text = effect.movieName
-                trackMovieUpdatedEvent(effect.movieName)
+                posterUrl.value = effect.posterPath
+                mutableMovieName.value = effect.movieName
             }
         }
     }
@@ -116,42 +121,8 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
             Constants.NORMAL_DATE_FORMAT,
             Constants.ONLY_DAY_OF_WEEK_FORMAT
         )
-//        binding.layoutMovieMain.tvDateTitle.text = formattedDate
-//        binding.layoutMovieMain.tvDayTitle.text = DateUtil.getDayTextForHomeScreen(day)
-    }
-
-    @Composable
-    private fun TopGreeting(data: String, day: String) {
-        Column {
-            Text(text = "17/09/1997")
-            Text(text = "Wednesday")
-        }
-    }
-
-    private fun loadPoster(posterPath: String) {
-        if (posterPath.isNotEmpty()) {
-            binding.layoutMovieMain.layoutMovieCard.ivPoster.load(posterPath) {
-                error(R.drawable.app_icon_img)
-                crossfade(true)
-            }
-        } else {
-            binding.layoutMovieMain.layoutMovieCard.ivPoster.load(R.drawable.app_icon_img)
-        }
-    }
-
-    private fun animateCardEntry() {
-        val animation: Animation =
-            AnimationUtils.loadAnimation(
-                requireContext(),
-                R.anim.card_entry_anim
-            )
-        binding.layoutMovieMain.layoutMovieCard.llCard.startAnimation(animation)
-    }
-
-    private fun trackMovieUpdatedEvent(movieName: String) {
-        val bundle = Bundle()
-        bundle.putString("movie_name", movieName)
-        mFirebaseAnalytics?.logEvent("displayed_movie_name", bundle)
+        mutableDate.value = formattedDate
+        mutableDay.value = DateUtil.getDayTextForHomeScreen(day)
     }
 
     private fun showNoMovieView() {
@@ -161,11 +132,6 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
     }
 
     private fun hideNoMovieView() {
-        binding.layoutMovieMain.layoutMovieCard.llCard.setCardBackgroundColor(
-            resources.getColor(
-                R.color.main_card_color
-            )
-        )
         binding.layoutMovieMain.movieSuggestionGroupView.visibility = View.VISIBLE
         binding.layoutMovieMain.btnStartGame.visibility = View.GONE
         binding.layoutMovieMain.ivNoMovieIcon.visibility = View.GONE
