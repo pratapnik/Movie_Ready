@@ -130,11 +130,11 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
     private fun showNoMovieView() {
         binding.layoutMovieMain.btnStartGame.visibility = View.VISIBLE
         binding.layoutMovieMain.ivNoMovieIcon.visibility = View.VISIBLE
-        binding.layoutMovieMain.movieSuggestionGroupView.visibility = View.GONE
+        binding.layoutMovieMain.movieCardComposeView.visibility = View.GONE
     }
 
     private fun hideNoMovieView() {
-        binding.layoutMovieMain.movieSuggestionGroupView.visibility = View.VISIBLE
+        binding.layoutMovieMain.movieCardComposeView.visibility = View.VISIBLE
         binding.layoutMovieMain.btnStartGame.visibility = View.GONE
         binding.layoutMovieMain.ivNoMovieIcon.visibility = View.GONE
     }
