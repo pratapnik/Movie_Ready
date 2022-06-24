@@ -1,6 +1,5 @@
 package com.odroid.movieready.view.fragment
 
-import android.media.MediaPlayer
 import android.view.View
 import androidx.compose.runtime.mutableStateOf
 import androidx.fragment.app.viewModels
@@ -10,6 +9,7 @@ import com.odroid.movieready.base.BaseMVIFragmentWithEffect
 import com.odroid.movieready.databinding.MovieSuggestionFragmentBinding
 import com.odroid.movieready.util.Constants
 import com.odroid.movieready.util.DateUtil
+import com.odroid.movieready.util.ViewUtil
 import com.odroid.movieready.view.layout.MovieSuggestionCard
 import com.odroid.movieready.view.layout.TopGreeting
 import com.odroid.movieready.view_intent.MovieSuggestionViewIntent
@@ -39,9 +39,6 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
     override fun initializeViews() {
         setDayAndDate()
         viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.LoadMovies)
-        binding.layoutMovieMain.btnGetMovie.setOnClickListener {
-            viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
-        }
         binding.layoutMovieMain.btnStartGame.setOnClickListener {
             viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
         }
@@ -55,7 +52,8 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
                 MovieSuggestionCard(
                     contentDescription = "Movie Suggestion",
                     title = mutableMovieName.value,
-                    posterPath = posterUrl.value
+                    posterPath = posterUrl.value,
+                    onNewMovieButtonClick = this::getNewMovieButtonClicked
                 )
             }
         }
@@ -82,6 +80,10 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
         }
     }
 
+    private fun getNewMovieButtonClicked() {
+        viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
+    }
+
     private fun showErrorView() {
         binding.errorView.btnRetry.setOnClickListener {
             viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.LoadMovies)
@@ -104,7 +106,7 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
     override fun renderEffect(effect: MovieSuggestionViewIntent.ViewEffect) {
         when (effect) {
             is MovieSuggestionViewIntent.ViewEffect.UpdateText -> {
-                triggerSound()
+                ViewUtil.triggerSound(requireContext(), R.raw.movie_generation_sound)
                 hideNoMovieView()
                 posterUrl.value = effect.posterPath
                 mutableMovieName.value = effect.movieName
@@ -135,35 +137,6 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
         binding.layoutMovieMain.movieSuggestionGroupView.visibility = View.VISIBLE
         binding.layoutMovieMain.btnStartGame.visibility = View.GONE
         binding.layoutMovieMain.ivNoMovieIcon.visibility = View.GONE
-    }
-
-    private fun triggerSound() {
-        var mediaPlayer: MediaPlayer? = MediaPlayer.create(
-            requireContext(),
-            R.raw.movie_generation_sound
-        )
-        try {
-            if (mediaPlayer == null) {
-                mediaPlayer = MediaPlayer.create(
-                    requireContext(),
-                    R.raw.movie_generation_sound
-                )
-            }
-
-            mediaPlayer?.setOnCompletionListener {
-
-            }
-
-            mediaPlayer?.start()
-
-        } catch (ex: java.lang.Exception) {
-            if (mediaPlayer != null) {
-
-                mediaPlayer.release()
-
-                mediaPlayer = null
-            }
-        }
     }
 
     override fun onDestroyView() {
