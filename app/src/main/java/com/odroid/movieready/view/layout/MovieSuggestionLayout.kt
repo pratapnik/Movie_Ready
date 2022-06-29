@@ -1,13 +1,11 @@
 package com.odroid.movieready.view.layout
 
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.ExtendedFloatingActionButton
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -31,28 +29,53 @@ import com.odroid.movieready.R
 
 @Composable
 fun TopGreeting(day: String, date: String) {
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = day,
-            style = TextStyle(
-                fontFamily = FontFamily(Font(R.font.font_bold)),
-                fontSize = 20.sp,
-                color = colorResource(R.color.primary_text_color)
+        Column {
+            Text(
+                text = day,
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.font_bold)),
+                    fontSize = 20.sp,
+                    color = colorResource(R.color.primary_text_color)
+                )
             )
-        )
-        Spacer(modifier = Modifier.height(6.dp))
-        Text(
-            text = date,
-            style = TextStyle(
-                fontFamily = FontFamily(Font(R.font.font_bold)),
-                fontSize = 20.sp,
-                color = colorResource(R.color.primary_text_color)
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = date,
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.font_bold)),
+                    fontSize = 20.sp,
+                    color = colorResource(R.color.primary_text_color)
+                )
             )
-        )
+        }
+        TextButton(
+            onClick = {}
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "Explore",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.font_bold)),
+                        fontSize = 16.sp,
+                        color = colorResource(R.color.primary_red_color)
+                    )
+                )
+                Image(
+                    modifier = Modifier
+                        .height(30.dp)
+                        .width(30.dp)
+                        .padding(start = 4.dp),
+                    painter = painterResource(id = R.drawable.hot),
+                    contentDescription = "contentDescription"
+                )
+            }
+        }
     }
 }
 
