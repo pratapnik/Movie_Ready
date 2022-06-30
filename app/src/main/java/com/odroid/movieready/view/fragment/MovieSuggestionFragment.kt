@@ -1,5 +1,6 @@
 package com.odroid.movieready.view.fragment
 
+import android.content.Intent
 import android.view.View
 import androidx.compose.runtime.mutableStateOf
 import androidx.fragment.app.viewModels
@@ -10,6 +11,7 @@ import com.odroid.movieready.databinding.MovieSuggestionFragmentBinding
 import com.odroid.movieready.util.Constants
 import com.odroid.movieready.util.DateUtil
 import com.odroid.movieready.util.ViewUtil
+import com.odroid.movieready.view.activity.ExploreActivity
 import com.odroid.movieready.view.layout.MovieSuggestionCard
 import com.odroid.movieready.view.layout.TopGreeting
 import com.odroid.movieready.view_intent.MovieSuggestionViewIntent
@@ -44,7 +46,10 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
         }
         binding.layoutMovieMain.topComposeView.setContent {
             MdcTheme {
-                TopGreeting(mutableDate.value, mutableDay.value)
+                TopGreeting(
+                    date = mutableDate.value,
+                    day = mutableDay.value, onExploreButtonClick = this::launchExploreSection
+                )
             }
         }
         binding.layoutMovieMain.movieCardComposeView.setContent {
@@ -82,6 +87,11 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
 
     private fun getNewMovieButtonClicked() {
         viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
+    }
+
+    private fun launchExploreSection() {
+        val exploreIntent = Intent(requireActivity(), ExploreActivity::class.java)
+        startActivity(exploreIntent)
     }
 
     private fun showErrorView() {

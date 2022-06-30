@@ -20,7 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -28,7 +28,8 @@ import coil.request.ImageRequest
 import com.odroid.movieready.R
 
 @Composable
-fun TopGreeting(day: String, date: String) {
+fun TopGreeting(day: String, date: String,
+                onExploreButtonClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -55,7 +56,7 @@ fun TopGreeting(day: String, date: String) {
             )
         }
         TextButton(
-            onClick = {}
+            onClick = onExploreButtonClick
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -76,6 +77,17 @@ fun TopGreeting(day: String, date: String) {
                 )
             }
         }
+    }
+}
+
+
+@Preview
+@Composable
+fun LayoutPreview() {
+    Column(modifier = Modifier.background(Color.White)) {
+        TopGreeting(day = "Sunday", date = "17 September 1997", onExploreButtonClick = {})
+        MovieSuggestionCard(posterPath = "https://picsum.photos/500/300?random=1",
+            contentDescription = "", title = "Cool Boy", onNewMovieButtonClick = { })
     }
 }
 
