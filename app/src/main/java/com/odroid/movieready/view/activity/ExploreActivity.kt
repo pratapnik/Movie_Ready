@@ -1,5 +1,8 @@
 package com.odroid.movieready.view.activity
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -21,8 +24,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.android.material.composethemeadapter.MdcTheme
 import com.odroid.movieready.R
-import com.odroid.movieready.base.BaseComposeActivity
 import com.odroid.movieready.entity.MovieResponse
 import com.odroid.movieready.view.layout.ExploreScreen
 import com.odroid.movieready.view.layout.FavouriteScreen
@@ -31,14 +34,18 @@ import com.odroid.movieready.view_intent.BottomNavItem
 import com.odroid.movieready.view_intent.getMoviesList
 import com.odroid.movieready.view_model.ExploreViewModel
 
-class ExploreActivity : BaseComposeActivity() {
+class ExploreActivity : ComponentActivity() {
 
     private val exploreViewModel: ExploreViewModel by viewModels()
     private val movieClicked = mutableStateOf(MovieResponse())
 
-    @Composable
-    override fun Content() {
-        ScaffoldWithBottomMenu()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            MdcTheme {
+                ScaffoldWithBottomMenu()
+            }
+        }
     }
 
     @Composable

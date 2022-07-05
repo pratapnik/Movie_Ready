@@ -9,6 +9,9 @@ android {
     compileSdkVersion 31
     buildToolsVersion "30.0.3"
 
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
     defaultConfig {
         applicationId "com.odroid.movieready"
         minSdkVersion 21
@@ -16,6 +19,7 @@ android {
         versionCode 1400
         versionName "1.4.0_dev"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "API_KEY", "\"${properties.getProperty("API_KEY")}\""
     }
 
     android.applicationVariants.all {
