@@ -1,17 +1,11 @@
 package com.odroid.movieready.view.layout
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -32,6 +26,8 @@ import com.odroid.movieready.R
 import com.odroid.movieready.entity.MovieResponse
 import com.odroid.movieready.view_intent.CategoryWithList
 import com.odroid.movieready.view_model.ExploreViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Preview
 @Composable
@@ -41,59 +37,157 @@ fun PreviewExploreScreen() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ExploreScreen(
     categoriesWithList: List<CategoryWithList>,
     exploreViewModel: ExploreViewModel
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
-            .fillMaxHeight()
-    ) {
-        items(categoriesWithList) { list: CategoryWithList ->
-            MoviesListWidget(categoryWithList = list, exploreViewModel)
-        }
-    }
-}
-
-@Composable
-fun MoviesListWidget(categoryWithList: CategoryWithList,
-                     exploreViewModel: ExploreViewModel) {
-    Text(
-        text = categoryWithList.title,
-        style = TextStyle(
-            fontFamily = FontFamily(Font(R.font.font_bold)),
-            fontSize = 20.sp,
-            color = colorResource(R.color.primary_text_color)
-        )
+    // Declaring a Boolean value to
+    // store bottom sheet collapsed state
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState =
+        BottomSheetState(BottomSheetValue.Collapsed)
     )
-    val moviesList = categoryWithList.list
-    LazyRow(
-        modifier = Modifier
-            .padding(horizontal = 8.dp, vertical = 16.dp)
+
+    // Declaing Coroutine scope
+    val coroutineScope = rememberCoroutineScope()
+    
+    var movieName = remember { mutableStateOf("movie")}
+
+    // Creating a Bottom Sheet
+    BottomSheetScaffold(
+        scaffoldState = bottomSheetScaffoldState,
+        sheetContent = {
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .background(colorResource(R.color.primary_button_color))
+            ) {
+                Column(
+                    Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = movieName.value, style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.font_bold)),
+                            fontSize = 20.sp,
+                            color = colorResource(R.color.primary_text_color)
+                        )
+                    )
+                }
+            }
+        },
+        sheetPeekHeight = 0.dp
     ) {
-        items(moviesList) { movie: MovieResponse ->
-            MovieWidget(movieResponse = movie, exploreViewModel)
+        LazyColumn(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+                .fillMaxHeight(0.95f)
+        ) {
+            items(categoriesWithList) { list: CategoryWithList ->
+                MoviesListWidget(
+                    categoryWithList = list, exploreViewModel,
+                    bottomSheetScaffoldState, coroutineScope, movieName
+                )
+            }
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun MovieWidget(movieResponse: MovieResponse,
-                exploreViewModel: ExploreViewModel) {
+fun MoviesListWidget(
+    categoryWithList: CategoryWithList,
+    exploreViewModel: ExploreViewModel,
+    bottomSheetScaffoldState: BottomSheetScaffoldState,
+    coroutineScope: CoroutineScope,
+    movieName: MutableState<String>
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Image(
+            modifier = Modifier
+                .height(30.dp)
+                .width(30.dp)
+                .padding(start = 4.dp),
+            painter = painterResource(id = categoryWithList.icon),
+            contentDescription = "contentDescription"
+        )
+        Spacer(modifier = Modifier.width(12.dp))
+        Text(
+            text = categoryWithList.title,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.font_bold)),
+                fontSize = 20.sp,
+                color = colorResource(R.color.primary_text_color)
+            )
+        )
+    }
+    val moviesList = categoryWithList.list
+    if (categoryWithList is CategoryWithList.TopRated) {
+        LazyVerticalGrid(
+            contentPadding = PaddingValues(8.dp),
+            cells = GridCells.Fixed(3),
+            modifier = Modifier
+                .height(500.dp)
+                .padding(horizontal = 4.dp, vertical = 4.dp)
+        ) {
+            items(moviesList) { movie: MovieResponse ->
+                MovieWidget(
+                    movieResponse = movie,
+                    exploreViewModel,
+                    bottomSheetScaffoldState, coroutineScope, movieName
+                )
+            }
+        }
+    } else {
+        LazyRow(
+            contentPadding = PaddingValues(8.dp),
+            modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
+        ) {
+            items(moviesList) { movie: MovieResponse ->
+                MovieWidget(
+                    movieResponse = movie,
+                    exploreViewModel,
+                    bottomSheetScaffoldState,
+                    coroutineScope,
+                    movieName
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun MovieWidget(
+    movieResponse: MovieResponse,
+    exploreViewModel: ExploreViewModel,
+    bottomSheetScaffoldState: BottomSheetScaffoldState,
+    coroutineScope: CoroutineScope,
+    movieName: MutableState<String>
+) {
     Card(
         modifier = Modifier
             .height(200.dp)
             .width(150.dp)
-            .padding(end = 8.dp)
+            .padding(end = 4.dp, bottom = 4.dp)
             .border(2.dp, Color.DarkGray, RoundedCornerShape(8.dp))
             .clickable {
-                exploreViewModel.movieClicked(movieResponse)
+                coroutineScope.launch {
+                    movieName.value = movieResponse.title
+                    if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                        bottomSheetScaffoldState.bottomSheetState.expand()
+                    } else {
+                        bottomSheetScaffoldState.bottomSheetState.collapse()
+                    }
+                }
             },
         shape = RoundedCornerShape(8.dp),
-        elevation = 8.dp
+        elevation = 8.dp,
     ) {
         Box(
             modifier = Modifier
@@ -141,9 +235,11 @@ fun MovieWidget(movieResponse: MovieResponse,
     }
 }
 
+
 fun getCategoriesWithList(): List<CategoryWithList> {
     return listOf(
         CategoryWithList.Trending,
-        CategoryWithList.NowPlaying
+        CategoryWithList.NowPlaying,
+        CategoryWithList.TopRated
     )
 }

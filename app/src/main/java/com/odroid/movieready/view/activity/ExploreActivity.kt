@@ -1,9 +1,5 @@
 package com.odroid.movieready.view.activity
 
-import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -19,7 +15,6 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -27,36 +22,23 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.odroid.movieready.R
+import com.odroid.movieready.base.BaseComposeActivity
 import com.odroid.movieready.entity.MovieResponse
 import com.odroid.movieready.view.layout.ExploreScreen
 import com.odroid.movieready.view.layout.FavouriteScreen
 import com.odroid.movieready.view.layout.getCategoriesWithList
 import com.odroid.movieready.view_intent.BottomNavItem
+import com.odroid.movieready.view_intent.getMoviesList
 import com.odroid.movieready.view_model.ExploreViewModel
 
-class ExploreActivity : ComponentActivity() {
+class ExploreActivity : BaseComposeActivity() {
 
     private val exploreViewModel: ExploreViewModel by viewModels()
     private val movieClicked = mutableStateOf(MovieResponse())
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            ScaffoldWithBottomMenu()
-        }
-        exploreViewModel.movieClicked.observe(this, Observer {
-            movieClicked.value = it
-        })
-    }
-
     @Composable
-    fun showToast() {
-        if (movieClicked.value.title.isNotEmpty())
-            Toast.makeText(
-                this,
-                movieClicked.value.title,
-                Toast.LENGTH_SHORT
-            ).show()
+    override fun Content() {
+        ScaffoldWithBottomMenu()
     }
 
     @Composable
@@ -64,7 +46,6 @@ class ExploreActivity : ComponentActivity() {
         val navController = rememberNavController()
         Scaffold(bottomBar = { BottomBar(navController) }
         ) {
-            showToast()
             NavigationGraph(navController = navController)
         }
     }
@@ -107,6 +88,7 @@ class ExploreActivity : ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun NavigationGraph(navController: NavHostController) {
         NavHost(navController, startDestination = BottomNavItem.Explore.screen_route) {
@@ -114,7 +96,7 @@ class ExploreActivity : ComponentActivity() {
                 ExploreScreen(getCategoriesWithList(), exploreViewModel)
             }
             composable(BottomNavItem.Favourite.screen_route) {
-                FavouriteScreen()
+                FavouriteScreen(getMoviesList(), exploreViewModel)
             }
         }
     }

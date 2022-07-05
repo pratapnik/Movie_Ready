@@ -9,8 +9,9 @@ sealed class CategoryWithList(
     var list: ArrayList<MovieResponse>
 ) {
 
-    object Trending : CategoryWithList("Trending", R.drawable.ic_next, getMoviesList())
+    object Trending : CategoryWithList("Trending", R.drawable.hot, getMoviesList())
     object NowPlaying : CategoryWithList("Now Playing", R.drawable.ic_play_button, getMoviesList())
+    object TopRated : CategoryWithList("Top Rated", R.drawable.ic_rating, getMoviesList())
 }
 
 fun getMoviesList(): ArrayList<MovieResponse> {
