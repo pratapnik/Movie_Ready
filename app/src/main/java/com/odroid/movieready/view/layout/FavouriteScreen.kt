@@ -52,31 +52,49 @@ fun FavouriteScreen(
     )
     var movieName = remember { mutableStateOf("movie") }
 
-    // Declaing Coroutine scope
     val coroutineScope = rememberCoroutineScope()
-    Column(modifier = Modifier
-        .padding(16.dp)
-        .fillMaxWidth()) {
-        Text(
-            text = "Favourites",
-            style = TextStyle(
-                fontFamily = FontFamily(Font(R.font.font_bold)),
-                fontSize = 20.sp,
-                color = colorResource(R.color.primary_text_color)
-            )
-        )
-        LazyVerticalGrid(
-            contentPadding = PaddingValues(8.dp),
-            cells = GridCells.Fixed(2),
+    val lazyListState = rememberLazyListState()
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+//        Text(
+//            text = "Favourites",
+//            style = TextStyle(
+//                fontFamily = FontFamily(Font(R.font.font_bold)),
+//                fontSize = 20.sp,
+//                color = colorResource(R.color.primary_text_color)
+//            )
+//        )
+//        LazyVerticalGrid(
+//            cells = GridCells.Fixed(3),
+//            modifier = Modifier
+//                .fillMaxHeight(0.95f),
+//            state = lazyListState
+//        ) {
+//            item {
+//                ScrollableTopAppBar(lazyListState = lazyListState)
+//            }
+//            items(favouriteMoviesList) { movie: MovieResponse ->
+//                MovieWidget(
+//                    movieResponse = movie,
+//                    exploreViewModel,
+//                    bottomSheetScaffoldState, coroutineScope, movieName
+//                )
+//            }
+//        }
+        LazyColumn(
             modifier = Modifier
-                .fillMaxHeight(0.95f)
-                .padding(horizontal = 4.dp, vertical = 4.dp)
+                .fillMaxHeight(0.95f),
+            state = lazyListState
         ) {
+            item {
+                ScrollableTopAppBar(lazyListState = lazyListState, "Your favourites")
+            }
             items(favouriteMoviesList) { movie: MovieResponse ->
-                MovieWidget(
+                FavouriteMovieWidget(
                     movieResponse = movie,
-                    exploreViewModel,
-                    bottomSheetScaffoldState, coroutineScope, movieName
+                    exploreViewModel
                 )
             }
         }
@@ -91,7 +109,7 @@ fun FavouriteMovieWidget(
     Card(
         modifier = Modifier
             .height(200.dp)
-            .width(150.dp)
+            .fillMaxWidth()
             .padding(end = 4.dp, bottom = 4.dp)
             .border(2.dp, Color.DarkGray, RoundedCornerShape(8.dp)),
         shape = RoundedCornerShape(8.dp),

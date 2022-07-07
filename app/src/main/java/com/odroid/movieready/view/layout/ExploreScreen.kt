@@ -44,19 +44,13 @@ fun ExploreScreen(
     categoriesWithList: List<CategoryWithList>,
     exploreViewModel: ExploreViewModel
 ) {
-    // Declaring a Boolean value to
-    // store bottom sheet collapsed state
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState =
         BottomSheetState(BottomSheetValue.Collapsed)
     )
-
-    // Declaing Coroutine scope
     val coroutineScope = rememberCoroutineScope()
-
     val movieName = remember { mutableStateOf("movie") }
 
-    // Creating a Bottom Sheet
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
@@ -83,29 +77,63 @@ fun ExploreScreen(
         },
         sheetPeekHeight = 0.dp
     ) {
-        TopAppBar(backgroundColor = colorResource(id = R.color.primary_app_color)) {
-            Text(
-                text = "Explore", style = TextStyle(
-                    fontFamily = FontFamily(Font(R.font.font_bold)),
-                    fontSize = 20.sp,
-                    color = colorResource(R.color.primary_text_color)
-                ), modifier = Modifier.padding(start = 12.dp)
+        ExploreSectionList(
+            categoriesWithList,
+            exploreViewModel,
+            bottomSheetScaffoldState,
+            coroutineScope,
+            movieName
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun ExploreSectionList(
+    categoriesWithList: List<CategoryWithList>,
+    exploreViewModel: ExploreViewModel,
+    bottomSheetScaffoldState: BottomSheetScaffoldState,
+    coroutineScope: CoroutineScope,
+    movieName: MutableState<String>
+) {
+    val lazyListState = rememberLazyListState()
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.95f),
+        state = lazyListState
+    ) {
+        item {
+            ScrollableTopAppBar(lazyListState, "Explore")
+        }
+        items(categoriesWithList) { list: CategoryWithList ->
+            MoviesListWidget(
+                categoryWithList = list, exploreViewModel,
+                bottomSheetScaffoldState, coroutineScope, movieName
             )
         }
-        LazyColumn(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-                .fillMaxHeight(0.95f)
-        ) {
-            items(categoriesWithList) { list: CategoryWithList ->
-                MoviesListWidget(
-                    categoryWithList = list, exploreViewModel,
-                    bottomSheetScaffoldState, coroutineScope, movieName
-                )
-            }
-        }
     }
+}
+
+@Composable
+fun ScrollableTopAppBar(lazyListState: LazyListState, title: String) {
+    var scrolledY = 0f
+    var previousOffset = 0
+    TopAppBar(backgroundColor = colorResource(id = R.color.primary_app_color), title = {
+        Text(
+            text = title, style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.font_bold)),
+                fontSize = 20.sp,
+                color = colorResource(R.color.primary_text_color)
+            ), modifier = Modifier.padding(start = 12.dp)
+        )
+    }, modifier = Modifier
+        .graphicsLayer {
+            scrolledY += lazyListState.firstVisibleItemScrollOffset - previousOffset
+            translationY = scrolledY * 0.1f
+            previousOffset = lazyListState.firstVisibleItemScrollOffset
+        }
+        .fillMaxWidth())
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
@@ -117,7 +145,7 @@ fun MoviesListWidget(
     coroutineScope: CoroutineScope,
     movieName: MutableState<String>
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(16.dp)) {
         Image(
             modifier = Modifier
                 .height(30.dp)
