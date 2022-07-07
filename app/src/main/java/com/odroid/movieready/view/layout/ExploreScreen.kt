@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -52,8 +53,8 @@ fun ExploreScreen(
 
     // Declaing Coroutine scope
     val coroutineScope = rememberCoroutineScope()
-    
-    var movieName = remember { mutableStateOf("movie")}
+
+    val movieName = remember { mutableStateOf("movie") }
 
     // Creating a Bottom Sheet
     BottomSheetScaffold(
@@ -82,6 +83,15 @@ fun ExploreScreen(
         },
         sheetPeekHeight = 0.dp
     ) {
+        TopAppBar(backgroundColor = colorResource(id = R.color.primary_app_color)) {
+            Text(
+                text = "Explore", style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.font_bold)),
+                    fontSize = 20.sp,
+                    color = colorResource(R.color.primary_text_color)
+                ), modifier = Modifier.padding(start = 12.dp)
+            )
+        }
         LazyColumn(
             modifier = Modifier
                 .padding(16.dp)
