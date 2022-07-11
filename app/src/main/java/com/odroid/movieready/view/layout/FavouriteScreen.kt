@@ -3,14 +3,12 @@ package com.odroid.movieready.view.layout
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -25,25 +23,28 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
-import com.odroid.movieready.entity.MovieResponse
-import com.odroid.movieready.view_intent.getMoviesList
+import com.odroid.movieready.entity.TmdbMovie
+import com.odroid.movieready.util.posterUrl
 import com.odroid.movieready.view_model.ExploreViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Preview
 @Composable
 fun PreviewFavouriteScreen() {
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
-        FavouriteScreen(getMoviesList(), ExploreViewModel())
+        FavouriteScreen(ExploreViewModel())
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun FavouriteScreen(
-    favouriteMoviesList: List<MovieResponse>,
     exploreViewModel: ExploreViewModel
 ) {
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
@@ -54,9 +55,13 @@ fun FavouriteScreen(
 
     // Declaing Coroutine scope
     val coroutineScope = rememberCoroutineScope()
-    Column(modifier = Modifier
-        .padding(16.dp)
-        .fillMaxWidth()) {
+    val nowPlayingMovies = exploreViewModel.getLatestMoviesPagination().collectAsLazyPagingItems()
+
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth()
+    ) {
         Text(
             text = "Favourites",
             style = TextStyle(
@@ -65,35 +70,50 @@ fun FavouriteScreen(
                 color = colorResource(R.color.primary_text_color)
             )
         )
-        LazyVerticalGrid(
+        LazyColumn(
             contentPadding = PaddingValues(8.dp),
-            cells = GridCells.Fixed(2),
             modifier = Modifier
                 .fillMaxHeight(0.95f)
                 .padding(horizontal = 4.dp, vertical = 4.dp)
         ) {
-            items(favouriteMoviesList) { movie: MovieResponse ->
-                MovieWidget(
-                    movieResponse = movie,
-                    exploreViewModel,
-                    bottomSheetScaffoldState, coroutineScope, movieName
-                )
+            items(nowPlayingMovies) { movie ->
+                if (movie != null) {
+                    TmdbMovieWidget(
+                        tmdbMovie = movie,
+                        exploreViewModel,
+                        bottomSheetScaffoldState, coroutineScope, movieName
+                    )
+                }
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun FavouriteMovieWidget(
-    movieResponse: MovieResponse,
-    exploreViewModel: ExploreViewModel
+fun TmdbMovieWidget(
+    tmdbMovie: TmdbMovie,
+    exploreViewModel: ExploreViewModel,
+    bottomSheetScaffoldState: BottomSheetScaffoldState,
+    coroutineScope: CoroutineScope,
+    movieName: MutableState<String>
 ) {
     Card(
         modifier = Modifier
             .height(200.dp)
-            .width(150.dp)
+            .fillMaxWidth()
             .padding(end = 4.dp, bottom = 4.dp)
-            .border(2.dp, Color.DarkGray, RoundedCornerShape(8.dp)),
+            .border(2.dp, Color.DarkGray, RoundedCornerShape(8.dp))
+            .clickable {
+                coroutineScope.launch {
+                    movieName.value = tmdbMovie.title
+                    if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+                        bottomSheetScaffoldState.bottomSheetState.expand()
+                    } else {
+                        bottomSheetScaffoldState.bottomSheetState.collapse()
+                    }
+                }
+            },
         shape = RoundedCornerShape(8.dp),
         elevation = 8.dp,
     ) {
@@ -103,7 +123,7 @@ fun FavouriteMovieWidget(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(movieResponse.posterUrl)
+                    .data(tmdbMovie.posterUrl.posterUrl())
                     .crossfade(true)
                     .error(R.drawable.app_icon_img)
                     .build(),
@@ -131,7 +151,7 @@ fun FavouriteMovieWidget(
                 contentAlignment = Alignment.BottomStart
             ) {
                 Text(
-                    text = movieResponse.title,
+                    text = tmdbMovie.title,
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.font_bold)),
                         fontSize = 14.sp,

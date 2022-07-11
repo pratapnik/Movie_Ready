@@ -31,7 +31,6 @@ import com.odroid.movieready.view.layout.ExploreScreen
 import com.odroid.movieready.view.layout.FavouriteScreen
 import com.odroid.movieready.view.layout.getCategoriesWithList
 import com.odroid.movieready.view_intent.BottomNavItem
-import com.odroid.movieready.view_intent.getMoviesList
 import com.odroid.movieready.view_model.ExploreViewModel
 
 class ExploreActivity : ComponentActivity() {
@@ -60,8 +59,9 @@ class ExploreActivity : ComponentActivity() {
     @Composable
     fun BottomBar(navController: NavController) {
         val items = listOf(
-            BottomNavItem.Explore,
-            BottomNavItem.Favourite
+            BottomNavItem.Movies,
+            BottomNavItem.TvShows,
+            BottomNavItem.Saved
         )
         BottomNavigation(
             elevation = 10.dp, backgroundColor = colorResource(id = R.color.primary_button_color)
@@ -98,12 +98,15 @@ class ExploreActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun NavigationGraph(navController: NavHostController) {
-        NavHost(navController, startDestination = BottomNavItem.Explore.screen_route) {
-            composable(BottomNavItem.Explore.screen_route) {
+        NavHost(navController, startDestination = BottomNavItem.Movies.screen_route) {
+            composable(BottomNavItem.Movies.screen_route) {
                 ExploreScreen(getCategoriesWithList(), exploreViewModel)
             }
-            composable(BottomNavItem.Favourite.screen_route) {
-                FavouriteScreen(getMoviesList(), exploreViewModel)
+            composable(BottomNavItem.Saved.screen_route) {
+                FavouriteScreen(exploreViewModel)
+            }
+            composable(BottomNavItem.TvShows.screen_route) {
+                ExploreScreen(getCategoriesWithList(), exploreViewModel)
             }
         }
     }
