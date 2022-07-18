@@ -44,45 +44,7 @@ fun ExploreScreen(
     categoriesWithList: List<CategoryWithList>,
     exploreViewModel: ExploreViewModel
 ) {
-    // Declaring a Boolean value to
-    // store bottom sheet collapsed state
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState =
-        BottomSheetState(BottomSheetValue.Collapsed)
-    )
-
-    // Declaing Coroutine scope
-    val coroutineScope = rememberCoroutineScope()
-
-    val movieName = remember { mutableStateOf("movie") }
-
-    // Creating a Bottom Sheet
-    BottomSheetScaffold(
-        scaffoldState = bottomSheetScaffoldState,
-        sheetContent = {
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .background(colorResource(R.color.primary_button_color))
-            ) {
-                Column(
-                    Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = movieName.value, style = TextStyle(
-                            fontFamily = FontFamily(Font(R.font.font_bold)),
-                            fontSize = 20.sp,
-                            color = colorResource(R.color.primary_text_color)
-                        )
-                    )
-                }
-            }
-        },
-        sheetPeekHeight = 0.dp
-    ) {
+    Column {
         TopAppBar(backgroundColor = colorResource(id = R.color.primary_app_color)) {
             Text(
                 text = "Explore", style = TextStyle(
@@ -100,8 +62,7 @@ fun ExploreScreen(
         ) {
             items(categoriesWithList) { list: CategoryWithList ->
                 MoviesListWidget(
-                    categoryWithList = list, exploreViewModel,
-                    bottomSheetScaffoldState, coroutineScope, movieName
+                    categoryWithList = list, exploreViewModel
                 )
             }
         }
@@ -112,10 +73,7 @@ fun ExploreScreen(
 @Composable
 fun MoviesListWidget(
     categoryWithList: CategoryWithList,
-    exploreViewModel: ExploreViewModel,
-    bottomSheetScaffoldState: BottomSheetScaffoldState,
-    coroutineScope: CoroutineScope,
-    movieName: MutableState<String>
+    exploreViewModel: ExploreViewModel
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Image(
@@ -148,8 +106,7 @@ fun MoviesListWidget(
             items(moviesList) { movie: MovieResponse ->
                 MovieWidget(
                     movieResponse = movie,
-                    exploreViewModel,
-                    bottomSheetScaffoldState, coroutineScope, movieName
+                    exploreViewModel
                 )
             }
         }
@@ -161,10 +118,7 @@ fun MoviesListWidget(
             items(moviesList) { movie: MovieResponse ->
                 MovieWidget(
                     movieResponse = movie,
-                    exploreViewModel,
-                    bottomSheetScaffoldState,
-                    coroutineScope,
-                    movieName
+                    exploreViewModel
                 )
             }
         }
@@ -175,27 +129,14 @@ fun MoviesListWidget(
 @Composable
 fun MovieWidget(
     movieResponse: MovieResponse,
-    exploreViewModel: ExploreViewModel,
-    bottomSheetScaffoldState: BottomSheetScaffoldState,
-    coroutineScope: CoroutineScope,
-    movieName: MutableState<String>
+    exploreViewModel: ExploreViewModel
 ) {
     Card(
         modifier = Modifier
             .height(200.dp)
             .width(150.dp)
             .padding(end = 4.dp, bottom = 4.dp)
-            .border(2.dp, Color.DarkGray, RoundedCornerShape(8.dp))
-            .clickable {
-                coroutineScope.launch {
-                    movieName.value = movieResponse.title
-                    if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                        bottomSheetScaffoldState.bottomSheetState.expand()
-                    } else {
-                        bottomSheetScaffoldState.bottomSheetState.collapse()
-                    }
-                }
-            },
+            .border(2.dp, Color.DarkGray, RoundedCornerShape(8.dp)),
         shape = RoundedCornerShape(8.dp),
         elevation = 8.dp,
     ) {

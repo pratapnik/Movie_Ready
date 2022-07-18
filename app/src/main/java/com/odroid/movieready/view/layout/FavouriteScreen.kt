@@ -47,14 +47,6 @@ fun PreviewFavouriteScreen() {
 fun FavouriteScreen(
     exploreViewModel: ExploreViewModel
 ) {
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState =
-        BottomSheetState(BottomSheetValue.Collapsed)
-    )
-    var movieName = remember { mutableStateOf("movie") }
-
-    // Declaing Coroutine scope
-    val coroutineScope = rememberCoroutineScope()
     val nowPlayingMovies = exploreViewModel.getLatestMoviesPagination().collectAsLazyPagingItems()
 
     Column(
@@ -79,9 +71,7 @@ fun FavouriteScreen(
             items(nowPlayingMovies) { movie ->
                 if (movie != null) {
                     TmdbMovieWidget(
-                        tmdbMovie = movie,
-                        exploreViewModel,
-                        bottomSheetScaffoldState, coroutineScope, movieName
+                        tmdbMovie = movie
                     )
                 }
             }
@@ -92,28 +82,14 @@ fun FavouriteScreen(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TmdbMovieWidget(
-    tmdbMovie: TmdbMovie,
-    exploreViewModel: ExploreViewModel,
-    bottomSheetScaffoldState: BottomSheetScaffoldState,
-    coroutineScope: CoroutineScope,
-    movieName: MutableState<String>
+    tmdbMovie: TmdbMovie
 ) {
     Card(
         modifier = Modifier
             .height(200.dp)
             .fillMaxWidth()
             .padding(end = 4.dp, bottom = 4.dp)
-            .border(2.dp, Color.DarkGray, RoundedCornerShape(8.dp))
-            .clickable {
-                coroutineScope.launch {
-                    movieName.value = tmdbMovie.title
-                    if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-                        bottomSheetScaffoldState.bottomSheetState.expand()
-                    } else {
-                        bottomSheetScaffoldState.bottomSheetState.collapse()
-                    }
-                }
-            },
+            .border(2.dp, Color.DarkGray, RoundedCornerShape(8.dp)),
         shape = RoundedCornerShape(8.dp),
         elevation = 8.dp,
     ) {

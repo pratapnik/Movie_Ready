@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     buildToolsVersion "30.0.3"
 
     Properties properties = new Properties()
@@ -15,7 +15,7 @@ android {
     defaultConfig {
         applicationId "com.odroid.movieready"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 1400
         versionName "1.4.0_dev"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -80,6 +80,7 @@ dependencies {
     implementation 'androidx.annotation:annotation:1.2.0'
     implementation 'io.coil-kt:coil:1.2.2'
     implementation 'io.coil-kt:coil-compose:2.1.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
 
     //Compose
     implementation 'androidx.activity:activity-compose:1.4.0'
@@ -90,7 +91,7 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:2.5.0"
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.1.1'
     implementation "com.google.android.material:compose-theme-adapter:1.1.1"
-    implementation "androidx.paging:paging-compose:1.0.0-alpha10"
+    implementation "androidx.paging:paging-compose:1.0.0-alpha15"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

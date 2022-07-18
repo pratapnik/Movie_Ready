@@ -4,5 +4,5 @@ import com.odroid.movieready.entity.TmdbMovie
 
 interface TmdbMovieRepository {
 
-    suspend fun getLatestMovies(page:Int): List<TmdbMovie>
+    suspend fun getPopularMovies(page:Int): List<TmdbMovie>
 }
