@@ -1,4 +1,4 @@
-package com.odroid.movieready.model
+package com.odroid.movieready.network
 
 import com.odroid.movieready.entity.MovieResponse
 import retrofit2.Response

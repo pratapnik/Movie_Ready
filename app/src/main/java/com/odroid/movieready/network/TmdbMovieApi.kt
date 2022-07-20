@@ -1,7 +1,6 @@
-package com.odroid.movieready.model
+package com.odroid.movieready.network
 
 import com.odroid.movieready.BuildConfig
-import com.odroid.movieready.entity.TmdbMovie
 import com.odroid.movieready.entity.TmdbResponse
 import retrofit2.http.GET
 import retrofit2.http.Query

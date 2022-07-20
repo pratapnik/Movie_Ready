@@ -3,7 +3,6 @@ package com.odroid.movieready.view.layout
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,8 +30,6 @@ import com.odroid.movieready.R
 import com.odroid.movieready.entity.TmdbMovie
 import com.odroid.movieready.util.posterUrl
 import com.odroid.movieready.view_model.ExploreViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Preview
 @Composable
@@ -47,7 +44,7 @@ fun PreviewFavouriteScreen() {
 fun FavouriteScreen(
     exploreViewModel: ExploreViewModel
 ) {
-    val nowPlayingMovies = exploreViewModel.getLatestMoviesPagination().collectAsLazyPagingItems()
+    val nowPlayingMovies = exploreViewModel.getPopularMoviesPagination().collectAsLazyPagingItems()
 
     Column(
         modifier = Modifier

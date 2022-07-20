@@ -45,15 +45,6 @@ fun ExploreScreen(
     exploreViewModel: ExploreViewModel
 ) {
     Column {
-        TopAppBar(backgroundColor = colorResource(id = R.color.primary_app_color)) {
-            Text(
-                text = "Explore", style = TextStyle(
-                    fontFamily = FontFamily(Font(R.font.font_bold)),
-                    fontSize = 20.sp,
-                    color = colorResource(R.color.primary_text_color)
-                ), modifier = Modifier.padding(start = 12.dp)
-            )
-        }
         LazyColumn(
             modifier = Modifier
                 .padding(16.dp)
@@ -90,7 +81,7 @@ fun MoviesListWidget(
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.font_bold)),
                 fontSize = 20.sp,
-                color = colorResource(R.color.primary_text_color)
+                color = colorResource(R.color.primary_text_color_dark_mode)
             )
         )
     }

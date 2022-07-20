@@ -1,7 +1,7 @@
 package com.odroid.movieready.repository
 
 import com.odroid.movieready.entity.TmdbMovie
-import com.odroid.movieready.model.RetrofitBuilder
+import com.odroid.movieready.network.RetrofitBuilder
 
 class TmdbMovieRepositoryImpl: TmdbMovieRepository {
 

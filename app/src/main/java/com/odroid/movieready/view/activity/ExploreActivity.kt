@@ -4,7 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -12,7 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -42,6 +49,8 @@ class ExploreActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MdcTheme {
+                window?.statusBarColor =
+                    colorResource(id = R.color.primary_color_dark_mode).toArgb()
                 ScaffoldWithBottomMenu()
             }
         }
@@ -50,7 +59,9 @@ class ExploreActivity : ComponentActivity() {
     @Composable
     fun ScaffoldWithBottomMenu() {
         val navController = rememberNavController()
-        Scaffold(bottomBar = { BottomBar(navController) }
+        Scaffold(
+            bottomBar = { BottomBar(navController) },
+            backgroundColor = colorResource(id = R.color.primary_color_dark_mode)
         ) {
             NavigationGraph(navController = navController)
         }
@@ -64,18 +75,21 @@ class ExploreActivity : ComponentActivity() {
             BottomNavItem.Saved
         )
         BottomNavigation(
-            elevation = 10.dp, backgroundColor = colorResource(id = R.color.primary_button_color)
-        ) {
+            elevation = 10.dp, backgroundColor = colorResource(id = R.color.bottom_nav_color),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 12.dp, top = 0.dp).clip(RoundedCornerShape(12.dp))
 
+        ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute = navBackStackEntry?.destination?.route
 
             items.forEach {
                 BottomNavigationItem(icon = {
-                    Icon(
-                        imageVector = Icons.Default.Search,
+                    Image(
+                        painter = painterResource(id = it.icon),
                         "",
-                        tint = colorResource(id = R.color.primary_text_color)
+                        modifier = Modifier
+                            .size(24.dp)
+                            .padding(4.dp)
                     )
                 },
                     label = { BottomNavigationItemText(text = it.title) },

@@ -1,4 +1,4 @@
-package com.odroid.movieready.util
+package com.odroid.movieready.pagination
 
 import android.util.Log
 import androidx.paging.PagingSource
@@ -6,7 +6,7 @@ import androidx.paging.PagingState
 import com.odroid.movieready.entity.TmdbMovie
 import com.odroid.movieready.repository.TmdbMovieRepository
 
-class TmdbLatestMoviesSource(private val tmdbMovieRepository: TmdbMovieRepository) :
+class PopularMoviesSource(private val tmdbMovieRepository: TmdbMovieRepository) :
     PagingSource<Int, TmdbMovie>() {
 
     override fun getRefreshKey(state: PagingState<Int, TmdbMovie>): Int? {

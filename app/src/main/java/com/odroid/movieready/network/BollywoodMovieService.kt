@@ -1,4 +1,4 @@
-package com.odroid.movieready.model
+package com.odroid.movieready.network
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
