@@ -5,19 +5,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -49,8 +47,6 @@ class ExploreActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MdcTheme {
-                window?.statusBarColor =
-                    colorResource(id = R.color.primary_color_dark_mode).toArgb()
                 ScaffoldWithBottomMenu()
             }
         }
@@ -61,9 +57,11 @@ class ExploreActivity : ComponentActivity() {
         val navController = rememberNavController()
         Scaffold(
             bottomBar = { BottomBar(navController) },
-            backgroundColor = colorResource(id = R.color.primary_color_dark_mode)
+            backgroundColor = Color.White
         ) {
-            NavigationGraph(navController = navController)
+            Box(modifier = Modifier.padding(it)) {
+                NavigationGraph(navController = navController)
+            }
         }
     }
 
@@ -76,7 +74,9 @@ class ExploreActivity : ComponentActivity() {
         )
         BottomNavigation(
             elevation = 10.dp, backgroundColor = colorResource(id = R.color.bottom_nav_color),
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 12.dp, top = 0.dp).clip(RoundedCornerShape(12.dp))
+            modifier = Modifier
+                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp, top = 0.dp)
+                .clip(RoundedCornerShape(12.dp))
 
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -92,7 +92,9 @@ class ExploreActivity : ComponentActivity() {
                             .padding(4.dp)
                     )
                 },
-                    label = { BottomNavigationItemText(text = it.title) },
+                    label = {
+                        BottomNavigationItemText(text = it.title)
+                    },
                     selected = currentRoute == it.screen_route,
                     onClick = {
                         navController.navigate(it.screen_route) {
@@ -129,8 +131,8 @@ class ExploreActivity : ComponentActivity() {
     fun BottomNavigationItemText(text: String) {
         Text(
             text = text, modifier = Modifier.padding(top = 4.dp), style = TextStyle(
-                color = colorResource(R.color.primary_text_color),
-                fontSize = 12.sp, fontFamily = FontFamily(Font(R.font.font_regular))
+                color = colorResource(R.color.white),
+                fontSize = 10.sp, fontFamily = FontFamily(Font(R.font.font_bold))
             )
         )
     }

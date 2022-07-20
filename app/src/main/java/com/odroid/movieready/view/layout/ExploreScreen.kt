@@ -6,11 +6,11 @@ import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -25,10 +25,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.MovieResponse
+import com.odroid.movieready.view_intent.Category
 import com.odroid.movieready.view_intent.CategoryWithList
 import com.odroid.movieready.view_model.ExploreViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Preview
 @Composable
@@ -44,18 +43,64 @@ fun ExploreScreen(
     categoriesWithList: List<CategoryWithList>,
     exploreViewModel: ExploreViewModel
 ) {
+    val selectedChip = rememberSaveable {
+        mutableStateOf(Category.TRENDING)
+    }
     Column {
-        LazyColumn(
+        LazyRow(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 8.dp)
                 .fillMaxWidth()
-                .fillMaxHeight(0.95f)
         ) {
             items(categoriesWithList) { list: CategoryWithList ->
-                MoviesListWidget(
-                    categoryWithList = list, exploreViewModel
-                )
+                Card(
+                    modifier = Modifier
+                        .padding(end = 12.dp)
+                        .clickable {
+                            selectedChip.value = list.category
+                        },
+                    border = BorderStroke(
+                        2.dp,
+                        colorResource(id = R.color.primary_color_dark_mode)
+                    ), shape = RoundedCornerShape(16.dp),
+                    backgroundColor = if (selectedChip.value == list.category) Color.LightGray else Color.White
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(
+                            start = 12.dp,
+                            end = 12.dp,
+                            top = 8.dp,
+                            bottom = 8.dp
+                        )
+                    ) {
+                        Image(
+                            modifier = Modifier
+                                .height(20.dp)
+                                .width(20.dp),
+                            painter = painterResource(id = list.icon),
+                            contentDescription = "contentDescription"
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = list.title,
+                            style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.font_bold)),
+                                fontSize = 14.sp,
+                                color = colorResource(R.color.primary_text_color)
+                            )
+                        )
+                    }
+                }
             }
+        }
+        val moviesList = categoriesWithList.find {
+            it.category == selectedChip.value
+        }?.list
+        moviesList?.let {
+            MoviesListWidget(
+                it, exploreViewModel
+            )
         }
     }
 }
@@ -63,55 +108,22 @@ fun ExploreScreen(
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun MoviesListWidget(
-    categoryWithList: CategoryWithList,
+    moviesList: ArrayList<MovieResponse>,
     exploreViewModel: ExploreViewModel
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Image(
-            modifier = Modifier
-                .height(30.dp)
-                .width(30.dp)
-                .padding(start = 4.dp),
-            painter = painterResource(id = categoryWithList.icon),
-            contentDescription = "contentDescription"
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Text(
-            text = categoryWithList.title,
-            style = TextStyle(
-                fontFamily = FontFamily(Font(R.font.font_bold)),
-                fontSize = 20.sp,
-                color = colorResource(R.color.primary_text_color_dark_mode)
+    LazyVerticalGrid(
+        contentPadding = PaddingValues(8.dp),
+        cells = GridCells.Fixed(2),
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp, vertical = 4.dp)
+    ) {
+        items(moviesList) { movie: MovieResponse ->
+            MovieWidget(
+                movieResponse = movie,
+                exploreViewModel
             )
-        )
-    }
-    val moviesList = categoryWithList.list
-    if (categoryWithList is CategoryWithList.TopRated) {
-        LazyVerticalGrid(
-            contentPadding = PaddingValues(8.dp),
-            cells = GridCells.Fixed(3),
-            modifier = Modifier
-                .height(500.dp)
-                .padding(horizontal = 4.dp, vertical = 4.dp)
-        ) {
-            items(moviesList) { movie: MovieResponse ->
-                MovieWidget(
-                    movieResponse = movie,
-                    exploreViewModel
-                )
-            }
-        }
-    } else {
-        LazyRow(
-            contentPadding = PaddingValues(8.dp),
-            modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
-        ) {
-            items(moviesList) { movie: MovieResponse ->
-                MovieWidget(
-                    movieResponse = movie,
-                    exploreViewModel
-                )
-            }
         }
     }
 }
@@ -124,7 +136,7 @@ fun MovieWidget(
 ) {
     Card(
         modifier = Modifier
-            .height(200.dp)
+            .height(300.dp)
             .width(150.dp)
             .padding(end = 4.dp, bottom = 4.dp)
             .border(2.dp, Color.DarkGray, RoundedCornerShape(8.dp)),
@@ -182,6 +194,7 @@ fun getCategoriesWithList(): List<CategoryWithList> {
     return listOf(
         CategoryWithList.Trending,
         CategoryWithList.NowPlaying,
+        CategoryWithList.Popular,
         CategoryWithList.TopRated
     )
 }

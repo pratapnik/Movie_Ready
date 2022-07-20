@@ -4,7 +4,7 @@
     <color name="primaryOtherColor">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primary_app_color">#FFEA00</color>
+    <color name="primary_app_color">#121419</color>
     <color name="main_card_color">#283845</color>
     <color name="primary_error_color">#f08080</color>
     <color name="tooltip_color">#90e0ef</color>
@@ -13,5 +13,5 @@
     <color name="primary_text_color_dark_mode">@color/primary_app_color</color>
     <color name="primary_color_dark_mode">#121419</color>
     <color name="primary_red_color">#D34E1A</color>
-    <color name="bottom_nav_color">#B2C8DF</color>
+    <color name="bottom_nav_color">@color/primary_color_dark_mode</color>
 </resources>
