@@ -61,28 +61,28 @@ fun TopGreeting(
                 )
             )
         }
-//        TextButton(
-//            onClick = onExploreButtonClick
-//        ) {
-//            Row(verticalAlignment = Alignment.CenterVertically) {
-//                Text(
-//                    text = "explore",
-//                    style = TextStyle(
-//                        fontFamily = FontFamily(Font(R.font.font_bold)),
-//                        fontSize = 16.sp,
-//                        color = colorResource(R.color.primary_red_color)
-//                    )
-//                )
-//                Image(
-//                    modifier = Modifier
-//                        .height(30.dp)
-//                        .width(30.dp)
-//                        .padding(start = 4.dp),
-//                    painter = painterResource(id = R.drawable.hot),
-//                    contentDescription = "contentDescription"
-//                )
-//            }
-//        }
+        TextButton(
+            onClick = onExploreButtonClick
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "explore",
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.font_bold)),
+                        fontSize = 16.sp,
+                        color = colorResource(R.color.primary_red_color)
+                    )
+                )
+                Image(
+                    modifier = Modifier
+                        .height(30.dp)
+                        .width(30.dp)
+                        .padding(start = 4.dp),
+                    painter = painterResource(id = R.drawable.hot),
+                    contentDescription = "contentDescription"
+                )
+            }
+        }
     }
 }
 
