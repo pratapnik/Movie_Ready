@@ -30,15 +30,16 @@
             app:layout_constraintTop_toBottomOf="@id/topComposeView"
             app:layout_constraintVertical_bias="0.136" />
 
-        <ImageButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_start_game"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            style="@style/PrimaryButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_16dp"
-            android:scaleType="fitCenter"
-            tools:visibility="visible"
-            android:src="@drawable/ic_play_button"
+            android:textAllCaps="false"
+            android:padding="@dimen/padding_8dp"
+            android:textSize="@dimen/text_size_20sp"
+            android:text="@string/lets_play_label"
+            android:drawableEnd="@drawable/ic_next"
             app:layout_constraintEnd_toEndOf="@id/iv_no_movie_icon"
             app:layout_constraintStart_toStartOf="@id/iv_no_movie_icon"
             app:layout_constraintTop_toBottomOf="@id/iv_no_movie_icon" />

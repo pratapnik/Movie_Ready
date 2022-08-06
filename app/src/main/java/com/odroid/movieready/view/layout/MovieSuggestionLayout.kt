@@ -17,6 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -26,10 +27,15 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
+import com.odroid.movieready.theming.boldFont
+import com.odroid.movieready.theming.primaryAppTextColor
+import com.odroid.movieready.theming.primaryButtonTextColor
 
 @Composable
-fun TopGreeting(day: String, date: String,
-                onExploreButtonClick: () -> Unit) {
+fun TopGreeting(
+    day: String, date: String,
+    onExploreButtonClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -42,7 +48,7 @@ fun TopGreeting(day: String, date: String,
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.font_bold)),
                     fontSize = 20.sp,
-                    color = colorResource(R.color.primary_text_color)
+                    color = primaryAppTextColor
                 )
             )
             Spacer(modifier = Modifier.height(6.dp))
@@ -51,32 +57,32 @@ fun TopGreeting(day: String, date: String,
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.font_bold)),
                     fontSize = 20.sp,
-                    color = colorResource(R.color.primary_text_color)
+                    color = primaryAppTextColor
                 )
             )
         }
-        TextButton(
-            onClick = onExploreButtonClick
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "Explore",
-                    style = TextStyle(
-                        fontFamily = FontFamily(Font(R.font.font_bold)),
-                        fontSize = 16.sp,
-                        color = colorResource(R.color.primary_red_color)
-                    )
-                )
-                Image(
-                    modifier = Modifier
-                        .height(30.dp)
-                        .width(30.dp)
-                        .padding(start = 4.dp),
-                    painter = painterResource(id = R.drawable.hot),
-                    contentDescription = "contentDescription"
-                )
-            }
-        }
+//        TextButton(
+//            onClick = onExploreButtonClick
+//        ) {
+//            Row(verticalAlignment = Alignment.CenterVertically) {
+//                Text(
+//                    text = "explore",
+//                    style = TextStyle(
+//                        fontFamily = FontFamily(Font(R.font.font_bold)),
+//                        fontSize = 16.sp,
+//                        color = colorResource(R.color.primary_red_color)
+//                    )
+//                )
+//                Image(
+//                    modifier = Modifier
+//                        .height(30.dp)
+//                        .width(30.dp)
+//                        .padding(start = 4.dp),
+//                    painter = painterResource(id = R.drawable.hot),
+//                    contentDescription = "contentDescription"
+//                )
+//            }
+//        }
     }
 }
 
@@ -151,7 +157,7 @@ fun MovieSuggestionCard(
                     Text(
                         text = title,
                         style = TextStyle(
-                            fontFamily = FontFamily(Font(R.font.font_bold)),
+                            fontFamily = boldFont,
                             fontSize = 20.sp,
                             color = Color.White
                         )
@@ -177,10 +183,10 @@ fun MovieSuggestionCard(
             },
             text = {
                 Text(
-                    text = "New Movie",
+                    text = stringResource(id = R.string.get_movie_button_label),
                     style = TextStyle(
-                        color = colorResource(R.color.primary_text_color),
-                        fontSize = 20.sp, fontFamily = FontFamily(Font(R.font.font_bold))
+                        color = primaryButtonTextColor,
+                        fontSize = 20.sp, fontFamily = boldFont
                     )
                 )
             },

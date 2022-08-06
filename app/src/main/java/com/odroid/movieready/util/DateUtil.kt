@@ -16,7 +16,7 @@ object DateUtil {
 
     fun getDayTextForHomeScreen(day: String): String {
         return when(day) {
-            "Sunday", "Friday", "Saturday" -> "Yayy! it's $day"
+            "Sunday", "Friday", "Saturday" -> "yayy! it's $day"
             else -> day
         }
     }
