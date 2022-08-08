@@ -27,7 +27,7 @@ import androidx.paging.compose.items
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
-import com.odroid.movieready.entity.TmdbMovie
+import com.odroid.movieready.entity.TmdbItem
 import com.odroid.movieready.util.posterUrl
 import com.odroid.movieready.view_model.ExploreViewModel
 
@@ -79,7 +79,7 @@ fun FavouriteScreen(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TmdbMovieWidget(
-    tmdbMovie: TmdbMovie
+    tmdbMovie: TmdbItem
 ) {
     Card(
         modifier = Modifier

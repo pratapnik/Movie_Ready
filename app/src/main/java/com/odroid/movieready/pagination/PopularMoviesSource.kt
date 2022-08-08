@@ -3,20 +3,20 @@ package com.odroid.movieready.pagination
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.odroid.movieready.entity.TmdbMovie
+import com.odroid.movieready.entity.TmdbItem
 import com.odroid.movieready.repository.TmdbMovieRepository
 
 class PopularMoviesSource(private val tmdbMovieRepository: TmdbMovieRepository) :
-    PagingSource<Int, TmdbMovie>() {
+    PagingSource<Int, TmdbItem>() {
 
-    override fun getRefreshKey(state: PagingState<Int, TmdbMovie>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, TmdbItem>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TmdbMovie> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TmdbItem> {
         return try {
             val page = params.key ?: 1
             val latestMovies = tmdbMovieRepository.getPopularMovies(page)

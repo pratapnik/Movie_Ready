@@ -2,7 +2,7 @@ package com.odroid.movieready.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class TmdbMovie(
+data class TmdbItem(
     @SerializedName("id")
     var id: Long,
     @SerializedName("title")
