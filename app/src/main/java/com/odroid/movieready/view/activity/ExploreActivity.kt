@@ -5,9 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -33,7 +31,7 @@ import com.google.android.material.composethemeadapter.MdcTheme
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.MovieResponse
 import com.odroid.movieready.view.layout.ExploreScreen
-import com.odroid.movieready.view.layout.FavouriteScreen
+import com.odroid.movieready.view.layout.VerticalListScreen
 import com.odroid.movieready.view.layout.getCategoriesWithList
 import com.odroid.movieready.view_intent.BottomNavItem
 import com.odroid.movieready.view_model.ExploreViewModel
@@ -119,7 +117,10 @@ class ExploreActivity : ComponentActivity() {
                 ExploreScreen(getCategoriesWithList(), exploreViewModel)
             }
             composable(BottomNavItem.Saved.screen_route) {
-                FavouriteScreen(exploreViewModel)
+                Column(modifier = Modifier.fillMaxSize()) {
+                    VerticalListScreen(exploreViewModel, "Popular")
+                }
+
             }
             composable(BottomNavItem.TvShows.screen_route) {
                 ExploreScreen(getCategoriesWithList(), exploreViewModel)
