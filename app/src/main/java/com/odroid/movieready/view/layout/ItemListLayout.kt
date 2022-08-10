@@ -12,13 +12,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.rememberNavController
 import com.odroid.movieready.entity.MovieResponse
 import com.odroid.movieready.view.widget.VerticalItemWidget
 import com.odroid.movieready.view_model.ExploreViewModel
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ItemListWidget(
+    navigator: DestinationsNavigator,
     moviesList: ArrayList<MovieResponse>,
     exploreViewModel: ExploreViewModel
 ) {
@@ -32,8 +35,7 @@ fun ItemListWidget(
     ) {
         items(moviesList) { item: MovieResponse ->
             VerticalItemWidget(
-                movieResponse = item,
-                exploreViewModel
+                navigator, movieResponse = item, exploreViewModel
             )
         }
     }
@@ -43,6 +45,6 @@ fun ItemListWidget(
 @Composable
 fun PreviewItemList() {
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
-        ItemListWidget(getCategoriesWithList()[0].list, ExploreViewModel())
+        ItemListWidget(rememberNavController() as DestinationsNavigator,getCategoriesWithList()[0].list, ExploreViewModel())
     }
 }

@@ -25,25 +25,30 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import com.odroid.movieready.R
 import com.odroid.movieready.view_intent.Category
 import com.odroid.movieready.view_intent.CategoryWithList
 import com.odroid.movieready.view_model.ExploreViewModel
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Preview
 @Composable
 fun PreviewExploreScreen() {
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
-        ExploreScreen(getCategoriesWithList(), ExploreViewModel())
+        ExploreScreen(rememberNavController() as DestinationsNavigator, ExploreViewModel())
     }
 }
 
+@Destination(start = true)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ExploreScreen(
-    categoriesWithList: List<CategoryWithList>,
+    navigator: DestinationsNavigator,
     exploreViewModel: ExploreViewModel
 ) {
+    val categoriesWithList = getCategoriesWithList()
     val selectedChip = rememberSaveable {
         mutableStateOf(Category.TRENDING)
     }
@@ -100,7 +105,7 @@ fun ExploreScreen(
         }?.list
         moviesList?.let {
             ItemListWidget(
-                it, exploreViewModel
+                navigator, it, exploreViewModel
             )
         }
     }

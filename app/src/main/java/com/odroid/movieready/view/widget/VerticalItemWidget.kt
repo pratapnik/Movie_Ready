@@ -22,16 +22,20 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.MovieResponse
+import com.odroid.movieready.view.layout.destinations.ItemDetailsScreenDestination
 import com.odroid.movieready.view_intent.getMoviesList
 import com.odroid.movieready.view_model.ExploreViewModel
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun VerticalItemWidget(
+    navigator: DestinationsNavigator,
     movieResponse: MovieResponse,
     exploreViewModel: ExploreViewModel
 ) {
@@ -43,6 +47,9 @@ fun VerticalItemWidget(
             .border(2.dp, Color.DarkGray, RoundedCornerShape(8.dp)),
         shape = RoundedCornerShape(8.dp),
         elevation = 8.dp,
+        onClick = {
+            navigator.navigate(ItemDetailsScreenDestination)
+        }
     ) {
         Box(
             modifier = Modifier
@@ -94,6 +101,10 @@ fun VerticalItemWidget(
 @Composable
 fun PreviewVerticalItem() {
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
-        VerticalItemWidget(getMoviesList()[0], ExploreViewModel())
+        VerticalItemWidget(
+            rememberNavController() as DestinationsNavigator,
+            getMoviesList()[0],
+            ExploreViewModel()
+        )
     }
 }

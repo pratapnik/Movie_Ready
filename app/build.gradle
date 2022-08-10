@@ -3,6 +3,9 @@ plugins {
     id 'kotlin-android'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'com.google.devtools.ksp' version '1.6.10-1.0.3'
 }
 
 android {
@@ -22,11 +25,16 @@ android {
         buildConfigField "String", "API_KEY", "\"${properties.getProperty("API_KEY")}\""
     }
 
-    android.applicationVariants.all {
+    applicationVariants.all {
         variant ->
             variant.outputs.all {
                 def appName = "ishaara"
                 outputFileName = appName + "-${variant.versionName}.apk"
+            }
+            kotlin.sourceSets {
+                getByName(variant.name) {
+                    kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
+                }
             }
     }
 
@@ -48,8 +56,7 @@ android {
         dataBinding true
     }
     composeOptions {
-        kotlinCompilerVersion "1.6.10"
-        kotlinCompilerExtensionVersion '1.1.1'
+        kotlinCompilerExtensionVersion '1.1.0'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -92,6 +99,8 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.1.1'
     implementation "com.google.android.material:compose-theme-adapter:1.1.1"
     implementation "androidx.paging:paging-compose:1.0.0-alpha15"
+    implementation 'io.github.raamcosta.compose-destinations:animations-core:1.5.15-beta'
+    ksp 'io.github.raamcosta.compose-destinations:ksp:1.5.15-beta'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

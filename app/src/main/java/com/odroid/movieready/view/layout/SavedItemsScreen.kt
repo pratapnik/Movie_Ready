@@ -16,17 +16,21 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.odroid.movieready.R
 import com.odroid.movieready.view.widget.FullWidthItemWidget
 import com.odroid.movieready.view_model.ExploreViewModel
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@Destination
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun VerticalListScreen(
-    exploreViewModel: ExploreViewModel,
-    screenTitle: String
+fun SavedItemsScreen(
+    navigator: DestinationsNavigator,
+    exploreViewModel: ExploreViewModel
 ) {
     val nowPlayingMovies = exploreViewModel.getPopularMoviesPagination().collectAsLazyPagingItems()
     Column(
@@ -36,7 +40,7 @@ fun VerticalListScreen(
             .fillMaxHeight()
     ) {
         Text(
-            text = screenTitle,
+            text = "screenTitle",
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.font_bold)),
                 fontSize = 20.sp,
@@ -52,7 +56,7 @@ fun VerticalListScreen(
             items(nowPlayingMovies) { movie ->
                 if (movie != null) {
                     FullWidthItemWidget(
-                        tmdbMovie = movie
+                        navigator, tmdbMovie = movie
                     )
                 }
             }
@@ -64,6 +68,6 @@ fun VerticalListScreen(
 @Composable
 fun PreviewFavouriteScreen() {
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
-        VerticalListScreen(ExploreViewModel(), "Popular")
+        SavedItemsScreen(rememberNavController() as DestinationsNavigator, ExploreViewModel())
     }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,14 +28,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.MovieResponse
-import com.odroid.movieready.view.layout.ExploreScreen
-import com.odroid.movieready.view.layout.VerticalListScreen
-import com.odroid.movieready.view.layout.getCategoriesWithList
+import com.odroid.movieready.view.layout.*
+import com.odroid.movieready.view.layout.destinations.Destination
 import com.odroid.movieready.view_intent.BottomNavItem
 import com.odroid.movieready.view_model.ExploreViewModel
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
+import com.ramcosta.composedestinations.navigation.dependency
+import com.ramcosta.composedestinations.navigation.navigate
 
 class ExploreActivity : ComponentActivity() {
 
@@ -50,15 +55,19 @@ class ExploreActivity : ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalAnimationApi::class)
     @Composable
     fun ScaffoldWithBottomMenu() {
-        val navController = rememberNavController()
+        val navController = rememberAnimatedNavController()
         Scaffold(
             bottomBar = { BottomBar(navController) },
             backgroundColor = Color.White
         ) {
             Box(modifier = Modifier.padding(it)) {
-                NavigationGraph(navController = navController)
+                DestinationsNavHost(navController = navController, navGraph = NavGraphs.root,
+                dependenciesContainerBuilder =  {
+                    dependency(exploreViewModel)
+                })
             }
         }
     }
@@ -77,54 +86,29 @@ class ExploreActivity : ComponentActivity() {
                 .clip(RoundedCornerShape(12.dp))
 
         ) {
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route
+            val currentDestination: Destination = navController.appCurrentDestinationAsState().value
+                    ?: NavGraphs.root.startAppDestination
 
-            items.forEach {
-                BottomNavigationItem(icon = {
-                    Image(
-                        painter = painterResource(id = it.icon),
-                        "",
-                        modifier = Modifier
-                            .size(24.dp)
-                            .padding(4.dp)
-                    )
-                },
-                    label = {
-                        BottomNavigationItemText(text = it.title)
-                    },
-                    selected = currentRoute == it.screen_route,
-                    onClick = {
-                        navController.navigate(it.screen_route) {
-                            navController.graph.startDestinationRoute?.let { screen_route ->
-                                popUpTo(screen_route) {
-                                    saveState = true
-                                }
+            BottomNavigation {
+                items.forEach { destination ->
+                    BottomNavigationItem(
+                        selected = currentDestination == destination.direction,
+                        onClick = {
+                            navController.navigate(destination.direction) {
+                                launchSingleTop = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    })
-            }
-        }
-    }
-
-    @OptIn(ExperimentalMaterialApi::class)
-    @Composable
-    fun NavigationGraph(navController: NavHostController) {
-        NavHost(navController, startDestination = BottomNavItem.Movies.screen_route) {
-            composable(BottomNavItem.Movies.screen_route) {
-                ExploreScreen(getCategoriesWithList(), exploreViewModel)
-            }
-            composable(BottomNavItem.Saved.screen_route) {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    VerticalListScreen(exploreViewModel, "Popular")
+                        },
+                        icon = {
+                            Image(
+                                painter = painterResource(id = destination.icon),
+                                contentDescription = destination.title
+                            )
+                        },
+                        label = { BottomNavigationItemText(destination.title) },
+                    )
                 }
+            }
 
-            }
-            composable(BottomNavItem.TvShows.screen_route) {
-                ExploreScreen(getCategoriesWithList(), exploreViewModel)
-            }
         }
     }
 

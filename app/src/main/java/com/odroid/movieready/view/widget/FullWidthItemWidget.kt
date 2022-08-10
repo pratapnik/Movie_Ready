@@ -22,15 +22,18 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.TmdbItem
 import com.odroid.movieready.util.posterUrl
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FullWidthItemWidget(
+    navigator: DestinationsNavigator,
     tmdbMovie: TmdbItem
 ) {
     Card(
@@ -92,7 +95,11 @@ fun FullWidthItemWidget(
 @Composable
 fun PreviewFullWidthItemWidget() {
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
-        FullWidthItemWidget(TmdbItem(234L, "Humsafar", "",
-            "", "", 7F, 8L))
+        FullWidthItemWidget(
+            rememberNavController() as DestinationsNavigator, TmdbItem(
+                234L, "Humsafar", "",
+                "", "", 7F, 8L
+            )
+        )
     }
 }
