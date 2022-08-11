@@ -27,4 +27,10 @@ class ExploreViewModel: ViewModel() {
             EntertainmentPagingSource(tmdbMovieRepository, SourceType.LATEST_MOVIES)
         }.flow
     }
+
+    fun getTrendingMoviesPagination(): Flow<PagingData<TmdbItem>> {
+        return Pager(PagingConfig(pageSize = 20)) {
+            EntertainmentPagingSource(tmdbMovieRepository, SourceType.TRENDING_MOVIES)
+        }.flow
+    }
 }

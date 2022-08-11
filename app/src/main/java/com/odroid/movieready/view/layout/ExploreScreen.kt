@@ -26,7 +26,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.odroid.movieready.R
+import com.odroid.movieready.entity.SourceType
 import com.odroid.movieready.view_intent.Category
 import com.odroid.movieready.view_intent.CategoryWithList
 import com.odroid.movieready.view_model.ExploreViewModel
@@ -100,14 +102,10 @@ fun ExploreScreen(
                 }
             }
         }
-        val moviesList = categoriesWithList.find {
-            it.category == selectedChip.value
-        }?.list
-        moviesList?.let {
-            ItemListWidget(
-                navigator, it, exploreViewModel
-            )
-        }
+        val moviesList = exploreViewModel.getTrendingMoviesPagination().collectAsLazyPagingItems()
+        ItemListWidget(
+            navigator, SourceType.TRENDING_MOVIES, exploreViewModel
+        )
     }
 }
 

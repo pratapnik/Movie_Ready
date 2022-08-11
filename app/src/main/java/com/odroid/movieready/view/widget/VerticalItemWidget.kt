@@ -27,6 +27,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.MovieResponse
+import com.odroid.movieready.entity.TmdbItem
+import com.odroid.movieready.entity.TmdbResponse
+import com.odroid.movieready.util.posterUrl
 import com.odroid.movieready.view.layout.destinations.ItemDetailsScreenDestination
 import com.odroid.movieready.view_intent.getMoviesList
 import com.odroid.movieready.view_model.ExploreViewModel
@@ -36,7 +39,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun VerticalItemWidget(
     navigator: DestinationsNavigator,
-    movieResponse: MovieResponse,
+    tmdbItem: TmdbItem,
     exploreViewModel: ExploreViewModel
 ) {
     Card(
@@ -57,7 +60,7 @@ fun VerticalItemWidget(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(movieResponse.posterUrl)
+                    .data(tmdbItem.posterUrl.posterUrl())
                     .crossfade(true)
                     .error(R.drawable.app_icon_img)
                     .build(),
@@ -85,7 +88,7 @@ fun VerticalItemWidget(
                 contentAlignment = Alignment.BottomStart
             ) {
                 Text(
-                    text = movieResponse.title,
+                    text = tmdbItem.title,
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.font_bold)),
                         fontSize = 14.sp,
@@ -103,7 +106,10 @@ fun PreviewVerticalItem() {
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
         VerticalItemWidget(
             rememberNavController() as DestinationsNavigator,
-            getMoviesList()[0],
+            TmdbItem(
+                234L, "Humsafar", "",
+                "", "", 7F, 8L
+            ),
             ExploreViewModel()
         )
     }

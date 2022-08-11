@@ -4,14 +4,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -23,28 +28,25 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.MovieResponse
 import com.odroid.movieready.view.layout.*
 import com.odroid.movieready.view.layout.destinations.Destination
+import com.odroid.movieready.view.layout.destinations.ExploreScreenDestination
+import com.odroid.movieready.view.layout.destinations.SavedItemsScreenDestination
 import com.odroid.movieready.view_intent.BottomNavItem
 import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
-import com.ramcosta.composedestinations.navigation.dependency
-import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.*
+import com.ramcosta.composedestinations.utils.isRouteOnBackStack
 
 class ExploreActivity : ComponentActivity() {
 
     private val exploreViewModel: ExploreViewModel by viewModels()
     private val movieClicked = mutableStateOf(MovieResponse())
+    private lateinit var bottomBarState: MutableState<Boolean>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,60 +57,86 @@ class ExploreActivity : ComponentActivity() {
         }
     }
 
-    @OptIn(ExperimentalAnimationApi::class)
+    @OptIn(ExperimentalAnimationApi::class, ExperimentalComposeUiApi::class)
     @Composable
     fun ScaffoldWithBottomMenu() {
         val navController = rememberAnimatedNavController()
+        bottomBarState = rememberSaveable { (mutableStateOf(true)) }
         Scaffold(
-            bottomBar = { BottomBar(navController) },
+            modifier = Modifier.fillMaxSize(),
+            bottomBar = { BottomBar(navController, bottomBarState) },
             backgroundColor = Color.White
         ) {
             Box(modifier = Modifier.padding(it)) {
                 DestinationsNavHost(navController = navController, navGraph = NavGraphs.root,
-                dependenciesContainerBuilder =  {
-                    dependency(exploreViewModel)
-                })
+                    dependenciesContainerBuilder = {
+                        dependency(exploreViewModel)
+                    })
             }
         }
     }
 
+    @OptIn(ExperimentalComposeUiApi::class)
     @Composable
-    fun BottomBar(navController: NavController) {
+    fun BottomBar(navController: NavController, bottomBarState: MutableState<Boolean>) {
         val items = listOf(
             BottomNavItem.Movies,
             BottomNavItem.TvShows,
             BottomNavItem.Saved
         )
-        BottomNavigation(
-            elevation = 10.dp, backgroundColor = colorResource(id = R.color.bottom_nav_color),
-            modifier = Modifier
-                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp, top = 0.dp)
-                .clip(RoundedCornerShape(12.dp))
+        val currentDestination: Destination =
+            navController.appCurrentDestinationAsState().value
+                ?: NavGraphs.root.startAppDestination
+        when(currentDestination) {
+            ExploreScreenDestination,
+            SavedItemsScreenDestination ->
+                AnimatedVisibility(
+                    visible = bottomBarState.value,
+                    enter = slideInVertically(initialOffsetY = { it }),
+                    exit = slideOutVertically(targetOffsetY = { it }),
+                    content = {
+                        BottomNavigation(
+                            elevation = 10.dp,
+                            backgroundColor = colorResource(id = R.color.bottom_nav_color),
+                            modifier = Modifier
+                                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp, top = 0.dp)
+                                .clip(RoundedCornerShape(12.dp))
 
-        ) {
-            val currentDestination: Destination = navController.appCurrentDestinationAsState().value
-                    ?: NavGraphs.root.startAppDestination
+                        ) {
 
-            BottomNavigation {
-                items.forEach { destination ->
-                    BottomNavigationItem(
-                        selected = currentDestination == destination.direction,
-                        onClick = {
-                            navController.navigate(destination.direction) {
-                                launchSingleTop = true
+
+                            items.forEach { destination ->
+                                val isCurrentDestOnBackStack =
+                                    navController.isRouteOnBackStack(destination.direction)
+                                BottomNavigationItem(
+                                    selected = currentDestination == destination.direction,
+                                    onClick = {
+                                        if (isCurrentDestOnBackStack) {
+                                            navController.popBackStack(destination.direction, false)
+                                            return@BottomNavigationItem
+                                        }
+                                        navController.navigate(destination.direction) {
+                                            popUpTo(NavGraphs.root) {
+                                                saveState = true
+                                            }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
+                                    },
+                                    icon = {
+                                        Image(
+                                            painter = painterResource(id = destination.icon),
+                                            contentDescription = destination.title,
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                    },
+                                    label = { BottomNavigationItemText(destination.title) },
+                                )
                             }
-                        },
-                        icon = {
-                            Image(
-                                painter = painterResource(id = destination.icon),
-                                contentDescription = destination.title
-                            )
-                        },
-                        label = { BottomNavigationItemText(destination.title) },
-                    )
-                }
-            }
-
+                        }
+                    }
+                )
+            else -> {}
         }
     }
 

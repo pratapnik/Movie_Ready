@@ -26,7 +26,7 @@ class EntertainmentPagingSource(
             val dataFromRemote = when (sourceType) {
                 SourceType.POPULAR_MOVIES -> tmdbMovieRepository.getPopularMovies(page)
                 SourceType.TRENDING_MOVIES -> {
-                    tmdbMovieRepository.getPopularMovies(page)
+                    tmdbMovieRepository.getTrendingMovies(page)
                 }
                 SourceType.LATEST_MOVIES -> tmdbMovieRepository.getLatestMovies(page)
             }

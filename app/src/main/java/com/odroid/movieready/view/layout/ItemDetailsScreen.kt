@@ -27,7 +27,10 @@ fun ItemDetailsScreen(
     navigator: DestinationsNavigator,
     exploreViewModel: ExploreViewModel
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        Text(text = "Item Details Screen with movie: ")
+    Surface(modifier = Modifier.fillMaxSize(), color = Color.White) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Text(text = "Item Details Screen with movie: ")
+        }
     }
+
 }
