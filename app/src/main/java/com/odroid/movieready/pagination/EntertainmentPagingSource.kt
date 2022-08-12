@@ -1,6 +1,5 @@
 package com.odroid.movieready.pagination
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.odroid.movieready.entity.SourceType
@@ -25,16 +24,13 @@ class EntertainmentPagingSource(
             val page = params.key ?: 1
             val dataFromRemote = when (sourceType) {
                 SourceType.POPULAR_MOVIES -> tmdbMovieRepository.getPopularMovies(page)
-                SourceType.TRENDING_MOVIES -> {
-                    tmdbMovieRepository.getTrendingMovies(page)
+                SourceType.UPCOMING_MOVIES -> {
+                    tmdbMovieRepository.getUpcomingMovies(page)
                 }
                 SourceType.LATEST_MOVIES -> tmdbMovieRepository.getLatestMovies(page)
+                SourceType.TOP_RATED -> tmdbMovieRepository.getTopRatedMovies(page)
+                SourceType.NOW_PLAYING -> tmdbMovieRepository.getNowPlayingMovies(page)
             }
-
-            Log.d(
-                "NPS",
-                "pageNo: $page, latestMovies:$dataFromRemote ,latestMoviesSize: ${dataFromRemote.size}"
-            )
             return if (dataFromRemote.isEmpty()) {
                 LoadResult.Error(
                     Exception("")

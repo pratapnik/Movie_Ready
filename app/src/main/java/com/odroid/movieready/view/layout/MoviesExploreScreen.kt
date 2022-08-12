@@ -26,11 +26,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.SourceType
-import com.odroid.movieready.view_intent.Category
-import com.odroid.movieready.view_intent.CategoryWithList
+import com.odroid.movieready.theming.primaryAppTextColor
+import com.odroid.movieready.theming.primaryButtonColor
+import com.odroid.movieready.view_intent.EntertainmentCategory
 import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -39,20 +39,20 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @Composable
 fun PreviewExploreScreen() {
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
-        ExploreScreen(rememberNavController() as DestinationsNavigator, ExploreViewModel())
+        MoviesExploreScreen(rememberNavController() as DestinationsNavigator, ExploreViewModel())
     }
 }
 
 @Destination(start = true)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ExploreScreen(
+fun MoviesExploreScreen(
     navigator: DestinationsNavigator,
     exploreViewModel: ExploreViewModel
 ) {
-    val categoriesWithList = getCategoriesWithList()
+    val entertainmentCategories = exploreViewModel.getMoviesCategories()
     val selectedChip = rememberSaveable {
-        mutableStateOf(Category.TRENDING)
+        mutableStateOf(SourceType.POPULAR_MOVIES)
     }
     Column {
         LazyRow(
@@ -60,7 +60,7 @@ fun ExploreScreen(
                 .padding(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 8.dp)
                 .fillMaxWidth()
         ) {
-            items(categoriesWithList) { list: CategoryWithList ->
+            items(entertainmentCategories) { list: EntertainmentCategory ->
                 Card(
                     modifier = Modifier
                         .padding(end = 12.dp)
@@ -71,7 +71,7 @@ fun ExploreScreen(
                         2.dp,
                         colorResource(id = R.color.primary_color_dark_mode)
                     ), shape = RoundedCornerShape(16.dp),
-                    backgroundColor = if (selectedChip.value == list.category) Color.LightGray else Color.White
+                    backgroundColor = if (selectedChip.value == list.category) primaryButtonColor else Color.White
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -95,25 +95,19 @@ fun ExploreScreen(
                             style = TextStyle(
                                 fontFamily = FontFamily(Font(R.font.font_bold)),
                                 fontSize = 14.sp,
-                                color = colorResource(R.color.primary_text_color)
+                                color = if (selectedChip.value == list.category) Color.White else primaryAppTextColor
                             )
                         )
                     }
                 }
             }
         }
-        val moviesList = exploreViewModel.getTrendingMoviesPagination().collectAsLazyPagingItems()
-        ItemListWidget(
-            navigator, SourceType.TRENDING_MOVIES, exploreViewModel
-        )
+        when(selectedChip.value) {
+            SourceType.POPULAR_MOVIES -> PopularMoviesScreen(navigator = navigator, exploreViewModel = exploreViewModel)
+            SourceType.TOP_RATED -> TopRatedMoviesScreen(navigator = navigator, exploreViewModel = exploreViewModel)
+            SourceType.NOW_PLAYING -> NowPlayingMoviesScreen(navigator = navigator, exploreViewModel = exploreViewModel)
+            SourceType.UPCOMING_MOVIES -> UpcomingMoviesScreen(navigator = navigator, exploreViewModel = exploreViewModel)
+            else -> {}
+        }
     }
-}
-
-fun getCategoriesWithList(): ArrayList<CategoryWithList> {
-    return arrayListOf(
-        CategoryWithList.Trending,
-        CategoryWithList.NowPlaying,
-        CategoryWithList.Popular,
-        CategoryWithList.TopRated
-    )
 }

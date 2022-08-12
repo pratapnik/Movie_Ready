@@ -4,14 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -32,14 +35,17 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.MovieResponse
-import com.odroid.movieready.view.layout.*
-import com.odroid.movieready.view.layout.destinations.Destination
-import com.odroid.movieready.view.layout.destinations.ExploreScreenDestination
-import com.odroid.movieready.view.layout.destinations.SavedItemsScreenDestination
+import com.odroid.movieready.view.layout.NavGraphs
+import com.odroid.movieready.view.layout.appCurrentDestinationAsState
+import com.odroid.movieready.view.layout.destinations.*
+import com.odroid.movieready.view.layout.startAppDestination
 import com.odroid.movieready.view_intent.BottomNavItem
 import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.navigation.*
+import com.ramcosta.composedestinations.navigation.dependency
+import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.popBackStack
+import com.ramcosta.composedestinations.navigation.popUpTo
 import com.ramcosta.composedestinations.utils.isRouteOnBackStack
 
 class ExploreActivity : ComponentActivity() {
@@ -87,55 +93,49 @@ class ExploreActivity : ComponentActivity() {
         val currentDestination: Destination =
             navController.appCurrentDestinationAsState().value
                 ?: NavGraphs.root.startAppDestination
-        when(currentDestination) {
-            ExploreScreenDestination,
+        when (currentDestination) {
+            PopularMoviesScreenDestination,
+            TopRatedMoviesScreenDestination,
+            NowPlayingMoviesScreenDestination,
+            MoviesExploreScreenDestination,
             SavedItemsScreenDestination ->
-                AnimatedVisibility(
-                    visible = bottomBarState.value,
-                    enter = slideInVertically(initialOffsetY = { it }),
-                    exit = slideOutVertically(targetOffsetY = { it }),
-                    content = {
-                        BottomNavigation(
-                            elevation = 10.dp,
-                            backgroundColor = colorResource(id = R.color.bottom_nav_color),
-                            modifier = Modifier
-                                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp, top = 0.dp)
-                                .clip(RoundedCornerShape(12.dp))
+                BottomNavigation(
+                    elevation = 10.dp,
+                    backgroundColor = colorResource(id = R.color.bottom_nav_color),
+                    modifier = Modifier
+                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp, top = 0.dp)
+                        .clip(RoundedCornerShape(12.dp))
 
-                        ) {
-
-
-                            items.forEach { destination ->
-                                val isCurrentDestOnBackStack =
-                                    navController.isRouteOnBackStack(destination.direction)
-                                BottomNavigationItem(
-                                    selected = currentDestination == destination.direction,
-                                    onClick = {
-                                        if (isCurrentDestOnBackStack) {
-                                            navController.popBackStack(destination.direction, false)
-                                            return@BottomNavigationItem
-                                        }
-                                        navController.navigate(destination.direction) {
-                                            popUpTo(NavGraphs.root) {
-                                                saveState = true
-                                            }
-                                            launchSingleTop = true
-                                            restoreState = true
-                                        }
-                                    },
-                                    icon = {
-                                        Image(
-                                            painter = painterResource(id = destination.icon),
-                                            contentDescription = destination.title,
-                                            modifier = Modifier.size(24.dp)
-                                        )
-                                    },
-                                    label = { BottomNavigationItemText(destination.title) },
+                ) {
+                    items.forEach { destination ->
+                        val isCurrentDestOnBackStack =
+                            navController.isRouteOnBackStack(destination.direction)
+                        BottomNavigationItem(
+                            selected = currentDestination == destination.direction,
+                            onClick = {
+                                if (isCurrentDestOnBackStack) {
+                                    navController.popBackStack(destination.direction, false)
+                                    return@BottomNavigationItem
+                                }
+                                navController.navigate(destination.direction) {
+                                    popUpTo(NavGraphs.root) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            },
+                            icon = {
+                                Image(
+                                    painter = painterResource(id = destination.icon),
+                                    contentDescription = destination.title,
+                                    modifier = Modifier.size(24.dp)
                                 )
-                            }
-                        }
+                            },
+                            label = { BottomNavigationItemText(destination.title) },
+                        )
                     }
-                )
+                }
             else -> {}
         }
     }

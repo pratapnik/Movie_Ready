@@ -26,12 +26,9 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
-import com.odroid.movieready.entity.MovieResponse
 import com.odroid.movieready.entity.TmdbItem
-import com.odroid.movieready.entity.TmdbResponse
 import com.odroid.movieready.util.posterUrl
 import com.odroid.movieready.view.layout.destinations.ItemDetailsScreenDestination
-import com.odroid.movieready.view_intent.getMoviesList
 import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 

@@ -30,4 +30,10 @@ interface TmdbMovieApi {
         @Query("api_key") apiKey: String = BuildConfig.API_KEY,
         @Query("page") pageNumber: Int
     ): TmdbResponse
+
+    @GET("movie/now_playing")
+    suspend fun getNowPlayingMovies(
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
+        @Query("page") pageNumber: Int
+    ): TmdbResponse
 }
