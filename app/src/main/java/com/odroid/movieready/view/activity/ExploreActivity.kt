@@ -5,23 +5,21 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -34,14 +32,19 @@ import androidx.navigation.NavController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.odroid.movieready.R
-import com.odroid.movieready.entity.MovieResponse
+import com.odroid.movieready.entity.SourceType
+import com.odroid.movieready.theming.primaryAppTextColor
+import com.odroid.movieready.theming.primaryButtonColor
+import com.odroid.movieready.theming.primaryDarkModeAppTextColor
 import com.odroid.movieready.view.layout.NavGraphs
 import com.odroid.movieready.view.layout.appCurrentDestinationAsState
 import com.odroid.movieready.view.layout.destinations.*
 import com.odroid.movieready.view.layout.startAppDestination
 import com.odroid.movieready.view_intent.BottomNavItem
+import com.odroid.movieready.view_intent.EntertainmentCategory
 import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.manualcomposablecalls.composable
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.popBackStack
@@ -51,8 +54,6 @@ import com.ramcosta.composedestinations.utils.isRouteOnBackStack
 class ExploreActivity : ComponentActivity() {
 
     private val exploreViewModel: ExploreViewModel by viewModels()
-    private val movieClicked = mutableStateOf(MovieResponse())
-    private lateinit var bottomBarState: MutableState<Boolean>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,13 +68,35 @@ class ExploreActivity : ComponentActivity() {
     @Composable
     fun ScaffoldWithBottomMenu() {
         val navController = rememberAnimatedNavController()
-        bottomBarState = rememberSaveable { (mutableStateOf(true)) }
+        val currentDestination: Destination =
+            navController.appCurrentDestinationAsState().value
+                ?: NavGraphs.root.startAppDestination
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            bottomBar = { BottomBar(navController, bottomBarState) },
-            backgroundColor = Color.White
+            bottomBar = { BottomBar(navController) },
+            backgroundColor = Color.White,
+            topBar = {
+                when(currentDestination) {
+                    PopularMoviesScreenDestination,
+                    TopRatedMoviesScreenDestination,
+                    NowPlayingMoviesScreenDestination,
+                    UpcomingMoviesScreenDestination -> {
+                        TopAppBar {
+                            Text(
+                                text = "movies",
+                                modifier = Modifier.padding(start = 16.dp, top = 6.dp),
+                                style = TextStyle(
+                                    color = primaryDarkModeAppTextColor,
+                                    fontSize = 24.sp, fontFamily = FontFamily(Font(R.font.font_bold))
+                                )
+                            )
+                        }
+                    }
+                    else -> {}
+                }
+            }
         ) {
-            Box(modifier = Modifier.padding(it)) {
+            Box(modifier = Modifier.fillMaxSize()) {
                 DestinationsNavHost(navController = navController, navGraph = NavGraphs.root,
                     dependenciesContainerBuilder = {
                         dependency(exploreViewModel)
@@ -84,12 +107,8 @@ class ExploreActivity : ComponentActivity() {
 
     @OptIn(ExperimentalComposeUiApi::class)
     @Composable
-    fun BottomBar(navController: NavController, bottomBarState: MutableState<Boolean>) {
-        val items = listOf(
-            BottomNavItem.Movies,
-            BottomNavItem.TvShows,
-            BottomNavItem.Saved
-        )
+    fun BottomBar(navController: NavController) {
+        val bottomNavItems = exploreViewModel.getMoviesCategories()
         val currentDestination: Destination =
             navController.appCurrentDestinationAsState().value
                 ?: NavGraphs.root.startAppDestination
@@ -97,17 +116,15 @@ class ExploreActivity : ComponentActivity() {
             PopularMoviesScreenDestination,
             TopRatedMoviesScreenDestination,
             NowPlayingMoviesScreenDestination,
-            MoviesExploreScreenDestination,
-            SavedItemsScreenDestination ->
+            UpcomingMoviesScreenDestination ->
                 BottomNavigation(
                     elevation = 10.dp,
                     backgroundColor = colorResource(id = R.color.bottom_nav_color),
                     modifier = Modifier
-                        .padding(start = 8.dp, end = 8.dp, bottom = 8.dp, top = 0.dp)
-                        .clip(RoundedCornerShape(12.dp))
-
+                        .fillMaxWidth()
+                        .height(50.dp)
                 ) {
-                    items.forEach { destination ->
+                    bottomNavItems.forEach { destination ->
                         val isCurrentDestOnBackStack =
                             navController.isRouteOnBackStack(destination.direction)
                         BottomNavigationItem(
@@ -129,7 +146,7 @@ class ExploreActivity : ComponentActivity() {
                                 Image(
                                     painter = painterResource(id = destination.icon),
                                     contentDescription = destination.title,
-                                    modifier = Modifier.size(24.dp)
+                                    modifier = Modifier.size(16.dp)
                                 )
                             },
                             label = { BottomNavigationItemText(destination.title) },
@@ -143,7 +160,7 @@ class ExploreActivity : ComponentActivity() {
     @Composable
     fun BottomNavigationItemText(text: String) {
         Text(
-            text = text, modifier = Modifier.padding(top = 4.dp), style = TextStyle(
+            text = text, modifier = Modifier.padding(top = 2.dp), style = TextStyle(
                 color = colorResource(R.color.white),
                 fontSize = 10.sp, fontFamily = FontFamily(Font(R.font.font_bold))
             )

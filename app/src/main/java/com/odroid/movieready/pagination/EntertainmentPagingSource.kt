@@ -27,7 +27,6 @@ class EntertainmentPagingSource(
                 SourceType.UPCOMING_MOVIES -> {
                     tmdbMovieRepository.getUpcomingMovies(page)
                 }
-                SourceType.LATEST_MOVIES -> tmdbMovieRepository.getLatestMovies(page)
                 SourceType.TOP_RATED -> tmdbMovieRepository.getTopRatedMovies(page)
                 SourceType.NOW_PLAYING -> tmdbMovieRepository.getNowPlayingMovies(page)
             }

@@ -43,71 +43,12 @@ fun PreviewExploreScreen() {
     }
 }
 
-@Destination(start = true)
+@Destination
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MoviesExploreScreen(
     navigator: DestinationsNavigator,
     exploreViewModel: ExploreViewModel
 ) {
-    val entertainmentCategories = exploreViewModel.getMoviesCategories()
-    val selectedChip = rememberSaveable {
-        mutableStateOf(SourceType.POPULAR_MOVIES)
-    }
-    Column {
-        LazyRow(
-            modifier = Modifier
-                .padding(start = 12.dp, end = 12.dp, top = 16.dp, bottom = 8.dp)
-                .fillMaxWidth()
-        ) {
-            items(entertainmentCategories) { list: EntertainmentCategory ->
-                Card(
-                    modifier = Modifier
-                        .padding(end = 12.dp)
-                        .clickable {
-                            selectedChip.value = list.category
-                        },
-                    border = BorderStroke(
-                        2.dp,
-                        colorResource(id = R.color.primary_color_dark_mode)
-                    ), shape = RoundedCornerShape(16.dp),
-                    backgroundColor = if (selectedChip.value == list.category) primaryButtonColor else Color.White
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(
-                            start = 12.dp,
-                            end = 12.dp,
-                            top = 8.dp,
-                            bottom = 8.dp
-                        )
-                    ) {
-                        Image(
-                            modifier = Modifier
-                                .height(20.dp)
-                                .width(20.dp),
-                            painter = painterResource(id = list.icon),
-                            contentDescription = "contentDescription"
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = list.title,
-                            style = TextStyle(
-                                fontFamily = FontFamily(Font(R.font.font_bold)),
-                                fontSize = 14.sp,
-                                color = if (selectedChip.value == list.category) Color.White else primaryAppTextColor
-                            )
-                        )
-                    }
-                }
-            }
-        }
-        when(selectedChip.value) {
-            SourceType.POPULAR_MOVIES -> PopularMoviesScreen(navigator = navigator, exploreViewModel = exploreViewModel)
-            SourceType.TOP_RATED -> TopRatedMoviesScreen(navigator = navigator, exploreViewModel = exploreViewModel)
-            SourceType.NOW_PLAYING -> NowPlayingMoviesScreen(navigator = navigator, exploreViewModel = exploreViewModel)
-            SourceType.UPCOMING_MOVIES -> UpcomingMoviesScreen(navigator = navigator, exploreViewModel = exploreViewModel)
-            else -> {}
-        }
-    }
+
 }

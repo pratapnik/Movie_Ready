@@ -11,6 +11,10 @@ import com.odroid.movieready.entity.SourceType
 import com.odroid.movieready.entity.TmdbItem
 import com.odroid.movieready.repository.TmdbMovieRepositoryImpl
 import com.odroid.movieready.pagination.EntertainmentPagingSource
+import com.odroid.movieready.view.layout.destinations.NowPlayingMoviesScreenDestination
+import com.odroid.movieready.view.layout.destinations.PopularMoviesScreenDestination
+import com.odroid.movieready.view.layout.destinations.TopRatedMoviesScreenDestination
+import com.odroid.movieready.view.layout.destinations.UpcomingMoviesScreenDestination
 import com.odroid.movieready.view_intent.EntertainmentCategory
 import kotlinx.coroutines.flow.Flow
 
@@ -22,12 +26,6 @@ class ExploreViewModel: ViewModel() {
         return Pager(PagingConfig(pageSize = 20)) {
             EntertainmentPagingSource(tmdbMovieRepository, SourceType.POPULAR_MOVIES)
         }.flow.cachedIn(viewModelScope)
-    }
-
-    fun getTrendingMoviesPagination(): Flow<PagingData<TmdbItem>> {
-        return Pager(PagingConfig(pageSize = 20)) {
-            EntertainmentPagingSource(tmdbMovieRepository, SourceType.UPCOMING_MOVIES)
-        }.flow
     }
 
     fun getTopRatedMoviesPagination(): Flow<PagingData<TmdbItem>> {
@@ -54,28 +52,32 @@ class ExploreViewModel: ViewModel() {
             EntertainmentCategory(
                 title = "popular",
                 icon = R.drawable.hot,
-                SourceType.POPULAR_MOVIES
+                SourceType.POPULAR_MOVIES,
+                PopularMoviesScreenDestination
             )
         )
         movieCategories.add(
             EntertainmentCategory(
                 title = "upcoming",
                 icon = R.drawable.ic_rating,
-                SourceType.UPCOMING_MOVIES
+                SourceType.UPCOMING_MOVIES,
+                UpcomingMoviesScreenDestination
             )
         )
         movieCategories.add(
             EntertainmentCategory(
                 title = "now playing",
                 icon = R.drawable.ic_play_button,
-                SourceType.NOW_PLAYING
+                SourceType.NOW_PLAYING,
+                NowPlayingMoviesScreenDestination
             )
         )
         movieCategories.add(
             EntertainmentCategory(
                 title = "top rated",
                 icon = R.drawable.ic_rating,
-                SourceType.TOP_RATED
+                SourceType.TOP_RATED,
+                TopRatedMoviesScreenDestination
             )
         )
         return movieCategories

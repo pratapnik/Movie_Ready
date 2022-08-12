@@ -7,12 +7,6 @@ import retrofit2.http.Query
 
 interface TmdbMovieApi {
 
-    @GET("movie/latest")
-    suspend fun getLatestMovies(
-        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
-        @Query("page") pageNumber: Int
-    ): TmdbResponse
-
     @GET("movie/popular")
     suspend fun getPopularMovies(
         @Query("api_key") apiKey: String = BuildConfig.API_KEY,
