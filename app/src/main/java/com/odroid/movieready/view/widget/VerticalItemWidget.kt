@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,6 +28,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.TmdbItem
+import com.odroid.movieready.theming.boldFont
+import com.odroid.movieready.theming.primaryAppTextColor
+import com.odroid.movieready.theming.regularFont
 import com.odroid.movieready.util.posterUrl
 import com.odroid.movieready.view.layout.destinations.ItemDetailsScreenDestination
 import com.odroid.movieready.view_model.ExploreViewModel
@@ -41,57 +45,50 @@ fun VerticalItemWidget(
 ) {
     Card(
         modifier = Modifier
-            .height(300.dp)
-            .width(150.dp)
-            .padding(end = 4.dp, bottom = 4.dp)
-            .border(2.dp, Color.DarkGray, RoundedCornerShape(8.dp)),
+            .height(200.dp)
+            .fillMaxWidth()
+            .padding(end = 12.dp, bottom = 8.dp, start = 12.dp),
         shape = RoundedCornerShape(8.dp),
-        elevation = 8.dp,
+        elevation = 12.dp,
         onClick = {
             navigator.navigate(ItemDetailsScreenDestination)
         }
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-        ) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(tmdbItem.posterUrl.posterUrl())
-                    .crossfade(true)
-                    .error(R.drawable.app_icon_img)
-                    .build(),
-                placeholder = painterResource(R.drawable.app_icon_img),
-                contentDescription = "contentDescription",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Transparent,
-                                Color.Black
-                            ), startY = 100f
+        Box {
+            Row(modifier = Modifier.fillMaxSize()) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(tmdbItem.posterUrl.posterUrl())
+                        .crossfade(true)
+                        .error(R.drawable.app_icon_img)
+                        .build(),
+                    placeholder = painterResource(R.drawable.app_icon_img),
+                    contentDescription = "contentDescription",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(0.35f)
+                )
+                Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
+                    Text(
+                        text = tmdbItem.title,
+                        style = TextStyle(
+                            fontFamily = boldFont,
+                            fontSize = 16.sp,
+                            color = primaryAppTextColor
                         )
                     )
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(12.dp),
-                contentAlignment = Alignment.BottomStart
-            ) {
-                Text(
-                    text = tmdbItem.title,
-                    style = TextStyle(
-                        fontFamily = FontFamily(Font(R.font.font_bold)),
-                        fontSize = 14.sp,
-                        color = Color.White
+                    Text(
+                        text = tmdbItem.description,
+                        style = TextStyle(
+                            fontFamily = regularFont,
+                            fontSize = 12.sp,
+                            color = primaryAppTextColor
+                        ),
+                        maxLines = 4,
+                        overflow = TextOverflow.Ellipsis
                     )
-                )
+                }
             }
         }
     }
