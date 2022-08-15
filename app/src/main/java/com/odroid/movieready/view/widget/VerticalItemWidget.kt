@@ -1,5 +1,6 @@
 package com.odroid.movieready.view.widget
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -17,14 +18,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.TmdbItem
-import com.odroid.movieready.theming.boldFont
+import com.odroid.movieready.theming.fontBold
+import com.odroid.movieready.theming.fontRegular
 import com.odroid.movieready.theming.primaryAppTextColor
-import com.odroid.movieready.theming.regularFont
+import com.odroid.movieready.util.DummyDestinationsNavigator
 import com.odroid.movieready.util.posterUrl
 import com.odroid.movieready.view.layout.destinations.ItemDetailsScreenDestination
 import com.odroid.movieready.view_model.ExploreViewModel
@@ -63,11 +64,15 @@ fun VerticalItemWidget(
                         .fillMaxHeight()
                         .fillMaxWidth(0.35f)
                 )
-                Column(modifier = Modifier.fillMaxSize().padding(8.dp)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
+                ) {
                     Text(
                         text = tmdbItem.title,
                         style = TextStyle(
-                            fontFamily = boldFont,
+                            fontFamily = fontBold,
                             fontSize = 16.sp,
                             color = primaryAppTextColor
                         )
@@ -75,12 +80,21 @@ fun VerticalItemWidget(
                     Text(
                         text = tmdbItem.description,
                         style = TextStyle(
-                            fontFamily = regularFont,
+                            fontFamily = fontRegular,
                             fontSize = 12.sp,
                             color = primaryAppTextColor
                         ),
+                        lineHeight = 14.sp,
                         maxLines = 4,
                         overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = tmdbItem.avgRating.toString().plus("/10"),
+                        style = TextStyle(
+                            fontFamily = fontBold,
+                            fontSize = 16.sp,
+                            color = primaryAppTextColor
+                        )
                     )
                 }
             }
@@ -88,12 +102,13 @@ fun VerticalItemWidget(
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Preview
 @Composable
 fun PreviewVerticalItem() {
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
         VerticalItemWidget(
-            rememberNavController() as DestinationsNavigator,
+            DummyDestinationsNavigator(),
             TmdbItem(
                 234L, "Humsafar", "",
                 "", "", 7F, 8L

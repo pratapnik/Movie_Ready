@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
-import com.odroid.movieready.theming.boldFont
+import com.odroid.movieready.theming.fontBold
 import com.odroid.movieready.theming.primaryAppTextColor
 import com.odroid.movieready.theming.primaryButtonTextColor
 
@@ -157,7 +157,7 @@ fun MovieSuggestionCard(
                     Text(
                         text = title,
                         style = TextStyle(
-                            fontFamily = boldFont,
+                            fontFamily = fontBold,
                             fontSize = 20.sp,
                             color = Color.White
                         )
@@ -186,7 +186,7 @@ fun MovieSuggestionCard(
                     text = stringResource(id = R.string.get_movie_button_label),
                     style = TextStyle(
                         color = primaryButtonTextColor,
-                        fontSize = 20.sp, fontFamily = boldFont
+                        fontSize = 20.sp, fontFamily = fontBold
                     )
                 )
             },
