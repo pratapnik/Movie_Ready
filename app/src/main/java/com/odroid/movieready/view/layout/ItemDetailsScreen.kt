@@ -1,5 +1,6 @@
 package com.odroid.movieready.view.layout
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -24,6 +25,7 @@ import com.odroid.movieready.R
 import com.odroid.movieready.theming.fontBold
 import com.odroid.movieready.theming.primaryAppTextColor
 import com.odroid.movieready.theming.fontRegular
+import com.odroid.movieready.theming.primaryAppColor
 import com.odroid.movieready.util.DummyDestinationsNavigator
 import com.odroid.movieready.util.posterUrl
 import com.odroid.movieready.view_model.ExploreViewModel
@@ -55,29 +57,33 @@ fun ItemDetailsScreen(
     val movieDetail by exploreViewModel.movieDetail.observeAsState()
     movieDetail?.let {
         Surface(modifier = Modifier.fillMaxSize(), color = Color.White) {
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
                 AsyncImage(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(300.dp)
+                        .background(primaryAppColor),
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(it.posterPath.posterUrl())
                         .crossfade(true)
                         .error(R.drawable.app_icon_img)
                         .build(),
                     placeholder = painterResource(R.drawable.app_icon_img),
-                    contentDescription = "movie_detail_poster",
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    contentDescription = "movie_detail_poster"
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = it.movieTitle,
                     style = TextStyle(
                         fontFamily = fontBold,
-                        fontSize = 16.sp,
+                        fontSize = 24.sp,
                         color = primaryAppTextColor
                     ),
-                    modifier = Modifier.padding(12.dp)
+                    modifier = Modifier.padding(top = 12.dp, start = 16.dp, end = 16.dp)
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -85,9 +91,10 @@ fun ItemDetailsScreen(
                     style = TextStyle(
                         fontFamily = fontRegular,
                         fontSize = 14.sp,
-                        color = primaryAppTextColor
+                        color = primaryAppTextColor,
+                        lineHeight = 18.sp
                     ),
-                    modifier = Modifier.padding(12.dp)
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                 )
             }
         }
