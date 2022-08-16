@@ -72,7 +72,7 @@ class ExploreViewModel : ViewModel() {
         movieCategories.add(
             EntertainmentCategory(
                 title = "upcoming",
-                icon = R.drawable.ic_rating,
+                icon = R.drawable.ic_upcoming,
                 SourceType.UPCOMING_MOVIES,
                 UpcomingMoviesScreenDestination
             )

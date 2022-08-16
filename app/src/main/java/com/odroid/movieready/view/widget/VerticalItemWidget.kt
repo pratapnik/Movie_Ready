@@ -23,6 +23,7 @@ import coil.request.ImageRequest
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.TmdbItem
 import com.odroid.movieready.theming.fontBold
+import com.odroid.movieready.theming.fontMedium
 import com.odroid.movieready.theming.fontRegular
 import com.odroid.movieready.theming.primaryAppTextColor
 import com.odroid.movieready.util.DummyDestinationsNavigator
@@ -42,8 +43,8 @@ fun VerticalItemWidget(
         modifier = Modifier
             .height(200.dp)
             .fillMaxWidth()
-            .padding(end = 12.dp, bottom = 8.dp, start = 12.dp),
-        shape = RoundedCornerShape(8.dp),
+            .padding(end = 16.dp, bottom = 12.dp, start = 16.dp),
+        shape = RoundedCornerShape(16.dp),
         elevation = 12.dp,
         onClick = {
             navigator.navigate(ItemDetailsScreenDestination(movieId = tmdbItem.id))
@@ -86,14 +87,26 @@ fun VerticalItemWidget(
                         ),
                         lineHeight = 14.sp,
                         maxLines = 4,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(top = 4.dp)
                     )
                     Text(
                         text = tmdbItem.avgRating.toString().plus("/10"),
                         style = TextStyle(
-                            fontFamily = fontBold,
-                            fontSize = 16.sp,
-                            color = primaryAppTextColor
+                            fontFamily = fontMedium,
+                            fontSize = 12.sp,
+                            color = primaryAppTextColor,
+                            letterSpacing = 1.sp
+                        ),
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                    Text(
+                        text = "(${tmdbItem.ratingCount})",
+                        style = TextStyle(
+                            fontFamily = fontMedium,
+                            fontSize = 8.sp,
+                            color = primaryAppTextColor,
+                            letterSpacing = 1.sp
                         )
                     )
                 }

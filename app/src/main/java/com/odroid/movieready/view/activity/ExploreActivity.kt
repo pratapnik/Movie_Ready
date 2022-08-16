@@ -24,6 +24,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.navigation.material.ModalBottomSheetLayout
+import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.odroid.movieready.R
 import com.odroid.movieready.view.layout.NavGraphs
@@ -32,6 +35,7 @@ import com.odroid.movieready.view.layout.destinations.*
 import com.odroid.movieready.view.layout.startAppDestination
 import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.popBackStack
@@ -51,21 +55,24 @@ class ExploreActivity : ComponentActivity() {
         }
     }
 
-    @OptIn(ExperimentalAnimationApi::class, ExperimentalComposeUiApi::class)
+    @OptIn(
+        ExperimentalAnimationApi::class, ExperimentalComposeUiApi::class,
+        ExperimentalMaterialNavigationApi::class
+    )
     @Composable
     fun ScaffoldWithBottomMenu() {
         val navController = rememberAnimatedNavController()
+        val navHostEngine = rememberAnimatedNavHostEngine()
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             bottomBar = { BottomBar(navController) },
             backgroundColor = Color.White
         ) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                DestinationsNavHost(navController = navController, navGraph = NavGraphs.root,
-                    dependenciesContainerBuilder = {
-                        dependency(exploreViewModel)
-                    })
-            }
+            DestinationsNavHost(navController = navController,
+                navGraph = NavGraphs.root,
+                dependenciesContainerBuilder = {
+                    dependency(exploreViewModel)
+                }, engine = navHostEngine)
         }
     }
 

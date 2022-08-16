@@ -18,14 +18,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
 import com.odroid.movieready.theming.fontBold
-import com.odroid.movieready.theming.primaryAppTextColor
 import com.odroid.movieready.theming.fontRegular
 import com.odroid.movieready.theming.primaryAppColor
+import com.odroid.movieready.theming.primaryAppTextColor
 import com.odroid.movieready.util.DummyDestinationsNavigator
 import com.odroid.movieready.util.posterUrl
 import com.odroid.movieready.view_model.ExploreViewModel
@@ -99,5 +98,4 @@ fun ItemDetailsScreen(
             }
         }
     }
-
 }
