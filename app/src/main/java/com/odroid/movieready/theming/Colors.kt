@@ -7,3 +7,6 @@ val primaryDarkModeAppTextColor = Color.White
 val primaryButtonTextColor = Color.White
 val primaryAppColor = Color(0xFF121419)
 val primaryButtonColor = primaryAppColor
+val ratingCardColor = Color(0xFF2D4059)
+val grayColor = Color(0xFF999999)
+val redColor = Color(0xFFFF2E63)

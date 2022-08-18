@@ -22,10 +22,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.TmdbItem
-import com.odroid.movieready.theming.fontBold
-import com.odroid.movieready.theming.fontMedium
-import com.odroid.movieready.theming.fontRegular
-import com.odroid.movieready.theming.primaryAppTextColor
+import com.odroid.movieready.theming.*
 import com.odroid.movieready.util.DummyDestinationsNavigator
 import com.odroid.movieready.util.posterUrl
 import com.odroid.movieready.view.layout.destinations.ItemDetailsScreenDestination
@@ -37,7 +34,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 fun VerticalItemWidget(
     navigator: DestinationsNavigator,
     tmdbItem: TmdbItem,
-    exploreViewModel: ExploreViewModel
+    exploreViewModel: ExploreViewModel,
+//    onItemClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -47,27 +45,46 @@ fun VerticalItemWidget(
         shape = RoundedCornerShape(16.dp),
         elevation = 12.dp,
         onClick = {
+//            onItemClick.invoke()
             navigator.navigate(ItemDetailsScreenDestination(movieId = tmdbItem.id))
         }
     ) {
-        Box {
-            Row(modifier = Modifier.fillMaxSize()) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(tmdbItem.posterUrl.posterUrl())
-                        .crossfade(true)
-                        .error(R.drawable.app_icon_img)
-                        .build(),
-                    placeholder = painterResource(R.drawable.app_icon_img),
-                    contentDescription = "contentDescription",
-                    contentScale = ContentScale.Crop,
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+            ) {
+                Card(
                     modifier = Modifier
-                        .fillMaxHeight()
+                        .height(200.dp)
                         .fillMaxWidth(0.35f)
-                )
+                        .padding(8.dp),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(tmdbItem.posterUrl.posterUrl())
+                            .crossfade(true)
+                            .error(R.drawable.app_icon_img)
+                            .build(),
+                        placeholder = painterResource(R.drawable.app_icon_img),
+                        contentDescription = "contentDescription",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .height(200.dp)
+                            .fillMaxWidth()
+                    )
+                }
+
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
+                        .height(200.dp)
                         .padding(8.dp)
                 ) {
                     Text(
@@ -76,7 +93,8 @@ fun VerticalItemWidget(
                             fontFamily = fontBold,
                             fontSize = 16.sp,
                             color = primaryAppTextColor
-                        )
+                        ),
+                        modifier = Modifier.padding(top = 8.dp)
                     )
                     Text(
                         text = tmdbItem.description,
@@ -90,25 +108,41 @@ fun VerticalItemWidget(
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.padding(top = 4.dp)
                     )
-                    Text(
-                        text = tmdbItem.avgRating.toString().plus("/10"),
-                        style = TextStyle(
-                            fontFamily = fontMedium,
-                            fontSize = 12.sp,
-                            color = primaryAppTextColor,
-                            letterSpacing = 1.sp
-                        ),
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                    Text(
-                        text = "(${tmdbItem.ratingCount})",
-                        style = TextStyle(
-                            fontFamily = fontMedium,
-                            fontSize = 8.sp,
-                            color = primaryAppTextColor,
-                            letterSpacing = 1.sp
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Column(
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth().fillMaxHeight()
+                    ) {
+                        Card(
+                            shape = RoundedCornerShape(16.dp),
+                            backgroundColor = ratingCardColor
+                        ) {
+                            Text(
+                                text = tmdbItem.avgRating.toString(),
+                                style = TextStyle(
+                                    fontFamily = fontMedium,
+                                    fontSize = 12.sp,
+                                    color = primaryButtonTextColor,
+                                    letterSpacing = 1.sp
+                                ),
+                                modifier = Modifier.padding(
+                                    start = 8.dp,
+                                    end = 8.dp,
+                                    top = 4.dp,
+                                    bottom = 4.dp
+                                )
+                            )
+                        }
+                        Text(
+                            text = "release date: ${tmdbItem.releaseDate}",
+                            style = TextStyle(
+                                fontFamily = fontRegular,
+                                fontSize = 12.sp,
+                                color = grayColor
+                            ),
+                            modifier = Modifier.padding(bottom = 4.dp)
                         )
-                    )
+                    }
                 }
             }
         }
@@ -126,7 +160,7 @@ fun PreviewVerticalItem() {
                 234L, "Humsafar", "",
                 "", "", 7F, 8L
             ),
-            ExploreViewModel()
+            ExploreViewModel(),
         )
     }
 }
