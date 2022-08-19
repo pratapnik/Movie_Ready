@@ -12,4 +12,7 @@ interface TmdbMovieRepository {
     suspend fun getTopRatedMovies(page: Int): List<TmdbItem>
     suspend fun getNowPlayingMovies(page: Int): List<TmdbItem>
     suspend fun getMovieDetails(movieId: Long): Flow<MovieDetail?>
+    suspend fun addToWatchlist(tmdbItem: TmdbItem)
+    suspend fun removeMovieFromWatchlist(movieId: Long)
+    fun getWatchlistMovies(): Flow<List<TmdbItem>>?
 }

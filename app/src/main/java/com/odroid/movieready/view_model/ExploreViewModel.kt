@@ -1,6 +1,7 @@
 package com.odroid.movieready.view_model
 
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +13,7 @@ import com.odroid.movieready.R
 import com.odroid.movieready.entity.MovieDetail
 import com.odroid.movieready.entity.SourceType
 import com.odroid.movieready.entity.TmdbItem
+import com.odroid.movieready.entity.TmdbListUiState
 import com.odroid.movieready.pagination.EntertainmentPagingSource
 import com.odroid.movieready.repository.TmdbMovieRepositoryImpl
 import com.odroid.movieready.util.Constants
@@ -20,7 +22,8 @@ import com.odroid.movieready.view.layout.destinations.PopularMoviesScreenDestina
 import com.odroid.movieready.view.layout.destinations.TopRatedMoviesScreenDestination
 import com.odroid.movieready.view.layout.destinations.UpcomingMoviesScreenDestination
 import com.odroid.movieready.view_intent.EntertainmentCategory
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class ExploreViewModel : ViewModel() {
@@ -32,6 +35,8 @@ class ExploreViewModel : ViewModel() {
     var upcomingListState: LazyListState = LazyListState()
     var nowPlayingListState: LazyListState = LazyListState()
     var topRatedListState: LazyListState = LazyListState()
+    private val _watchMoviesStateFlow: MutableStateFlow<List<TmdbItem>> = MutableStateFlow(emptyList())
+    val watchMoviesStateFlow = _watchMoviesStateFlow.asStateFlow()
 
     fun getPopularMoviesPagination(): Flow<PagingData<TmdbItem>> {
         return Pager(PagingConfig(pageSize = 20)) {
@@ -42,19 +47,19 @@ class ExploreViewModel : ViewModel() {
     fun getTopRatedMoviesPagination(): Flow<PagingData<TmdbItem>> {
         return Pager(PagingConfig(pageSize = 20)) {
             EntertainmentPagingSource(tmdbMovieRepository, SourceType.TOP_RATED)
-        }.flow
+        }.flow.cachedIn(viewModelScope)
     }
 
     fun getNowPlayingMoviesPagination(): Flow<PagingData<TmdbItem>> {
         return Pager(PagingConfig(pageSize = 20)) {
             EntertainmentPagingSource(tmdbMovieRepository, SourceType.NOW_PLAYING)
-        }.flow
+        }.flow.cachedIn(viewModelScope)
     }
 
     fun getUpcomingMoviesPagination(): Flow<PagingData<TmdbItem>> {
         return Pager(PagingConfig(pageSize = 20)) {
             EntertainmentPagingSource(tmdbMovieRepository, SourceType.UPCOMING_MOVIES)
-        }.flow
+        }.flow.cachedIn(viewModelScope)
     }
 
     fun fetchMovieDetails(movieId: Long) {
@@ -66,7 +71,7 @@ class ExploreViewModel : ViewModel() {
     }
 
     fun updateListState(listType: String, listState: LazyListState) {
-        when(listType) {
+        when (listType) {
             Constants.POPULAR_MOVIES_HEADER -> popularListState = listState
             Constants.UPCOMING_MOVIES_HEADER -> upcomingListState = listState
             Constants.NOW_PLAYING_MOVIES_HEADER -> nowPlayingListState = listState
@@ -75,7 +80,7 @@ class ExploreViewModel : ViewModel() {
     }
 
     fun getListState(listType: String): LazyListState {
-        return when(listType) {
+        return when (listType) {
             Constants.POPULAR_MOVIES_HEADER -> popularListState
             Constants.UPCOMING_MOVIES_HEADER -> upcomingListState
             Constants.NOW_PLAYING_MOVIES_HEADER -> nowPlayingListState
@@ -87,7 +92,25 @@ class ExploreViewModel : ViewModel() {
     }
 
     fun addMovieToWatchList(tmdbItem: TmdbItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            tmdbMovieRepository.addToWatchlist(tmdbItem)
+//            _watchMoviesStateFlow.value = TmdbListUiState.Loading
+        }
+    }
 
+    fun removeMovieFromWatchList(movieId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            tmdbMovieRepository.removeMovieFromWatchlist(movieId)
+        }
+    }
+
+    fun fetchWatchlistMovies() {
+        viewModelScope.launch {
+            tmdbMovieRepository.getWatchlistMovies().collect {
+//                _watchMoviesStateFlow.value = TmdbListUiState.Success(it)
+                _watchMoviesStateFlow.value = it
+            }
+        }
     }
 
     fun getMoviesCategories(): ArrayList<EntertainmentCategory> {

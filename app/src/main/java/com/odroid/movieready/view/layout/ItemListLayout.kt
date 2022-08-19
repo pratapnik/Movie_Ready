@@ -24,8 +24,8 @@ import com.odroid.movieready.R
 import com.odroid.movieready.entity.TmdbItem
 import com.odroid.movieready.theming.primaryAppColor
 import com.odroid.movieready.theming.primaryDarkModeAppTextColor
-import com.odroid.movieready.theming.redColor
 import com.odroid.movieready.theming.whiteColor
+import com.odroid.movieready.view.layout.destinations.WatchlistMoviesScreenDestination
 import com.odroid.movieready.view.widget.VerticalItemWidget
 import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -90,7 +90,7 @@ fun ItemListWidget(
                     )
                     IconButton(
                         onClick = {
-
+                            navigator.navigate(WatchlistMoviesScreenDestination)
                         }
                     ) {
                         Icon(

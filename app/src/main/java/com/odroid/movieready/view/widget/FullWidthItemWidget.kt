@@ -4,10 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,12 +24,17 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.TmdbItem
+import com.odroid.movieready.theming.ratingCardColor
+import com.odroid.movieready.theming.whiteColor
 import com.odroid.movieready.util.posterUrl
+import com.odroid.movieready.view.layout.destinations.ItemDetailsScreenDestination
+import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun FullWidthItemWidget(
+    exploreViewModel: ExploreViewModel,
     navigator: DestinationsNavigator,
     tmdbMovie: TmdbItem
 ) {
@@ -44,6 +46,9 @@ fun FullWidthItemWidget(
             .border(2.dp, Color.DarkGray, RoundedCornerShape(8.dp)),
         shape = RoundedCornerShape(8.dp),
         elevation = 8.dp,
+        onClick = {
+            navigator.navigate(ItemDetailsScreenDestination(tmdbMovie.id))
+        }
     ) {
         Box(
             modifier = Modifier
@@ -87,6 +92,17 @@ fun FullWidthItemWidget(
                     )
                 )
             }
+            IconButton(
+                onClick = {
+                    exploreViewModel.removeMovieFromWatchList(tmdbMovie.id)
+                }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_add_to_watchlist),
+                    contentDescription = "remove from watchlist",
+                    tint = whiteColor
+                )
+            }
         }
     }
 }
@@ -96,6 +112,7 @@ fun FullWidthItemWidget(
 fun PreviewFullWidthItemWidget() {
     Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
         FullWidthItemWidget(
+            ExploreViewModel(),
             rememberNavController() as DestinationsNavigator, TmdbItem(
                 234L, "Humsafar", "",
                 "", "", 7F, 8L
