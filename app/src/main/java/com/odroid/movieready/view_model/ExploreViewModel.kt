@@ -110,7 +110,7 @@ class ExploreViewModel : ViewModel() {
         )
         movieCategories.add(
             EntertainmentCategory(
-                title = "now playing",
+                title = "trending",
                 icon = R.drawable.ic_play_button,
                 SourceType.NOW_PLAYING,
                 NowPlayingMoviesScreenDestination

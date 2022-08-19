@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Scaffold
@@ -14,8 +15,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -25,10 +26,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
-import com.google.accompanist.navigation.material.ModalBottomSheetLayout
-import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.odroid.movieready.R
+import com.odroid.movieready.theming.bottomNavColor
+import com.odroid.movieready.theming.primaryAppTextColor
 import com.odroid.movieready.view.layout.NavGraphs
 import com.odroid.movieready.view.layout.appCurrentDestinationAsState
 import com.odroid.movieready.view.layout.destinations.*
@@ -68,11 +69,13 @@ class ExploreActivity : ComponentActivity() {
             bottomBar = { BottomBar(navController) },
             backgroundColor = Color.White
         ) {
-            DestinationsNavHost(navController = navController,
+            DestinationsNavHost(
+                navController = navController,
                 navGraph = NavGraphs.root,
                 dependenciesContainerBuilder = {
                     dependency(exploreViewModel)
-                }, engine = navHostEngine)
+                }, engine = navHostEngine
+            )
         }
     }
 
@@ -90,10 +93,11 @@ class ExploreActivity : ComponentActivity() {
             UpcomingMoviesScreenDestination ->
                 BottomNavigation(
                     elevation = 10.dp,
-                    backgroundColor = colorResource(id = R.color.bottom_nav_color),
+                    backgroundColor = bottomNavColor,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp)
+                        .wrapContentHeight()
+                        .clip(RoundedCornerShape(16.dp, 16.dp, 0.dp, 0.dp))
                 ) {
                     bottomNavItems.forEach { destination ->
                         val isCurrentDestOnBackStack =
@@ -131,9 +135,9 @@ class ExploreActivity : ComponentActivity() {
     @Composable
     fun BottomNavigationItemText(text: String) {
         Text(
-            text = text, modifier = Modifier.padding(top = 2.dp), style = TextStyle(
-                color = colorResource(R.color.white),
-                fontSize = 10.sp, fontFamily = FontFamily(Font(R.font.font_bold))
+            text = text, style = TextStyle(
+                color = primaryAppTextColor,
+                fontSize = 12.sp, fontFamily = FontFamily(Font(R.font.font_bold))
             )
         )
     }

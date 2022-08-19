@@ -25,6 +25,7 @@ import com.odroid.movieready.entity.TmdbItem
 import com.odroid.movieready.theming.primaryAppColor
 import com.odroid.movieready.theming.primaryDarkModeAppTextColor
 import com.odroid.movieready.theming.redColor
+import com.odroid.movieready.theming.whiteColor
 import com.odroid.movieready.view.widget.VerticalItemWidget
 import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -95,10 +96,10 @@ fun ItemListWidget(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_bookmarks),
                             contentDescription = "watchlist",
-                            tint = redColor,
+                            tint = whiteColor,
                             modifier = Modifier.padding(
-                                end = 16.dp, top = 6.dp, bottom = 6.dp,
-                                start = 16.dp
+                                end = 20.dp, top = 6.dp, bottom = 6.dp,
+                                start = 20.dp
                             )
                         )
                     }

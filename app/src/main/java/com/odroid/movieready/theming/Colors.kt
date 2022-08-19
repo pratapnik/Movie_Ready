@@ -10,3 +10,6 @@ val primaryButtonColor = primaryAppColor
 val ratingCardColor = Color(0xFF2D4059)
 val grayColor = Color(0xFF999999)
 val redColor = Color(0xFFFF2E63)
+val bottomNavColor = Color(0xFFF9F5EB)
+val bottomNavItemSelectedColor = Color(0xFFF9F5EB)
+val whiteColor = Color.White

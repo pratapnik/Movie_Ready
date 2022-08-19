@@ -3,7 +3,9 @@ package com.odroid.movieready.view.layout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Card
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -12,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -61,19 +64,28 @@ fun ItemDetailsScreen(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
-                AsyncImage(
+                Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(300.dp)
-                        .background(primaryAppColor),
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(it.posterPath.posterUrl())
-                        .crossfade(true)
-                        .error(R.drawable.app_icon_img)
-                        .build(),
-                    placeholder = painterResource(R.drawable.app_icon_img),
-                    contentDescription = "movie_detail_poster"
-                )
+                        .fillMaxHeight(0.4F),
+                    shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp),
+                    elevation = 12.dp
+                ) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(0.4F)
+                            .background(primaryAppColor),
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(it.posterPath.posterUrl())
+                            .crossfade(true)
+                            .error(R.drawable.app_icon_img)
+                            .build(),
+                        placeholder = painterResource(R.drawable.app_icon_img),
+                        contentDescription = "movie_detail_poster",
+                        contentScale = ContentScale.Crop
+                    )
+                }
                 Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     text = it.movieTitle,
