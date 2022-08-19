@@ -28,7 +28,6 @@ import com.odroid.movieready.theming.redColor
 import com.odroid.movieready.view.widget.VerticalItemWidget
 import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
@@ -38,31 +37,34 @@ fun ItemListWidget(
     exploreViewModel: ExploreViewModel,
     headerTitle: String
 ) {
-//    val lazyListState = rememberLazyListState()
-//    val listState = exploreViewModel.getListState(headerTitle)
-//    val lifecycle = LocalLifecycleOwner.current.lifecycle
-//    val latestLifecycleEvent = remember { mutableStateOf(Lifecycle.Event.ON_ANY) }
-//    DisposableEffect(lifecycle) {
-//        val observer = LifecycleEventObserver { _, event ->
-//            latestLifecycleEvent.value = event
-//        }
-//        lifecycle.addObserver(observer)
-//        onDispose {
-//            lifecycle.removeObserver(observer)
-//        }
-//    }
-//
-//    if (latestLifecycleEvent.value == Lifecycle.Event.ON_RESUME) {
-//        LaunchedEffect(latestLifecycleEvent) {
-//            lazyListState.scrollToItem(listState.first, listState.second)
-//        }
-//    }
+    val lazyListState = rememberLazyListState()
+    val listState = exploreViewModel.getListState(headerTitle)
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val latestLifecycleEvent = remember { mutableStateOf(Lifecycle.Event.ON_ANY) }
+    DisposableEffect(lifecycle) {
+        val observer = LifecycleEventObserver { _, event ->
+            latestLifecycleEvent.value = event
+        }
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+        }
+    }
+
+    if (latestLifecycleEvent.value == Lifecycle.Event.ON_RESUME) {
+        LaunchedEffect(latestLifecycleEvent) {
+            lazyListState.animateScrollToItem(
+                listState.firstVisibleItemIndex,
+                listState.firstVisibleItemScrollOffset
+            )
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
             .fillMaxHeight()
             .fillMaxWidth(),
-//        state = lazyListState
+        state = lazyListState
     ) {
         stickyHeader {
             Card(
@@ -108,13 +110,12 @@ fun ItemListWidget(
                 VerticalItemWidget(
                     navigator, movieItem, exploreViewModel
                 )
-//                {
-//                    exploreViewModel.updateListState(
-//                        headerTitle,
-//                        lazyListState.firstVisibleItemIndex,
-//                        lazyListState.firstVisibleItemScrollOffset
-//                    )
-//                }
+                {
+                    exploreViewModel.updateListState(
+                        headerTitle,
+                        lazyListState
+                    )
+                }
             }
         }
     }

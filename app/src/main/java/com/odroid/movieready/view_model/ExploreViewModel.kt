@@ -1,5 +1,6 @@
 package com.odroid.movieready.view_model
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -27,10 +28,10 @@ class ExploreViewModel : ViewModel() {
     private val tmdbMovieRepository = TmdbMovieRepositoryImpl()
     private val _movieDetail = MutableLiveData<MovieDetail>()
     val movieDetail = _movieDetail
-//    var popularListState: Pair<Int, Int> = Pair(0, 0)
-//    var upcomingListState: Pair<Int, Int> = Pair(0, 0)
-//    var nowPlayingListState: Pair<Int, Int> = Pair(0, 0)
-//    var topRatedListState: Pair<Int, Int> = Pair(0, 0)
+    var popularListState: LazyListState = LazyListState()
+    var upcomingListState: LazyListState = LazyListState()
+    var nowPlayingListState: LazyListState = LazyListState()
+    var topRatedListState: LazyListState = LazyListState()
 
     fun getPopularMoviesPagination(): Flow<PagingData<TmdbItem>> {
         return Pager(PagingConfig(pageSize = 20)) {
@@ -64,26 +65,30 @@ class ExploreViewModel : ViewModel() {
         }
     }
 
-//    fun updateListState(listType: String, index: Int, offset: Int) {
-//        when(listType) {
-//            Constants.POPULAR_MOVIES_HEADER -> popularListState = popularListState.copy(index, offset)
-//            Constants.UPCOMING_MOVIES_HEADER -> upcomingListState = upcomingListState.copy(index, offset)
-//            Constants.NOW_PLAYING_MOVIES_HEADER -> nowPlayingListState = nowPlayingListState.copy(index, offset)
-//            Constants.TOP_RATED_MOVIES_HEADER -> topRatedListState = topRatedListState.copy(index, offset)
-//        }
-//    }
-//
-//    fun getListState(listType: String): Pair<Int, Int> {
-//        return when(listType) {
-//            Constants.POPULAR_MOVIES_HEADER -> popularListState
-//            Constants.UPCOMING_MOVIES_HEADER -> upcomingListState
-//            Constants.NOW_PLAYING_MOVIES_HEADER -> nowPlayingListState
-//            Constants.TOP_RATED_MOVIES_HEADER -> topRatedListState
-//            else -> {
-//                return Pair(0,0)
-//            }
-//        }
-//    }
+    fun updateListState(listType: String, listState: LazyListState) {
+        when(listType) {
+            Constants.POPULAR_MOVIES_HEADER -> popularListState = listState
+            Constants.UPCOMING_MOVIES_HEADER -> upcomingListState = listState
+            Constants.NOW_PLAYING_MOVIES_HEADER -> nowPlayingListState = listState
+            Constants.TOP_RATED_MOVIES_HEADER -> topRatedListState = listState
+        }
+    }
+
+    fun getListState(listType: String): LazyListState {
+        return when(listType) {
+            Constants.POPULAR_MOVIES_HEADER -> popularListState
+            Constants.UPCOMING_MOVIES_HEADER -> upcomingListState
+            Constants.NOW_PLAYING_MOVIES_HEADER -> nowPlayingListState
+            Constants.TOP_RATED_MOVIES_HEADER -> topRatedListState
+            else -> {
+                return LazyListState()
+            }
+        }
+    }
+
+    fun addMovieToWatchList(tmdbItem: TmdbItem) {
+
+    }
 
     fun getMoviesCategories(): ArrayList<EntertainmentCategory> {
         val movieCategories = arrayListOf<EntertainmentCategory>()

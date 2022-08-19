@@ -3,11 +3,9 @@ package com.odroid.movieready.view.widget
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -35,7 +33,7 @@ fun VerticalItemWidget(
     navigator: DestinationsNavigator,
     tmdbItem: TmdbItem,
     exploreViewModel: ExploreViewModel,
-//    onItemClick: () -> Unit
+    onItemClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -45,7 +43,7 @@ fun VerticalItemWidget(
         shape = RoundedCornerShape(16.dp),
         elevation = 12.dp,
         onClick = {
-//            onItemClick.invoke()
+            onItemClick.invoke()
             navigator.navigate(ItemDetailsScreenDestination(movieId = tmdbItem.id))
         }
     ) {
@@ -111,7 +109,9 @@ fun VerticalItemWidget(
                     Spacer(modifier = Modifier.height(10.dp))
                     Column(
                         verticalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth().fillMaxHeight()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
                     ) {
                         Card(
                             shape = RoundedCornerShape(16.dp),
@@ -133,15 +133,32 @@ fun VerticalItemWidget(
                                 )
                             )
                         }
-                        Text(
-                            text = "release date: ${tmdbItem.releaseDate}",
-                            style = TextStyle(
-                                fontFamily = fontRegular,
-                                fontSize = 12.sp,
-                                color = grayColor
-                            ),
-                            modifier = Modifier.padding(bottom = 4.dp)
-                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Bottom
+                        ) {
+                            Text(
+                                text = "release date: ${tmdbItem.releaseDate}",
+                                style = TextStyle(
+                                    fontFamily = fontRegular,
+                                    fontSize = 12.sp,
+                                    color = grayColor
+                                ),
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                            IconButton(
+                                onClick = {
+                                    exploreViewModel.addMovieToWatchList(tmdbItem)
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_add_to_watchlist),
+                                    contentDescription = "add to watchlist",
+                                    tint = ratingCardColor
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -161,6 +178,8 @@ fun PreviewVerticalItem() {
                 "", "", 7F, 8L
             ),
             ExploreViewModel(),
-        )
+        ) {
+
+        }
     }
 }
