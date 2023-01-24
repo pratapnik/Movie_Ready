@@ -48,7 +48,9 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
             MdcTheme {
                 TopGreeting(
                     date = mutableDate.value,
-                    day = mutableDay.value, onExploreButtonClick = this::launchExploreSection
+                    day = mutableDay.value,
+                    shouldShowExploreButton = false,
+                    onExploreButtonClick = this::launchExploreSection
                 )
             }
         }

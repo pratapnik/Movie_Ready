@@ -34,6 +34,7 @@ import com.odroid.movieready.theming.primaryButtonTextColor
 @Composable
 fun TopGreeting(
     day: String, date: String,
+    shouldShowExploreButton: Boolean,
     onExploreButtonClick: () -> Unit
 ) {
     Row(
@@ -61,37 +62,43 @@ fun TopGreeting(
                 )
             )
         }
-        TextButton(
-            onClick = onExploreButtonClick
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "explore",
-                    style = TextStyle(
-                        fontFamily = FontFamily(Font(R.font.font_bold)),
-                        fontSize = 16.sp,
-                        color = colorResource(R.color.primary_red_color)
+        if (shouldShowExploreButton) {
+            TextButton(
+                onClick = onExploreButtonClick
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "explore",
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.font_bold)),
+                            fontSize = 16.sp,
+                            color = colorResource(R.color.primary_red_color)
+                        )
                     )
-                )
-                Image(
-                    modifier = Modifier
-                        .height(30.dp)
-                        .width(30.dp)
-                        .padding(start = 4.dp),
-                    painter = painterResource(id = R.drawable.hot),
-                    contentDescription = "contentDescription"
-                )
+                    Image(
+                        modifier = Modifier
+                            .height(30.dp)
+                            .width(30.dp)
+                            .padding(start = 4.dp),
+                        painter = painterResource(id = R.drawable.hot),
+                        contentDescription = "contentDescription"
+                    )
+                }
             }
         }
     }
 }
 
-
 @Preview
 @Composable
 fun LayoutPreview() {
     Column(modifier = Modifier.background(Color.White)) {
-        TopGreeting(day = "Sunday", date = "17 September 1997", onExploreButtonClick = {})
+        TopGreeting(
+            day = "Sunday",
+            date = "17 September 1997",
+            onExploreButtonClick = {},
+            shouldShowExploreButton = false
+        )
         MovieSuggestionCard(posterPath = "https://picsum.photos/500/300?random=1",
             contentDescription = "", title = "Cool Boy", onNewMovieButtonClick = { })
     }
