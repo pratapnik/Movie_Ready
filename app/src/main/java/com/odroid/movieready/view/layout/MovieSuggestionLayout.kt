@@ -33,28 +33,29 @@ import com.odroid.movieready.theming.primaryButtonTextColor
 
 @Composable
 fun TopGreeting(
-    day: String, date: String,
     shouldShowExploreButton: Boolean,
     onExploreButtonClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+            .padding(16.dp)
     ) {
-        Column {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             Text(
-                text = day,
+                text = "sshh!",
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.font_bold)),
                     fontSize = 20.sp,
                     color = primaryAppTextColor
                 )
             )
-            Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = date,
+                text = "let them guess it",
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.font_bold)),
                     fontSize = 20.sp,
@@ -94,8 +95,6 @@ fun TopGreeting(
 fun LayoutPreview() {
     Column(modifier = Modifier.background(Color.White)) {
         TopGreeting(
-            day = "Sunday",
-            date = "17 September 1997",
             onExploreButtonClick = {},
             shouldShowExploreButton = false
         )
@@ -129,7 +128,7 @@ fun MovieSuggestionCard(
                 .fillMaxWidth()
                 .scale(scale),
             shape = RoundedCornerShape(15.dp),
-            elevation = 5.dp
+            elevation = 24.dp
         ) {
             Box(modifier = Modifier.fillMaxHeight(0.8f)) {
                 AsyncImage(

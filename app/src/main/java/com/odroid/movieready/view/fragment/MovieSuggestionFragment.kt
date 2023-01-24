@@ -28,8 +28,6 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
 
     private val movieSuggestionViewModel: MovieSuggestionViewModel by viewModels()
 
-    private var mutableDate = mutableStateOf("")
-    private var mutableDay = mutableStateOf("")
     private var mutableMovieName = mutableStateOf("")
     private var posterUrl = mutableStateOf("")
 
@@ -39,7 +37,6 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
     override fun getLayout(): Int = R.layout.movie_suggestion_fragment
 
     override fun initializeViews() {
-        setDayAndDate()
         viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.LoadMovies)
         binding.layoutMovieMain.btnStartGame.setOnClickListener {
             viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
@@ -47,8 +44,6 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
         binding.layoutMovieMain.topComposeView.setContent {
             MdcTheme {
                 TopGreeting(
-                    date = mutableDate.value,
-                    day = mutableDay.value,
                     shouldShowExploreButton = false,
                     onExploreButtonClick = this::launchExploreSection
                 )
@@ -124,19 +119,6 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
                 mutableMovieName.value = effect.movieName
             }
         }
-    }
-
-    private fun setDayAndDate() {
-        val c = Calendar.getInstance().time
-        val df = SimpleDateFormat(Constants.NORMAL_DATE_FORMAT, Locale.getDefault())
-        val formattedDate = df.format(c)
-        val day = DateUtil.getFormattedDate(
-            formattedDate,
-            Constants.NORMAL_DATE_FORMAT,
-            Constants.ONLY_DAY_OF_WEEK_FORMAT
-        )
-        mutableDate.value = formattedDate
-        mutableDay.value = DateUtil.getDayTextForHomeScreen(day)
     }
 
     private fun showNoMovieView() {

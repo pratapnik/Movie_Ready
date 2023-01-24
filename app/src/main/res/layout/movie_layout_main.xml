@@ -20,10 +20,10 @@
         <ImageView
             android:id="@+id/iv_no_movie_icon"
             android:layout_width="@dimen/match_constraint_dimen"
-            android:layout_height="wrap_content"
+            android:layout_height="400dp"
             android:layout_margin="@dimen/margin_80dp"
             tools:visibility="visible"
-            android:src="@drawable/ic_movie_placeholder"
+            android:src="@drawable/shut_up_image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,16 +48,15 @@
             android:id="@+id/movieCardComposeView"
             android:layout_width="0dp"
             android:layout_height="@dimen/match_constraint_dimen"
-            android:paddingStart="@dimen/margin_40dp"
-            android:paddingEnd="@dimen/margin_40dp"
-            android:paddingBottom="@dimen/margin_16dp"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
             android:paddingTop="@dimen/margin_16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/topComposeView"
             app:layout_constraintVertical_bias="0.464"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

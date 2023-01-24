@@ -64,28 +64,10 @@ class MovieSuggestionViewModel : BaseMVIViewModelWithEffect<
     }
 
     private fun getMovie(): MovieResponse? {
-        val randomNumber = getRandomNumber()
-        var movieNumber = randomNumber
-        var posterUrl = moviesList?.get(movieNumber)?.posterUrl
-        var movieEntity: MovieResponse? = moviesList?.get(movieNumber)
-        while (posterUrl.isNullOrEmpty()) {
-            if (movieNumber >= moviesList?.size!! - 1) {
-                movieNumber = getRandomNumber()
-            } else {
-                movieNumber++
-            }
-            movieEntity = moviesList?.get(movieNumber)
-            posterUrl = movieEntity?.posterUrl ?: ""
+        val moviesWithPoster = moviesList?.filter {
+            it.posterUrl.isNotEmpty()
         }
-        return movieEntity
+        return moviesWithPoster?.random() ?: moviesList?.random()
     }
 
-    private fun getRandomNumber(): Int {
-        return if (!moviesList.isNullOrEmpty()) {
-            val movieListSize = moviesList!!.size - 1
-            (0..movieListSize).random()
-        } else {
-            0
-        }
-    }
 }
