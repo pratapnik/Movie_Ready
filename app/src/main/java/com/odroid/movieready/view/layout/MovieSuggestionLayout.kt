@@ -43,23 +43,15 @@ fun TopGreeting(
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "sshh!",
+                text = "Ishaara Says Hi!",
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.font_bold)),
                     fontSize = 20.sp,
-                    color = primaryAppTextColor
-                )
-            )
-            Text(
-                text = "let them guess it",
-                style = TextStyle(
-                    fontFamily = FontFamily(Font(R.font.font_bold)),
-                    fontSize = 20.sp,
-                    color = primaryAppTextColor
+                    color = primaryAppTextColor,
+                    letterSpacing = 1.sp
                 )
             )
         }
@@ -111,11 +103,17 @@ fun MovieSuggestionCard(
     modifier: Modifier = Modifier,
     onNewMovieButtonClick: () -> Unit
 ) {
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Bottom
+    ) {
         val infiniteTransition = rememberInfiniteTransition()
 
         val scale by infiniteTransition.animateFloat(
-            initialValue = 0.95f,
+            initialValue = 0.98f,
             targetValue = 1f,
             animationSpec = infiniteRepeatable(
                 animation = tween(1000),
@@ -125,12 +123,13 @@ fun MovieSuggestionCard(
 
         Card(
             modifier = modifier
-                .fillMaxWidth()
+                .fillMaxWidth(0.95F)
+                .fillMaxHeight(0.7F)
                 .scale(scale),
             shape = RoundedCornerShape(15.dp),
             elevation = 24.dp
         ) {
-            Box(modifier = Modifier.fillMaxHeight(0.8f)) {
+            Box(modifier = Modifier.fillMaxHeight(0.82F)) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(posterPath)
@@ -171,7 +170,7 @@ fun MovieSuggestionCard(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(24.dp))
         ExtendedFloatingActionButton(
             onClick = onNewMovieButtonClick,
             modifier = Modifier
@@ -198,5 +197,6 @@ fun MovieSuggestionCard(
             },
             backgroundColor = colorResource(R.color.primary_button_color)
         )
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }

@@ -35,20 +35,19 @@ class HomeActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     private fun scheduleNotification() {
-        //Todo - uncomment this code before merging
-//        val notificationIntent = Intent(this, NotificationPublisher::class.java)
-//        val pendingIntent = PendingIntent.getBroadcast(
-//            this,
-//            0,
-//            notificationIntent,
-//            PendingIntent.FLAG_UPDATE_CURRENT
-//        )
-//        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//        alarmManager.setRepeating(
-//            AlarmManager.RTC_WAKEUP,
-//            SystemClock.elapsedRealtime() + 60 * 1000,
-//            1000 * 60 * 60 * 12,
-//            pendingIntent
-//        )
+        val notificationIntent = Intent(this, NotificationPublisher::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            this,
+            0,
+            notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            SystemClock.elapsedRealtime() + 60 * 1000,
+            1000 * 60 * 60 * 12,
+            pendingIntent
+        )
     }
 }

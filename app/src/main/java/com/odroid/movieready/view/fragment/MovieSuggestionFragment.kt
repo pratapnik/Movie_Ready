@@ -12,6 +12,7 @@ import com.odroid.movieready.util.Constants
 import com.odroid.movieready.util.DateUtil
 import com.odroid.movieready.util.ViewUtil
 import com.odroid.movieready.view.activity.ExploreActivity
+import com.odroid.movieready.view.components.MovieCounterView
 import com.odroid.movieready.view.layout.MovieSuggestionCard
 import com.odroid.movieready.view.layout.TopGreeting
 import com.odroid.movieready.view_intent.MovieSuggestionViewIntent
@@ -30,6 +31,7 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
 
     private var mutableMovieName = mutableStateOf("")
     private var posterUrl = mutableStateOf("")
+    private val movieCounter = mutableStateOf(1)
 
     override val viewModel: MovieSuggestionViewModel
         get() = movieSuggestionViewModel
@@ -43,10 +45,14 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
         }
         binding.layoutMovieMain.topComposeView.setContent {
             MdcTheme {
-                TopGreeting(
-                    shouldShowExploreButton = false,
-                    onExploreButtonClick = this::launchExploreSection
-                )
+                if(mutableMovieName.value.isNotEmpty()) {
+                    MovieCounterView(value = movieCounter.value)
+                } else {
+                    TopGreeting(
+                        shouldShowExploreButton = false,
+                        onExploreButtonClick = this::launchExploreSection
+                    )
+                }
             }
         }
         binding.layoutMovieMain.movieCardComposeView.setContent {
@@ -83,6 +89,7 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
     }
 
     private fun getNewMovieButtonClicked() {
+        movieCounter.value++
         viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
     }
 

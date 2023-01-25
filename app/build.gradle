@@ -19,8 +19,8 @@ android {
         applicationId "com.odroid.movieready"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 1500
-        versionName "1.5.0_dev"
+        versionCode 1601
+        versionName "1.6.0_dev"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "API_KEY", "\"${properties.getProperty("API_KEY")}\""
     }

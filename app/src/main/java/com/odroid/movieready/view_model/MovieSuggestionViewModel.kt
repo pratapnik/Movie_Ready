@@ -14,6 +14,7 @@ class MovieSuggestionViewModel : BaseMVIViewModelWithEffect<
         MovieSuggestionViewIntent.ViewEffect>() {
 
     private var moviesList: List<MovieResponse>? = null
+    private var moviesWithPoster: List<MovieResponse>? = null
     var job: Job? = null
 
     override fun processEvent(event: MovieSuggestionViewIntent.ViewEvent) {
@@ -39,6 +40,9 @@ class MovieSuggestionViewModel : BaseMVIViewModelWithEffect<
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         moviesList = response.body()
+                        moviesWithPoster = moviesList?.filter {
+                            it.posterUrl.isNotEmpty()
+                        }
                         viewState = MovieSuggestionViewIntent.ViewState.MoviesLoaded
                     } else {
                         viewState = MovieSuggestionViewIntent.ViewState.MoviesLoadingFailed
@@ -64,10 +68,13 @@ class MovieSuggestionViewModel : BaseMVIViewModelWithEffect<
     }
 
     private fun getMovie(): MovieResponse? {
-        val moviesWithPoster = moviesList?.filter {
-            it.posterUrl.isNotEmpty()
+        moviesWithPoster?.let {
+            return it.shuffled().last()
         }
-        return moviesWithPoster?.random() ?: moviesList?.random()
+        moviesList?.let {
+            return it.shuffled().last()
+        }
+        return null
     }
 
 }
