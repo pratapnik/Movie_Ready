@@ -8,6 +8,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -30,6 +32,7 @@ import com.odroid.movieready.R
 import com.odroid.movieready.theming.fontBold
 import com.odroid.movieready.theming.primaryAppTextColor
 import com.odroid.movieready.theming.primaryButtonTextColor
+import com.odroid.movieready.view.components.HideMovieView
 
 @Composable
 fun TopGreeting(
@@ -103,6 +106,9 @@ fun MovieSuggestionCard(
     modifier: Modifier = Modifier,
     onNewMovieButtonClick: () -> Unit
 ) {
+    val movieVisibility = remember {
+        mutableStateOf(true)
+    }
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -169,10 +175,36 @@ fun MovieSuggestionCard(
                     )
                 }
             }
+            if (!movieVisibility.value) {
+                HideMovieView(onUnHideClick = {
+                    movieVisibility.value = true
+                })
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight(0.82F)
+                    .fillMaxWidth()
+                    .padding(end = 4.dp),
+                contentAlignment = Alignment.TopEnd
+            ) {
+                IconButton(onClick = { movieVisibility.value = !movieVisibility.value }) {
+                    Icon(
+                        painter = if (!movieVisibility.value) {
+                            painterResource(id = R.drawable.ic_visibility_off)
+                        } else {
+                            painterResource(id = R.drawable.ic_visibility)
+                        }, contentDescription = "card visibility",
+                        tint = Color.White
+                    )
+                }
+            }
         }
         Spacer(modifier = Modifier.height(24.dp))
         ExtendedFloatingActionButton(
-            onClick = onNewMovieButtonClick,
+            onClick = {
+                movieVisibility.value = true
+                onNewMovieButtonClick.invoke()
+            },
             modifier = Modifier
                 .padding(8.dp)
                 .align(Alignment.CenterHorizontally),
