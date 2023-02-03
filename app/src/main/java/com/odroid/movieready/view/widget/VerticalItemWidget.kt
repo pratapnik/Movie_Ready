@@ -23,7 +23,7 @@ import com.odroid.movieready.entity.TmdbItem
 import com.odroid.movieready.theming.*
 import com.odroid.movieready.util.DummyDestinationsNavigator
 import com.odroid.movieready.util.posterUrl
-import com.odroid.movieready.view.layout.destinations.ItemDetailsScreenDestination
+import com.odroid.movieready.view.views.destinations.ItemDetailsScreenDestination
 import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 

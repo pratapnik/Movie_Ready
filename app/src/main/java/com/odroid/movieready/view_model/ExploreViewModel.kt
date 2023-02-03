@@ -1,7 +1,6 @@
 package com.odroid.movieready.view_model
 
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,14 +12,13 @@ import com.odroid.movieready.R
 import com.odroid.movieready.entity.MovieDetail
 import com.odroid.movieready.entity.SourceType
 import com.odroid.movieready.entity.TmdbItem
-import com.odroid.movieready.entity.TmdbListUiState
 import com.odroid.movieready.pagination.EntertainmentPagingSource
 import com.odroid.movieready.repository.TmdbMovieRepositoryImpl
 import com.odroid.movieready.util.Constants
-import com.odroid.movieready.view.layout.destinations.NowPlayingMoviesScreenDestination
-import com.odroid.movieready.view.layout.destinations.PopularMoviesScreenDestination
-import com.odroid.movieready.view.layout.destinations.TopRatedMoviesScreenDestination
-import com.odroid.movieready.view.layout.destinations.UpcomingMoviesScreenDestination
+import com.odroid.movieready.view.views.destinations.NowPlayingMoviesScreenDestination
+import com.odroid.movieready.view.views.destinations.PopularMoviesScreenDestination
+import com.odroid.movieready.view.views.destinations.TopRatedMoviesScreenDestination
+import com.odroid.movieready.view.views.destinations.UpcomingMoviesScreenDestination
 import com.odroid.movieready.view_intent.EntertainmentCategory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

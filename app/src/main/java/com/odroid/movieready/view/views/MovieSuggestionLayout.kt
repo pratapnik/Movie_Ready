@@ -1,4 +1,4 @@
-package com.odroid.movieready.view.layout
+package com.odroid.movieready.view.views
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
@@ -34,6 +34,7 @@ import com.odroid.movieready.theming.fontBold
 import com.odroid.movieready.theming.primaryAppTextColor
 import com.odroid.movieready.theming.primaryButtonTextColor
 import com.odroid.movieready.view.components.HideMovieView
+import com.odroid.movieready.view.components.MovieCounterView
 
 @Composable
 fun TopGreeting(
@@ -43,7 +44,7 @@ fun TopGreeting(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(start = 24.dp, top = 24.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -94,8 +95,15 @@ fun LayoutPreview() {
             onExploreButtonClick = {},
             shouldShowExploreButton = false
         )
-        MovieSuggestionCard(posterPath = "https://picsum.photos/500/300?random=1",
-            contentDescription = "", title = "Cool Boy", onNewMovieButtonClick = { })
+        MovieSuggestionCard(
+            posterPath = "https://picsum.photos/500/300?random=1",
+            contentDescription = "",
+            title = "Cool Boy",
+            onNewMovieButtonClick = { },
+            movieCounterValue = 1,
+            lastSuggestedMovieName = "",
+            lastSuggestedMoviePosterUrl = ""
+        )
     }
 }
 
@@ -104,6 +112,9 @@ fun MovieSuggestionCard(
     posterPath: String,
     contentDescription: String,
     title: String,
+    movieCounterValue: Int,
+    lastSuggestedMovieName: String,
+    lastSuggestedMoviePosterUrl: String,
     modifier: Modifier = Modifier,
     onNewMovieButtonClick: () -> Unit
 ) {
@@ -113,9 +124,10 @@ fun MovieSuggestionCard(
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(start = 20.dp, end = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
+        verticalArrangement = Arrangement.Center
     ) {
         val infiniteTransition = rememberInfiniteTransition()
 
@@ -127,11 +139,17 @@ fun MovieSuggestionCard(
                 repeatMode = RepeatMode.Reverse,
             )
         )
-
+        GameplayTopView(
+            lastSuggestedMovieName = lastSuggestedMovieName,
+            lastSuggestedMoviePosterUrl = lastSuggestedMoviePosterUrl
+        )
+        Spacer(modifier = Modifier.size(24.dp))
+        MovieCounterView(value = movieCounterValue)
+        Spacer(modifier = Modifier.size(24.dp))
         Card(
             modifier = modifier
                 .fillMaxWidth(0.95F)
-                .fillMaxHeight(0.7F)
+                .fillMaxHeight(0.75F)
                 .scale(scale),
             shape = RoundedCornerShape(15.dp),
             elevation = 24.dp

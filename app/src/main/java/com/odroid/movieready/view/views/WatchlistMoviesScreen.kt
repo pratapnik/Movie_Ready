@@ -1,4 +1,4 @@
-package com.odroid.movieready.view.layout
+package com.odroid.movieready.view.views
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*

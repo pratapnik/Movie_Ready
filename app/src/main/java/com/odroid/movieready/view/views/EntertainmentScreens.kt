@@ -1,4 +1,4 @@
-package com.odroid.movieready.view.layout
+package com.odroid.movieready.view.views
 
 import androidx.compose.runtime.Composable
 import androidx.paging.compose.collectAsLazyPagingItems

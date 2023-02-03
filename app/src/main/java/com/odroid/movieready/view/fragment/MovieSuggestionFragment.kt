@@ -8,17 +8,12 @@ import com.google.android.material.composethemeadapter.MdcTheme
 import com.odroid.movieready.R
 import com.odroid.movieready.base.BaseMVIFragmentWithEffect
 import com.odroid.movieready.databinding.MovieSuggestionFragmentBinding
-import com.odroid.movieready.util.Constants
-import com.odroid.movieready.util.DateUtil
 import com.odroid.movieready.util.ViewUtil
 import com.odroid.movieready.view.activity.ExploreActivity
-import com.odroid.movieready.view.components.MovieCounterView
-import com.odroid.movieready.view.layout.MovieSuggestionCard
-import com.odroid.movieready.view.layout.TopGreeting
+import com.odroid.movieready.view.views.MovieSuggestionCard
+import com.odroid.movieready.view.views.TopGreeting
 import com.odroid.movieready.view_intent.MovieSuggestionViewIntent
 import com.odroid.movieready.view_model.MovieSuggestionViewModel
-import java.text.SimpleDateFormat
-import java.util.*
 
 class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
         MovieSuggestionViewModel,
@@ -29,9 +24,12 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
 
     private val movieSuggestionViewModel: MovieSuggestionViewModel by viewModels()
 
-    private var mutableMovieName = mutableStateOf("")
-    private var posterUrl = mutableStateOf("")
+    private var currentMovieName = mutableStateOf("")
+    private var currentPosterUrl = mutableStateOf("")
     private val movieCounter = mutableStateOf(1)
+
+    private var lastMovieName = mutableStateOf("")
+    private var lastMoviePosterUrl = mutableStateOf("")
 
     override val viewModel: MovieSuggestionViewModel
         get() = movieSuggestionViewModel
@@ -45,9 +43,7 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
         }
         binding.layoutMovieMain.topComposeView.setContent {
             MdcTheme {
-                if(mutableMovieName.value.isNotEmpty()) {
-                    MovieCounterView(value = movieCounter.value)
-                } else {
+                if (currentMovieName.value.isEmpty()) {
                     TopGreeting(
                         shouldShowExploreButton = false,
                         onExploreButtonClick = this::launchExploreSection
@@ -59,8 +55,11 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
             MdcTheme {
                 MovieSuggestionCard(
                     contentDescription = "Movie Suggestion",
-                    title = mutableMovieName.value,
-                    posterPath = posterUrl.value,
+                    title = currentMovieName.value,
+                    posterPath = currentPosterUrl.value,
+                    movieCounterValue = movieCounter.value,
+                    lastSuggestedMovieName = lastMovieName.value,
+                    lastSuggestedMoviePosterUrl = lastMoviePosterUrl.value,
                     onNewMovieButtonClick = this::getNewMovieButtonClicked
                 )
             }
@@ -90,6 +89,8 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
 
     private fun getNewMovieButtonClicked() {
         movieCounter.value++
+        lastMovieName.value = currentMovieName.value
+        lastMoviePosterUrl.value = currentPosterUrl.value
         viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
     }
 
@@ -122,8 +123,8 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
             is MovieSuggestionViewIntent.ViewEffect.UpdateText -> {
                 ViewUtil.triggerSound(requireContext(), R.raw.movie_generation_sound)
                 hideNoMovieView()
-                posterUrl.value = effect.posterPath
-                mutableMovieName.value = effect.movieName
+                currentPosterUrl.value = effect.posterPath
+                currentMovieName.value = effect.movieName
             }
         }
     }
@@ -131,6 +132,7 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
     private fun showNoMovieView() {
         binding.layoutMovieMain.btnStartGame.visibility = View.VISIBLE
         binding.layoutMovieMain.ivNoMovieIcon.visibility = View.VISIBLE
+        binding.layoutMovieMain.topComposeView.visibility = View.VISIBLE
         binding.layoutMovieMain.movieCardComposeView.visibility = View.GONE
     }
 
@@ -138,6 +140,7 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
         binding.layoutMovieMain.movieCardComposeView.visibility = View.VISIBLE
         binding.layoutMovieMain.btnStartGame.visibility = View.GONE
         binding.layoutMovieMain.ivNoMovieIcon.visibility = View.GONE
+        binding.layoutMovieMain.topComposeView.visibility = View.GONE
     }
 
     override fun onDestroyView() {

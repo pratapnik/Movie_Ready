@@ -30,10 +30,10 @@ import com.google.android.material.composethemeadapter.MdcTheme
 import com.odroid.movieready.R
 import com.odroid.movieready.theming.bottomNavColor
 import com.odroid.movieready.theming.primaryAppTextColor
-import com.odroid.movieready.view.layout.NavGraphs
-import com.odroid.movieready.view.layout.appCurrentDestinationAsState
-import com.odroid.movieready.view.layout.destinations.*
-import com.odroid.movieready.view.layout.startAppDestination
+import com.odroid.movieready.view.views.NavGraphs
+import com.odroid.movieready.view.views.appCurrentDestinationAsState
+import com.odroid.movieready.view.views.destinations.*
+import com.odroid.movieready.view.views.startAppDestination
 import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine

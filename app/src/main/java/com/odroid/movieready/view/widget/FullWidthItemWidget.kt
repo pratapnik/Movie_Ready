@@ -24,10 +24,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.TmdbItem
-import com.odroid.movieready.theming.ratingCardColor
 import com.odroid.movieready.theming.whiteColor
 import com.odroid.movieready.util.posterUrl
-import com.odroid.movieready.view.layout.destinations.ItemDetailsScreenDestination
+import com.odroid.movieready.view.views.destinations.ItemDetailsScreenDestination
 import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
