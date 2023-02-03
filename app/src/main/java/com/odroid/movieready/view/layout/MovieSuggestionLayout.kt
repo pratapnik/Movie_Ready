@@ -1,5 +1,6 @@
 package com.odroid.movieready.view.layout
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -171,21 +172,21 @@ fun MovieSuggestionCard(
                             fontFamily = fontBold,
                             fontSize = 20.sp,
                             color = Color.White
-                        )
+                        ),
+                        modifier = Modifier.fillMaxWidth(0.85F)
                     )
                 }
             }
-            if (!movieVisibility.value) {
+            AnimatedVisibility(visible = !movieVisibility.value) {
                 HideMovieView(onUnHideClick = {
                     movieVisibility.value = true
                 })
             }
             Box(
                 modifier = Modifier
-                    .fillMaxHeight(0.82F)
                     .fillMaxWidth()
-                    .padding(end = 4.dp),
-                contentAlignment = Alignment.TopEnd
+                    .padding(end = 8.dp, bottom = 4.dp),
+                contentAlignment = Alignment.BottomEnd
             ) {
                 IconButton(onClick = { movieVisibility.value = !movieVisibility.value }) {
                     Icon(

@@ -20,12 +20,12 @@ fun MovieCounterView(value: Int) {
         modifier = Modifier
             .defaultMinSize(50.dp, 50.dp)
             .background(color = Color(0xFFFFEA20), shape = CircleShape)
-            .padding(16.dp),
+            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
         contentAlignment = Alignment.Center
     ) {
-        Row() {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = "movie count:", style = TextStyle(
+                text = "movie no.", style = TextStyle(
                     color = primaryAppTextColor,
                     fontSize = 12.sp, fontFamily = fontBold
                 )
