@@ -91,6 +91,6 @@ class NotificationPublisher : BroadcastReceiver() {
             Notification("Pushpa I hate tears", "Amar Prem (1972)"),
             Notification("Watan ke aage kuch nahi, khud bhi nahi", "Raazi (2018)"),
         )
-        return notifications.random()
+        return notifications.shuffled().last()
     }
 }

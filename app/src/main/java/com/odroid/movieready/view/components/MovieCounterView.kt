@@ -23,11 +23,21 @@ fun MovieCounterView(value: Int) {
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = value.toString(), style = TextStyle(
-                color = primaryAppTextColor,
-                fontSize = 12.sp, fontFamily = fontBold
+        Row() {
+            Text(
+                text = "movie count:", style = TextStyle(
+                    color = primaryAppTextColor,
+                    fontSize = 12.sp, fontFamily = fontBold
+                )
             )
-        )
+            Spacer(modifier = Modifier.size(8.dp))
+            Text(
+                text = value.toString(), style = TextStyle(
+                    color = primaryAppTextColor,
+                    fontSize = 16.sp, fontFamily = fontBold
+                )
+            )
+        }
+
     }
 }
