@@ -144,80 +144,85 @@ fun MovieSuggestionCard(
             lastSuggestedMoviePosterUrl = lastSuggestedMoviePosterUrl
         )
         Spacer(modifier = Modifier.size(24.dp))
-        MovieCounterView(value = movieCounterValue)
-        Spacer(modifier = Modifier.size(24.dp))
-        Card(
-            modifier = modifier
-                .fillMaxWidth(0.95F)
-                .fillMaxHeight(0.75F)
-                .scale(scale),
-            shape = RoundedCornerShape(15.dp),
-            elevation = 24.dp
-        ) {
-            Box(modifier = Modifier.fillMaxHeight(0.82F)) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(posterPath)
-                        .crossfade(true)
-                        .error(R.drawable.app_icon_img)
-                        .build(),
-                    placeholder = painterResource(R.drawable.app_icon_img),
-                    contentDescription = contentDescription,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    Color.Transparent,
-                                    Color.Black
-                                ), startY = 800f
-                            )
-                        )
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(12.dp),
-                    contentAlignment = Alignment.BottomStart
+        Box(contentAlignment = Alignment.TopStart) {
+            Box(modifier = Modifier.padding(top = 20.dp, start = 12.dp, end = 12.dp)) {
+                Card(
+                    modifier = modifier
+                        .fillMaxWidth(0.95F)
+                        .fillMaxHeight(0.75F)
+                        .scale(scale),
+                    shape = RoundedCornerShape(15.dp),
+                    elevation = 24.dp
                 ) {
-                    Text(
-                        text = title,
-                        style = TextStyle(
-                            fontFamily = fontBold,
-                            fontSize = 20.sp,
-                            color = Color.White
-                        ),
-                        modifier = Modifier.fillMaxWidth(0.85F)
-                    )
+                    Box(modifier = Modifier.fillMaxHeight(0.82F)) {
+                        AsyncImage(
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(posterPath)
+                                .crossfade(true)
+                                .error(R.drawable.app_icon_img)
+                                .build(),
+                            placeholder = painterResource(R.drawable.app_icon_img),
+                            contentDescription = contentDescription,
+                            contentScale = ContentScale.FillBounds,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(
+                                            Color.Transparent,
+                                            Color.Black
+                                        ), startY = 800f
+                                    )
+                                )
+                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(12.dp),
+                            contentAlignment = Alignment.BottomStart
+                        ) {
+                            Text(
+                                text = title,
+                                style = TextStyle(
+                                    fontFamily = fontBold,
+                                    fontSize = 20.sp,
+                                    color = Color.White
+                                ),
+                                modifier = Modifier.fillMaxWidth(0.85F)
+                            )
+                        }
+                    }
+                    this@Column.AnimatedVisibility(visible = !movieVisibility.value) {
+                        HideMovieView(onUnHideClick = {
+                            movieVisibility.value = true
+                        })
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 8.dp, bottom = 4.dp),
+                        contentAlignment = Alignment.BottomEnd
+                    ) {
+                        IconButton(onClick = { movieVisibility.value = !movieVisibility.value }) {
+                            Icon(
+                                painter = if (!movieVisibility.value) {
+                                    painterResource(id = R.drawable.ic_visibility_off)
+                                } else {
+                                    painterResource(id = R.drawable.ic_visibility)
+                                }, contentDescription = "card visibility",
+                                tint = Color.White
+                            )
+                        }
+                    }
                 }
             }
-            AnimatedVisibility(visible = !movieVisibility.value) {
-                HideMovieView(onUnHideClick = {
-                    movieVisibility.value = true
-                })
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 8.dp, bottom = 4.dp),
-                contentAlignment = Alignment.BottomEnd
-            ) {
-                IconButton(onClick = { movieVisibility.value = !movieVisibility.value }) {
-                    Icon(
-                        painter = if (!movieVisibility.value) {
-                            painterResource(id = R.drawable.ic_visibility_off)
-                        } else {
-                            painterResource(id = R.drawable.ic_visibility)
-                        }, contentDescription = "card visibility",
-                        tint = Color.White
-                    )
-                }
-            }
+
+            MovieCounterView(value = movieCounterValue)
         }
+
         Spacer(modifier = Modifier.height(24.dp))
         ExtendedFloatingActionButton(
             onClick = {

@@ -11,30 +11,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.odroid.movieready.theming.fontBold
-import com.odroid.movieready.theming.primaryAppTextColor
+import com.odroid.movieready.theming.*
 
 @Composable
 fun MovieCounterView(value: Int) {
     Box(
         modifier = Modifier
-            .defaultMinSize(50.dp, 50.dp)
-            .background(color = Color(0xFFFFEA20), shape = CircleShape)
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+            .defaultMinSize(40.dp, 40.dp)
+            .background(color = radicalRed, shape = CircleShape)
+            .padding(start = 9.dp, end = 9.dp, top = 4.dp, bottom = 4.dp),
         contentAlignment = Alignment.Center
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = "movie no.", style = TextStyle(
-                    color = primaryAppTextColor,
-                    fontSize = 12.sp, fontFamily = fontBold
-                )
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-            Text(
-                text = value.toString(), style = TextStyle(
-                    color = primaryAppTextColor,
-                    fontSize = 16.sp, fontFamily = fontBold
+                text = "#$value", style = TextStyle(
+                    color = primaryDarkModeAppTextColor,
+                    fontSize = 17.sp, fontFamily = fontBold
                 )
             )
         }

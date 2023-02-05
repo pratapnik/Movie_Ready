@@ -9,20 +9,19 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
-import com.odroid.movieready.theming.fontBold
-import com.odroid.movieready.theming.fontMedium
-import com.odroid.movieready.theming.grayColor
-import com.odroid.movieready.theming.primaryAppTextColor
+import com.odroid.movieready.theming.*
 
 @Composable
 fun LastSuggestedMovieView(
@@ -31,7 +30,7 @@ fun LastSuggestedMovieView(
     lastSuggestedMoviePosterUrl: String
 ) {
     AnimatedVisibility(visible = lastSuggestedMovieName.isNotEmpty()) {
-        Box(modifier = modifier.padding(top = 20.dp, bottom = 12.dp)) {
+        Box {
             Card(
                 modifier = modifier,
                 shape = RoundedCornerShape(16.dp),
@@ -40,28 +39,31 @@ fun LastSuggestedMovieView(
                 elevation = 8.dp
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier.wrapContentSize(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Spacer(modifier = Modifier.size(12.dp))
+                    Spacer(modifier = Modifier.size(20.dp))
                     Text(
                         text = "last movie:",
                         style = TextStyle(
                             fontFamily = fontMedium,
                             fontSize = 16.sp,
-                            color = primaryAppTextColor
-                        )
+                            color = grayColor
+                        ),
+                        modifier = Modifier.fillMaxWidth(0.2F)
                     )
-                    Spacer(modifier = Modifier.size(12.dp))
+                    Spacer(modifier = Modifier.size(8.dp))
                     Text(
                         text = lastSuggestedMovieName,
                         style = TextStyle(
                             fontFamily = fontBold,
                             fontSize = 20.sp,
                             color = primaryAppTextColor
-                        )
+                        ),
+                        modifier = Modifier.fillMaxWidth(0.60F)
                     )
-                    Spacer(modifier = Modifier.size(12.dp))
+                    Spacer(modifier = Modifier.size(16.dp))
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(lastSuggestedMoviePosterUrl)
@@ -70,15 +72,23 @@ fun LastSuggestedMovieView(
                             .build(),
                         placeholder = painterResource(R.drawable.app_icon_img),
                         contentDescription = "last movie image",
-                        contentScale = ContentScale.Crop,
+                        contentScale = ContentScale.FillBounds,
                         modifier = Modifier
-                            .width(50.dp)
-                            .height(90.dp)
+                            .fillMaxWidth()
+                            .height(100.dp)
+                            .clip(RoundedCornerShape(16.dp))
                     )
                 }
             }
         }
-
-
     }
+}
+
+@Preview
+@Composable
+fun LastSuggestedMoviePreview() {
+    LastSuggestedMovieView(
+        lastSuggestedMovieName = "Race 3",
+        lastSuggestedMoviePosterUrl = "https://upload.wikimedia.org/wikipedia/en/2/23/Ganga_Tere_Desh_Mein.jpg"
+    )
 }
