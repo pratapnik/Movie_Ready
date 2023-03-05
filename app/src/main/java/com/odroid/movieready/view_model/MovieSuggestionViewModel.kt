@@ -2,9 +2,9 @@ package com.odroid.movieready.view_model
 
 import androidx.lifecycle.viewModelScope
 import com.odroid.movieready.base.BaseMVIViewModelWithEffect
-import com.odroid.movieready.model.BollywoodMovieService
+import com.odroid.movieready.network.BollywoodMovieService
 import com.odroid.movieready.entity.MovieResponse
-import com.odroid.movieready.util.PreferenceUtils
+import com.odroid.movieready.util.Analytics
 import com.odroid.movieready.view_intent.MovieSuggestionViewIntent
 import kotlinx.coroutines.*
 
@@ -14,6 +14,7 @@ class MovieSuggestionViewModel : BaseMVIViewModelWithEffect<
         MovieSuggestionViewIntent.ViewEffect>() {
 
     private var moviesList: List<MovieResponse>? = null
+    private var moviesWithPoster: List<MovieResponse>? = null
     var job: Job? = null
 
     override fun processEvent(event: MovieSuggestionViewIntent.ViewEvent) {
@@ -39,6 +40,9 @@ class MovieSuggestionViewModel : BaseMVIViewModelWithEffect<
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         moviesList = response.body()
+                        moviesWithPoster = moviesList?.filter {
+                            it.posterUrl.isNotEmpty()
+                        }
                         viewState = MovieSuggestionViewIntent.ViewState.MoviesLoaded
                     } else {
                         viewState = MovieSuggestionViewIntent.ViewState.MoviesLoadingFailed
@@ -55,36 +59,22 @@ class MovieSuggestionViewModel : BaseMVIViewModelWithEffect<
     private fun updateRandomMovie() {
         if (!moviesList.isNullOrEmpty()) {
             val movie = getMovie()
+            val movieTitle = movie?.title ?: ""
+            Analytics.trackMovieUpdatedEvent(movieTitle)
             viewEffect = MovieSuggestionViewIntent.ViewEffect.UpdateText(
-                movie?.title ?: "",
-                movie?.posterUrl ?: ""
+                movieTitle, movie?.posterUrl ?: ""
             )
         }
     }
 
     private fun getMovie(): MovieResponse? {
-        val randomNumber = getRandomNumber()
-        var movieNumber = randomNumber
-        var posterUrl = moviesList?.get(movieNumber)?.posterUrl
-        var movieEntity: MovieResponse? = moviesList?.get(movieNumber)
-        while (posterUrl.isNullOrEmpty()) {
-            if (movieNumber >= moviesList?.size!! - 1) {
-                movieNumber = getRandomNumber()
-            } else {
-                movieNumber++
-            }
-            movieEntity = moviesList?.get(movieNumber)
-            posterUrl = movieEntity?.posterUrl ?: ""
+        moviesWithPoster?.let {
+            return it.shuffled().last()
         }
-        return movieEntity
+        moviesList?.let {
+            return it.shuffled().last()
+        }
+        return null
     }
 
-    private fun getRandomNumber(): Int {
-        return if (!moviesList.isNullOrEmpty()) {
-            val movieListSize = moviesList!!.size - 1
-            (0..movieListSize).random()
-        } else {
-            0
-        }
-    }
 }

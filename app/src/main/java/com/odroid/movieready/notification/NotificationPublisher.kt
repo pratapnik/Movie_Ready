@@ -75,18 +75,22 @@ class NotificationPublisher : BroadcastReceiver() {
     }
 
     private fun getRandomNotificationContent(): Notification {
-        val firstNotification =
-            Notification("Take a chill pill", "Why not take some time out and play dumb charades?")
-        val secondNotification =
-            Notification("Did you forget to take a break?", "Come on! Let's play!")
-        val thirdNotification =
-            Notification("Lighten up your mood", "Let's guess some movies")
-        val notifications = arrayListOf<Notification>()
-        notifications.apply {
-            add(firstNotification)
-            add(secondNotification)
-            add(thirdNotification)
-        }
-        return notifications.random()
+        val notifications = listOf(
+            Notification("Take a chill pill", "Why not take some time out and play dumb charades?"),
+            Notification("Mere paas maa hai", "Deewar (1975)"),
+            Notification("Lighten up your mood", "Let's guess some movies"),
+            Notification("Did you forget to take a break?", "Come on! Let's play!"),
+            Notification("Main aaj bhi phenke hue paise nahi uthata", "Agneepath (1990)"),
+            Notification("Jab tak hai jaan, jab tak hai jaan", "Jab Tak Hai Jaan (2012)"),
+            Notification("Kuch kuch hota hai", "Kuch Kuch Hota Hai (1998)"),
+            Notification("Mogambo khush hua", "Mr India (1987)"),
+            Notification("Kitne admi the", "Sholay (1975)"),
+            Notification("Picture abhi baaki hai mere dost", "Om Shanti Om (2007)"),
+            Notification("Ja Simran ja jee le apni zindagi", "Dilwale Dulhaniya Le Jayenge (1995)"),
+            Notification("Basanti in kutto ke samne mat naachna", "Sholay (1975)"),
+            Notification("Pushpa I hate tears", "Amar Prem (1972)"),
+            Notification("Watan ke aage kuch nahi, khud bhi nahi", "Raazi (2018)"),
+        )
+        return notifications.shuffled().last()
     }
 }

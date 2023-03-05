@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName
 
 data class MovieResponse(
     @SerializedName("imdb_id")
-    val movieId: String = "",
+    var movieId: String = "",
     @SerializedName("poster_path")
-    val posterUrl: String = "",
+    var posterUrl: String = "",
     @SerializedName("title")
-    val title: String = "",
+    var title: String = "",
     @SerializedName("wiki_link")
-    val wikiLink: String = ""
+    var wikiLink: String = ""
 )

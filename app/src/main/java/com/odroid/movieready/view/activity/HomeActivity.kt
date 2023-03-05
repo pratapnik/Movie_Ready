@@ -4,7 +4,9 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.SystemClock
+import androidx.annotation.RequiresApi
 import com.odroid.movieready.R
 import com.odroid.movieready.base.BaseActivity
 import com.odroid.movieready.databinding.ActivityMainBinding
@@ -34,13 +36,14 @@ class HomeActivity : BaseActivity<ActivityMainBinding>() {
         transaction.commitAllowingStateLoss()
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun scheduleNotification() {
         val notificationIntent = Intent(this, NotificationPublisher::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             this,
             0,
             notificationIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setRepeating(
