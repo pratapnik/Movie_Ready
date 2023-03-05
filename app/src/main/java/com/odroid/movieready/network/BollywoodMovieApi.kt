@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 interface BollywoodMovieApi {
 
-    @GET("bollywood_movie.json")
+    @GET("bollywood_movies_2.0.json")
     suspend fun getAllMovies(): Response<List<MovieResponse>>
 }

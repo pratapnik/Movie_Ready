@@ -7,7 +7,7 @@ data class MovieResponse(
     var movieId: String = "",
     @SerializedName("poster_path")
     var posterUrl: String = "",
-    @SerializedName("title")
+    @SerializedName("original_title")
     var title: String = "",
     @SerializedName("wiki_link")
     var wikiLink: String = ""

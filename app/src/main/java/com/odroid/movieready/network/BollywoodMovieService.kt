@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object BollywoodMovieService {
 
-    private val BASE_URL = "https://gist.githubusercontent.com/pratapnik/51b3edaab55d418139c35338f1a41f36/raw/9f87248523ece2ba47c81484769ba4ef345d1e3f/"
+    private val BASE_URL = "https://gist.githubusercontent.com/pratapnik/cf3e54d6fd3d705438458ab6f97aeac9/raw/d08764cdc0b0fec4aa137eda83accb5fd5357a87/"
 
     fun getBollywoodMovieService(): BollywoodMovieApi {
         return Retrofit.Builder()
