@@ -1,6 +1,7 @@
 package com.odroid.movieready.view.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
@@ -18,14 +19,15 @@ fun MovieCounterView(value: Int) {
     Box(
         modifier = Modifier
             .defaultMinSize(40.dp, 40.dp)
-            .background(color = radicalRed, shape = CircleShape)
-            .padding(start = 9.dp, end = 9.dp, top = 4.dp, bottom = 4.dp),
+            .background(color = turbo, shape = CircleShape)
+            .border(width = 1.dp, shape = CircleShape, color = scarpaFlowBorderColor)
+            .padding(vertical = 4.dp, horizontal = 10.dp),
         contentAlignment = Alignment.Center
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = "#$value", style = TextStyle(
-                    color = primaryDarkModeAppTextColor,
+                    color = primaryAppTextColor,
                     fontSize = 17.sp, fontFamily = fontBold
                 )
             )

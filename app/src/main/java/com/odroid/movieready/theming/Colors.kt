@@ -13,4 +13,5 @@ val redColor = Color(0xFFFF2E63)
 val bottomNavColor = Color(0xFFF9F5EB)
 val bottomNavItemSelectedColor = Color(0xFFF9F5EB)
 val whiteColor = Color.White
-val radicalRed = Color(0xFFFF2E63)
+val turbo = Color(0xFFFFF000)
+val scarpaFlowBorderColor = Color(0xFF5E5A61)
