@@ -143,13 +143,13 @@ fun MovieSuggestionCard(
             lastSuggestedMovieName = lastSuggestedMovieName,
             lastSuggestedMoviePosterUrl = lastSuggestedMoviePosterUrl
         )
-        Spacer(modifier = Modifier.size(24.dp))
+        Spacer(modifier = Modifier.size(20.dp))
         Box(contentAlignment = Alignment.TopStart) {
             Box(modifier = Modifier.padding(top = 20.dp, start = 12.dp, end = 12.dp)) {
                 Card(
                     modifier = modifier
-                        .fillMaxWidth(0.95F)
-                        .fillMaxHeight(0.75F)
+                        .fillMaxWidth(0.98F)
+                        .fillMaxHeight(0.78F)
                         .scale(scale),
                     shape = RoundedCornerShape(15.dp),
                     elevation = 24.dp

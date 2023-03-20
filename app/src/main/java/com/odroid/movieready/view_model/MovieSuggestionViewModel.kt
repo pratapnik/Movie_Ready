@@ -37,6 +37,7 @@ class MovieSuggestionViewModel : BaseMVIViewModelWithEffect<
         job = CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = bollywoodMovieApi.getAllMovies()
+                delay(500)
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         moviesList = response.body()
