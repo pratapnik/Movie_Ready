@@ -10,6 +10,7 @@ import com.odroid.movieready.base.BaseMVIFragmentWithEffect
 import com.odroid.movieready.databinding.MovieSuggestionFragmentBinding
 import com.odroid.movieready.util.ViewUtil
 import com.odroid.movieready.view.activity.ExploreActivity
+import com.odroid.movieready.view.views.LaunchProgressView
 import com.odroid.movieready.view.views.MovieSuggestionCard
 import com.odroid.movieready.view.views.TopGreeting
 import com.odroid.movieready.view_intent.MovieSuggestionViewIntent
@@ -38,6 +39,11 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
 
     override fun initializeViews() {
         viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.LoadMovies)
+        binding.progressComposeView.setContent {
+            MdcTheme {
+                LaunchProgressView()
+            }
+        }
         binding.layoutMovieMain.btnStartGame.setOnClickListener {
             viewModel.processEvent(MovieSuggestionViewIntent.ViewEvent.UpdateClicked)
         }
@@ -111,11 +117,11 @@ class MovieSuggestionFragment : BaseMVIFragmentWithEffect<
     }
 
     private fun hideProgressBar() {
-        binding.progressBar.visibility = View.GONE
+        binding.progressComposeView.visibility = View.GONE
     }
 
     private fun showProgressBar() {
-        binding.progressBar.visibility = View.VISIBLE
+        binding.progressComposeView.visibility = View.VISIBLE
     }
 
     override fun renderEffect(effect: MovieSuggestionViewIntent.ViewEffect) {

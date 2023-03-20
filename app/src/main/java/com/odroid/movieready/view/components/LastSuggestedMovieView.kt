@@ -39,30 +39,42 @@ fun LastSuggestedMovieView(
                 elevation = 8.dp
             ) {
                 Row(
-                    modifier = Modifier.wrapContentSize(),
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Spacer(modifier = Modifier.size(20.dp))
-                    Text(
-                        text = "last movie:",
-                        style = TextStyle(
-                            fontFamily = fontMedium,
-                            fontSize = 16.sp,
-                            color = grayColor
-                        ),
-                        modifier = Modifier.fillMaxWidth(0.2F)
-                    )
-                    Spacer(modifier = Modifier.size(8.dp))
-                    Text(
-                        text = lastSuggestedMovieName,
-                        style = TextStyle(
-                            fontFamily = fontBold,
-                            fontSize = 20.sp,
-                            color = primaryAppTextColor
-                        ),
-                        modifier = Modifier.fillMaxWidth(0.60F)
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically){
+                        Spacer(modifier = Modifier.size(16.dp))
+                        Text(
+                            text = "last \nmovie",
+                            style = TextStyle(
+                                fontFamily = fontMedium,
+                                fontSize = 14.sp,
+                                color = grayColor
+                            )
+                        )
+                        Spacer(modifier = Modifier.size(8.dp))
+                        Text(
+                            text = "->",
+                            style = TextStyle(
+                                fontFamily = fontMedium,
+                                fontSize = 20.sp,
+                                color = grayColor
+                            )
+                        )
+                        Spacer(modifier = Modifier.size(12.dp))
+                        Text(
+                            text = lastSuggestedMovieName,
+                            style = TextStyle(
+                                fontFamily = fontMedium,
+                                fontSize = 18.sp,
+                                color = primaryAppTextColor
+                            ),
+                            modifier = Modifier.fillMaxWidth(0.6F)
+                        )
+                    }
                     Spacer(modifier = Modifier.size(16.dp))
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
@@ -74,8 +86,8 @@ fun LastSuggestedMovieView(
                         contentDescription = "last movie image",
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
+                            .width(81.dp)
+                            .height(108.dp)
                             .clip(RoundedCornerShape(16.dp))
                     )
                 }
@@ -87,8 +99,10 @@ fun LastSuggestedMovieView(
 @Preview
 @Composable
 fun LastSuggestedMoviePreview() {
-    LastSuggestedMovieView(
-        lastSuggestedMovieName = "Race 3",
-        lastSuggestedMoviePosterUrl = "https://upload.wikimedia.org/wikipedia/en/2/23/Ganga_Tere_Desh_Mein.jpg"
-    )
+    Box(modifier = Modifier.padding(16.dp)) {
+        LastSuggestedMovieView(
+            lastSuggestedMovieName = "Race 3 Race 3 Race 3 Race 3 Race 3",
+            lastSuggestedMoviePosterUrl = "https://upload.wikimedia.org/wikipedia/en/2/23/Ganga_Tere_Desh_Mein.jpg"
+        )
+    }
 }
