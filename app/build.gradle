@@ -5,7 +5,7 @@ plugins {
     id 'com.google.firebase.crashlytics'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
-    id 'com.google.devtools.ksp' version '1.6.10-1.0.3'
+    id 'com.google.devtools.ksp' version '1.8.10-1.0.9'
 }
 
 android {
@@ -31,11 +31,9 @@ android {
                 def appName = "ishaara"
                 outputFileName = appName + "-${variant.versionName}.apk"
             }
-            kotlin.sourceSets {
-                getByName(variant.name) {
-                    kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
-                }
-            }
+            variant.addJavaSourceFoldersToModel(
+                    new File(buildDir, "generated/ksp/${variant.name}/kotlin")
+            )
     }
 
     buildTypes {
@@ -56,7 +54,7 @@ android {
         dataBinding true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.1.0'
+        kotlinCompilerExtensionVersion '1.4.2'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -69,46 +67,46 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.5.0'
-    implementation 'androidx.appcompat:appcompat:1.3.0'
-    implementation 'com.google.android.material:material:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0-alpha01'
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0-alpha01"
-    implementation "androidx.fragment:fragment-ktx:1.3.6"
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
+    implementation "androidx.fragment:fragment-ktx:1.5.7"
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-    implementation "androidx.activity:activity-ktx:1.2.3"
-    implementation 'com.google.firebase:firebase-analytics:19.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.0.1'
-    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation "androidx.activity:activity-ktx:1.7.2"
+    implementation 'com.google.firebase:firebase-analytics:21.3.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.7'
+    implementation 'androidx.annotation:annotation:1.6.0'
     implementation 'io.coil-kt:coil:1.2.2'
     implementation 'io.coil-kt:coil-compose:2.1.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
 
     //Compose
-    implementation 'androidx.activity:activity-compose:1.4.0'
-    implementation 'androidx.compose.material:material:1.1.1'
-    implementation 'androidx.compose.animation:animation:1.1.1'
-    implementation 'androidx.compose.ui:ui-tooling:1.1.1'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1'
-    implementation "androidx.navigation:navigation-compose:2.5.0"
-    implementation 'androidx.compose.runtime:runtime-livedata:1.3.0-alpha03'
-    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.1.1'
-    implementation "com.google.android.material:compose-theme-adapter:1.1.1"
-    implementation "androidx.paging:paging-compose:1.0.0-alpha15"
-    implementation 'io.github.raamcosta.compose-destinations:animations-core:1.5.15-beta'
-    ksp 'io.github.raamcosta.compose-destinations:ksp:1.5.15-beta'
+    implementation 'androidx.activity:activity-compose:1.7.2'
+    implementation 'androidx.compose.material:material:1.4.3'
+    implementation 'androidx.compose.animation:animation:1.4.3'
+    implementation 'androidx.compose.ui:ui-tooling:1.4.3'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1'
+    implementation "androidx.navigation:navigation-compose:2.5.3"
+    implementation 'androidx.compose.runtime:runtime-livedata:1.5.0-beta01'
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.4.3'
+    implementation "com.google.android.material:compose-theme-adapter:1.2.1"
+    implementation "androidx.paging:paging-compose:1.0.0-alpha20"
+    implementation 'io.github.raamcosta.compose-destinations:animations-core:1.8.42-beta'
+    ksp 'io.github.raamcosta.compose-destinations:ksp:1.8.42-beta'
     implementation "com.google.accompanist:accompanist-navigation-animation:0.26.1-alpha"
     implementation "com.airbnb.android:lottie-compose:4.0.0"
 
     //Room
-    implementation "androidx.room:room-runtime:2.4.3"
-    kapt "androidx.room:room-compiler:2.4.3"
-    implementation "androidx.room:room-ktx:2.4.3"
+    implementation "androidx.room:room-runtime:2.5.1"
+    kapt "androidx.room:room-compiler:2.5.1"
+    implementation "androidx.room:room-ktx:2.5.1"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

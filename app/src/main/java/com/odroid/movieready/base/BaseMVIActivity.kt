@@ -13,6 +13,6 @@ abstract class BaseMVIActivity<
 
     @CallSuper
     override fun onViewReady() {
-        viewModel.states().observe({ this.lifecycle }, ::renderState)
+        viewModel.states().observe(this, ::renderState)
     }
 }

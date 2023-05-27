@@ -1,11 +1,22 @@
 package com.odroid.movieready.util
 
+import androidx.navigation.NavOptions
 import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.Navigator
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 class DummyDestinationsNavigator: DestinationsNavigator {
     override fun clearBackStack(route: String): Boolean {
         return false
+    }
+
+    override fun navigate(
+        route: String,
+        onlyIfResumed: Boolean,
+        navOptions: NavOptions?,
+        navigatorExtras: Navigator.Extras?
+    ) {
+
     }
 
     override fun navigate(

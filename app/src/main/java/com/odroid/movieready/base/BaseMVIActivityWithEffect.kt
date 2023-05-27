@@ -15,6 +15,6 @@ abstract class BaseMVIActivityWithEffect<
     @CallSuper
     override fun onViewReady() {
         super.onViewReady()
-        viewModel.effects().observe({ this.lifecycle }, ::renderEffect)
+        viewModel.effects().observe(this, ::renderEffect)
     }
 }

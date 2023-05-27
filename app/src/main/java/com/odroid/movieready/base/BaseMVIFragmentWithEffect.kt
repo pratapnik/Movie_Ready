@@ -14,6 +14,6 @@ abstract class BaseMVIFragmentWithEffect<
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.effects().observe(viewLifecycleOwner::getLifecycle, ::renderEffect)
+        viewModel.effects().observe(viewLifecycleOwner, ::renderEffect)
     }
 }
