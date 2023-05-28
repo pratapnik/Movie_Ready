@@ -7,7 +7,7 @@ import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination(start = true)
+@Destination
 @Composable
 fun PopularMoviesScreen(navigator: DestinationsNavigator,
                         exploreViewModel: ExploreViewModel) {

@@ -15,13 +15,15 @@ import com.odroid.movieready.entity.TmdbItem
 import com.odroid.movieready.pagination.EntertainmentPagingSource
 import com.odroid.movieready.repository.TmdbMovieRepositoryImpl
 import com.odroid.movieready.util.Constants
-import com.odroid.movieready.view.views.destinations.NowPlayingMoviesScreenDestination
-import com.odroid.movieready.view.views.destinations.PopularMoviesScreenDestination
-import com.odroid.movieready.view.views.destinations.TopRatedMoviesScreenDestination
-import com.odroid.movieready.view.views.destinations.UpcomingMoviesScreenDestination
+import com.odroid.movieready.view.destinations.NowPlayingMoviesScreenDestination
+import com.odroid.movieready.view.destinations.PopularMoviesScreenDestination
+import com.odroid.movieready.view.destinations.TopRatedMoviesScreenDestination
+import com.odroid.movieready.view.destinations.UpcomingMoviesScreenDestination
 import com.odroid.movieready.view_intent.EntertainmentCategory
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ExploreViewModel : ViewModel() {

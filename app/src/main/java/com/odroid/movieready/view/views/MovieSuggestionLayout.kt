@@ -1,12 +1,32 @@
 package com.odroid.movieready.view.views
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,9 +50,11 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
+import com.odroid.movieready.theming.IshaaraColors
 import com.odroid.movieready.theming.fontBold
 import com.odroid.movieready.theming.primaryAppTextColor
-import com.odroid.movieready.theming.primaryButtonTextColor
+import com.odroid.movieready.view.components.ButtonIcon
+import com.odroid.movieready.view.components.CommonButton
 import com.odroid.movieready.view.components.HideMovieView
 import com.odroid.movieready.view.components.MovieCounterView
 
@@ -102,7 +124,8 @@ fun LayoutPreview() {
             onNewMovieButtonClick = { },
             movieCounterValue = 1,
             lastSuggestedMovieName = "",
-            lastSuggestedMoviePosterUrl = ""
+            lastSuggestedMoviePosterUrl = "",
+            openMovieDetails = {}
         )
     }
 }
@@ -116,7 +139,8 @@ fun MovieSuggestionCard(
     lastSuggestedMovieName: String,
     lastSuggestedMoviePosterUrl: String,
     modifier: Modifier = Modifier,
-    onNewMovieButtonClick: () -> Unit
+    onNewMovieButtonClick: () -> Unit,
+    openMovieDetails: () -> Unit
 ) {
     val movieVisibility = remember {
         mutableStateOf(true)
@@ -152,7 +176,8 @@ fun MovieSuggestionCard(
                         .fillMaxHeight(0.78F)
                         .scale(scale),
                     shape = RoundedCornerShape(15.dp),
-                    elevation = 24.dp
+                    elevation = 24.dp,
+                    border = BorderStroke(width = 2.dp, color = IshaaraColors.primary_app_color)
                 ) {
                     Box(modifier = Modifier.fillMaxHeight(0.82F)) {
                         AsyncImage(
@@ -224,7 +249,7 @@ fun MovieSuggestionCard(
         }
 
         Spacer(modifier = Modifier.height(24.dp))
-        ExtendedFloatingActionButton(
+        CommonButton(
             onClick = {
                 movieVisibility.value = true
                 onNewMovieButtonClick.invoke()
@@ -232,26 +257,13 @@ fun MovieSuggestionCard(
             modifier = Modifier
                 .padding(8.dp)
                 .align(Alignment.CenterHorizontally),
-            shape = RoundedCornerShape(24.dp),
-            icon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_next),
-                    modifier = Modifier
-                        .height(24.dp)
-                        .width(24.dp),
-                    contentDescription = "next icon"
-                )
-            },
-            text = {
-                Text(
-                    text = stringResource(id = R.string.get_movie_button_label),
-                    style = TextStyle(
-                        color = primaryButtonTextColor,
-                        fontSize = 20.sp, fontFamily = fontBold
-                    )
-                )
-            },
-            backgroundColor = colorResource(R.color.primary_button_color)
+            prefixIcon = ButtonIcon(
+                icon = R.drawable.ic_next,
+                iconSpacing = 10.dp,
+                iconSize = 24.dp,
+                iconColor = IshaaraColors.background_color_FFFFFF
+            ),
+            label = stringResource(id = R.string.get_movie_button_label)
         )
         Spacer(modifier = Modifier.height(24.dp))
     }
