@@ -9,6 +9,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -125,7 +126,8 @@ fun LayoutPreview() {
             movieCounterValue = 1,
             lastSuggestedMovieName = "",
             lastSuggestedMoviePosterUrl = "",
-            openMovieDetails = {}
+            openMovieDetails = {},
+            lastMovieClicked = {}
         )
     }
 }
@@ -140,7 +142,8 @@ fun MovieSuggestionCard(
     lastSuggestedMoviePosterUrl: String,
     modifier: Modifier = Modifier,
     onNewMovieButtonClick: () -> Unit,
-    openMovieDetails: () -> Unit
+    openMovieDetails: () -> Unit,
+    lastMovieClicked: () -> Unit
 ) {
     val movieVisibility = remember {
         mutableStateOf(true)
@@ -165,7 +168,10 @@ fun MovieSuggestionCard(
         )
         GameplayTopView(
             lastSuggestedMovieName = lastSuggestedMovieName,
-            lastSuggestedMoviePosterUrl = lastSuggestedMoviePosterUrl
+            lastSuggestedMoviePosterUrl = lastSuggestedMoviePosterUrl,
+            lastMovieClicked = {
+                lastMovieClicked.invoke()
+            }
         )
         Spacer(modifier = Modifier.size(20.dp))
         Box(contentAlignment = Alignment.TopStart) {
@@ -174,7 +180,10 @@ fun MovieSuggestionCard(
                     modifier = modifier
                         .fillMaxWidth(0.98F)
                         .fillMaxHeight(0.78F)
-                        .scale(scale),
+                        .scale(scale)
+                        .clickable {
+                            openMovieDetails.invoke()
+                        },
                     shape = RoundedCornerShape(15.dp),
                     elevation = 24.dp,
                     border = BorderStroke(width = 2.dp, color = IshaaraColors.primary_app_color)

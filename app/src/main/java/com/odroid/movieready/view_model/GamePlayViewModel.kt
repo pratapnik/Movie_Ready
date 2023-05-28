@@ -2,12 +2,11 @@ package com.odroid.movieready.view_model
 
 import androidx.lifecycle.ViewModel
 import com.odroid.movieready.entity.MovieResponse
-import com.odroid.movieready.model.MovieSuggestionModel
 import com.odroid.movieready.network.BollywoodMovieService
 import com.odroid.movieready.util.Analytics
+import com.odroid.movieready.util.toMovieSuggestionModel
 import com.odroid.movieready.view.view_state.GamePlayUiState
 import com.odroid.movieready.view.view_state.GamePlayViewState
-import com.odroid.movieready.view_intent.MovieSuggestionViewIntent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,10 +39,7 @@ class GamePlayViewModel @Inject constructor(): ViewModel() {
 
     fun newMovieClicked() {
         _gamePlayUiState.update {
-            it.copy(previousMovie = MovieSuggestionModel(
-                movieTitle = it.currentMovie.movieTitle,
-                moviePoster = it.currentMovie.moviePoster
-            ))
+            it.copy(previousMovie = it.currentMovie)
         }
         updateRandomMovie()
     }
@@ -62,7 +58,7 @@ class GamePlayViewModel @Inject constructor(): ViewModel() {
                     if (response.isSuccessful) {
                         moviesList = response.body()
                         moviesWithPoster = moviesList?.filter {
-                            it.posterUrl.isNotEmpty()
+                            it.posterPath.isNullOrEmpty().not()
                         }
                         _gamePlayUiState.update {
                             it.copy(viewState = GamePlayViewState.GAME_NOT_STARTED)
@@ -86,13 +82,10 @@ class GamePlayViewModel @Inject constructor(): ViewModel() {
     private fun updateRandomMovie() {
         if (!moviesList.isNullOrEmpty()) {
             val movie = getMovie()
-            val movieTitle = movie?.title ?: ""
+            val movieTitle = movie?.originalTitle ?: ""
             Analytics.trackMovieUpdatedEvent(movieTitle)
             _gamePlayUiState.update {
-                it.copy(currentMovie = MovieSuggestionModel(
-                    movieTitle = movieTitle,
-                    moviePoster = movie?.posterUrl ?: ""
-                ))
+                it.copy(currentMovie = movie.toMovieSuggestionModel())
             }
         }
     }

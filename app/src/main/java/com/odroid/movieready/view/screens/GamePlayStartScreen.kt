@@ -88,6 +88,10 @@ fun GamePlayStartScreen(
                         viewModel.newMovieClicked()
                     },
                     openMovieDetails = {
+                        appRouter.openMovieDetailsBottomSheet(movieSuggestionModel = gamePlayUiState.currentMovie)
+                    },
+                    lastMovieClicked = {
+                        appRouter.openMovieDetailsBottomSheet(movieSuggestionModel = gamePlayUiState.previousMovie)
                     }
                 )
             }

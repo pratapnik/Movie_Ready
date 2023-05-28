@@ -11,13 +11,17 @@ import com.odroid.movieready.view.components.LastSuggestedMovieView
 @Composable
 fun GameplayTopView(
     lastSuggestedMovieName: String,
-    lastSuggestedMoviePosterUrl: String
+    lastSuggestedMoviePosterUrl: String,
+    lastMovieClicked: () -> Unit
 ) {
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         LastSuggestedMovieView(
             modifier = Modifier.fillMaxWidth(),
             lastSuggestedMovieName = lastSuggestedMovieName,
-            lastSuggestedMoviePosterUrl = lastSuggestedMoviePosterUrl
+            lastSuggestedMoviePosterUrl = lastSuggestedMoviePosterUrl,
+            lastMovieClicked = {
+                lastMovieClicked.invoke()
+            }
         )
     }
 }
@@ -27,6 +31,7 @@ fun GameplayTopView(
 fun GameplayTopViewPreview() {
     GameplayTopView(
         lastSuggestedMovieName = "Race 3",
-        lastSuggestedMoviePosterUrl = "https://upload.wikimedia.org/wikipedia/en/2/23/Ganga_Tere_Desh_Mein.jpg"
+        lastSuggestedMoviePosterUrl = "https://upload.wikimedia.org/wikipedia/en/2/23/Ganga_Tere_Desh_Mein.jpg",
+        lastMovieClicked = {}
     )
 }

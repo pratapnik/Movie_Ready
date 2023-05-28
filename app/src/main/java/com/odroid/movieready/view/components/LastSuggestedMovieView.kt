@@ -2,6 +2,7 @@ package com.odroid.movieready.view.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -27,12 +28,15 @@ import com.odroid.movieready.theming.*
 fun LastSuggestedMovieView(
     modifier: Modifier = Modifier,
     lastSuggestedMovieName: String,
-    lastSuggestedMoviePosterUrl: String
+    lastSuggestedMoviePosterUrl: String,
+    lastMovieClicked: () -> Unit
 ) {
     AnimatedVisibility(visible = lastSuggestedMovieName.isNotEmpty()) {
         Box {
             Card(
-                modifier = modifier,
+                modifier = modifier.clickable {
+                    lastMovieClicked.invoke()
+                },
                 shape = RoundedCornerShape(16.dp),
                 backgroundColor = Color.White,
                 border = BorderStroke(2.dp, color = grayColor),
@@ -45,7 +49,7 @@ fun LastSuggestedMovieView(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically){
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Spacer(modifier = Modifier.size(16.dp))
                         Text(
                             text = "last \nmovie",
@@ -102,7 +106,8 @@ fun LastSuggestedMoviePreview() {
     Box(modifier = Modifier.padding(16.dp)) {
         LastSuggestedMovieView(
             lastSuggestedMovieName = "Race 3 Race 3 Race 3 Race 3 Race 3",
-            lastSuggestedMoviePosterUrl = "https://upload.wikimedia.org/wikipedia/en/2/23/Ganga_Tere_Desh_Mein.jpg"
+            lastSuggestedMoviePosterUrl = "https://upload.wikimedia.org/wikipedia/en/2/23/Ganga_Tere_Desh_Mein.jpg",
+            lastMovieClicked = {}
         )
     }
 }

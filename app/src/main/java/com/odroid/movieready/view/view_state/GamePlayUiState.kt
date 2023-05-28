@@ -10,10 +10,8 @@ data class GamePlayUiState(
     companion object {
         val default = GamePlayUiState(
             viewState = GamePlayViewState.LOADING,
-            currentMovie = MovieSuggestionModel.preview,
-            previousMovie = MovieSuggestionModel(
-                "", ""
-            )
+            currentMovie = MovieSuggestionModel.empty,
+            previousMovie = MovieSuggestionModel.empty
         )
     }
 }
