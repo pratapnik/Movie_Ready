@@ -7,4 +7,6 @@ object IshaaraColors {
     val background_color_red = Color(0xFFFF2E63)
     val app_button_background_primary = Color(0xFF121419)
     val primary_app_color = Color(0xFF121419)
+    val primary_app_dark_text_color = Color(0xFF000814)
+    val primary_app_error_text_color = Color(0xFFF08080)
 }

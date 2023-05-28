@@ -3,6 +3,7 @@ package com.odroid.movieready.view.components
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -56,6 +57,7 @@ fun CommonButton(
     label: String = "",
     prefixIcon: ButtonIcon = ButtonIcon.default,
     suffixIcon: ButtonIcon = ButtonIcon.default,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     onClick: () -> Unit = {},
 ) {
     Button(
@@ -64,7 +66,8 @@ fun CommonButton(
         colors = ButtonDefaults.buttonColors(
             backgroundColor = IshaaraColors.app_button_background_primary
         ),
-        shape = IshaaraShapes.default.roundedCornerMedium
+        shape = IshaaraShapes.default.roundedCornerMedium,
+        contentPadding = contentPadding
     ) {
         if (prefixIcon.icon != 0) {
             Icon(

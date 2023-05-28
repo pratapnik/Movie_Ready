@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -16,7 +15,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.odroid.movieready.theming.IshaaraColors
@@ -24,6 +22,7 @@ import com.odroid.movieready.util.ViewUtil
 import com.odroid.movieready.view.sideEffect.OneShotEffect
 import com.odroid.movieready.view.view_state.GamePlayViewState
 import com.odroid.movieready.view.views.AppRouter
+import com.odroid.movieready.view.views.ErrorView
 import com.odroid.movieready.view.views.GamePlayOnboardingView
 import com.odroid.movieready.view.views.LaunchProgressView
 import com.odroid.movieready.view.views.MovieSuggestionCard
@@ -64,13 +63,9 @@ fun GamePlayStartScreen(
         }
 
         GamePlayViewState.LOAD_ERROR -> {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = Color.Red), contentAlignment = Alignment.Center
-            ) {
-                Text(text = "Load ERROR")
-            }
+            ErrorView(tryAgain = {
+                viewModel.getAllMov()
+            })
         }
 
         GamePlayViewState.GAME_STARTED -> {
