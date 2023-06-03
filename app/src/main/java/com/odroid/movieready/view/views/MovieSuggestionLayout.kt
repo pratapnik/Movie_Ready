@@ -185,15 +185,14 @@ fun MovieSuggestionCard(
             Box(modifier = Modifier.padding(top = 20.dp, start = 12.dp, end = 12.dp)) {
                 Card(
                     modifier = modifier
-                        .fillMaxWidth(0.98F)
+                        .fillMaxWidth()
                         .fillMaxHeight(0.78F)
                         .scale(scale)
                         .clickable {
                             openMovieDetails.invoke()
                         },
                     shape = RoundedCornerShape(15.dp),
-                    elevation = 24.dp,
-                    border = BorderStroke(width = 2.dp, color = IshaaraColors.primary_app_color)
+                    elevation = 24.dp
                 ) {
                     Box(modifier = Modifier.fillMaxHeight(0.82F)) {
                         AsyncImage(
@@ -215,7 +214,7 @@ fun MovieSuggestionCard(
                                         colors = listOf(
                                             Color.Transparent,
                                             Color.Black
-                                        ), startY = 800f
+                                        ), startY = 750F
                                     )
                                 )
                         )
