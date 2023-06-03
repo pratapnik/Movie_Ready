@@ -265,6 +265,7 @@ fun MovieSuggestionCard(
             },
             modifier = Modifier
                 .padding(8.dp)
+                .height(56.dp)
                 .align(Alignment.CenterHorizontally),
             prefixIcon = ButtonIcon(
                 icon = R.drawable.ic_next,

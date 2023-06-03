@@ -25,4 +25,24 @@ object ViewUtil {
             }
         }
     }
+
+    fun getNameInitials(name: String, numberOfInitials: Int, shouldCapitalize: Boolean): String {
+        val splitName = name.split(" ")
+        val nameInitials = mutableListOf<String>()
+
+        val initialsLimit = if (splitName.size > numberOfInitials) {
+            numberOfInitials
+        } else {
+            splitName.size
+        }
+
+        for (index in 0 until initialsLimit) {
+            nameInitials.add(index, splitName.getOrNull(index)?.firstOrNull().toString())
+        }
+
+        if (shouldCapitalize) {
+            return nameInitials.joinToString("").uppercase()
+        }
+        return nameInitials.joinToString("")
+    }
 }

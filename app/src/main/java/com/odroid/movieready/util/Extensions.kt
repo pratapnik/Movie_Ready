@@ -30,3 +30,9 @@ fun MovieResponse?.toMovieSuggestionModel(): MovieSuggestionModel {
         releaseDate = releaseDate ?: ""
     )
 }
+
+fun String.getListFromStringUsingSeparator(separator: String): List<String> {
+    return split(separator).filter {
+        it.isNotEmpty()
+    }
+}
