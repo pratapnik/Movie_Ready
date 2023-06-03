@@ -198,7 +198,7 @@ fun MovieDetailsModal(movieSuggestionModel: MovieSuggestionModel) {
                             MovieLongTextSection(
                                 title = "Summary",
                                 description = movieSuggestionModel.summary,
-                                shouldShowFull = true,
+                                shouldShowFull = false,
                                 maxLines = 4
                             )
                             Spacer(modifier = Modifier.size(20.dp))

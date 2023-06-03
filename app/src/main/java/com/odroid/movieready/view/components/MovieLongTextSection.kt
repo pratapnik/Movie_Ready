@@ -34,6 +34,11 @@ fun MovieLongTextSection(
     shouldShowFull: Boolean,
     maxLines: Int
 ) {
+    val maxLinesForDescription = if(shouldShowFull) {
+        Int.MAX_VALUE
+    } else {
+        maxLines
+    }
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = title, style = TextStyle(
@@ -44,14 +49,7 @@ fun MovieLongTextSection(
             )
         )
         Spacer(modifier = Modifier.size(12.dp))
-        Text(
-            text = description, style = TextStyle(
-                color = IshaaraColors.primary_app_light_text_color,
-                fontSize = 16.sp,
-                fontFamily = fontRegular,
-                lineHeight = 21.sp
-            )
-        )
+        ExpandingText(text = description, minimizedMaxLines = 4)
     }
 
 }
