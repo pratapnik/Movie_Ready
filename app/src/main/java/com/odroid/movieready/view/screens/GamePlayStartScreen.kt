@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.odroid.movieready.analytics.AnalyticsConstants
 import com.odroid.movieready.theming.IshaaraColors
 import com.odroid.movieready.util.ViewUtil
 import com.odroid.movieready.view.sideEffect.OneShotEffect
@@ -88,9 +89,17 @@ fun GamePlayStartScreen(
                         viewModel.newMovieClicked()
                     },
                     openMovieDetails = {
+                        viewModel.trackMovieDetailModalOpen(
+                            source = AnalyticsConstants.EventValues.CURRENT_MOVIE_BANNER,
+                            movieName = it
+                        )
                         appRouter.openMovieDetailsBottomSheet(movieSuggestionModel = gamePlayUiState.currentMovie)
                     },
                     lastMovieClicked = {
+                        viewModel.trackMovieDetailModalOpen(
+                            source = AnalyticsConstants.EventValues.LAST_MOVIE_BANNER,
+                            movieName = it
+                        )
                         appRouter.openMovieDetailsBottomSheet(movieSuggestionModel = gamePlayUiState.previousMovie)
                     }
                 )

@@ -146,8 +146,8 @@ fun MovieSuggestionCard(
     lastSuggestedMoviePosterUrl: String,
     modifier: Modifier = Modifier,
     onNewMovieButtonClick: () -> Unit,
-    openMovieDetails: () -> Unit,
-    lastMovieClicked: () -> Unit
+    openMovieDetails: (movieName: String) -> Unit,
+    lastMovieClicked: (movieName: String) -> Unit
 ) {
     val movieVisibility = remember {
         mutableStateOf(true)
@@ -172,7 +172,7 @@ fun MovieSuggestionCard(
             lastSuggestedMovieName = lastSuggestedMovieName,
             lastSuggestedMoviePosterUrl = lastSuggestedMoviePosterUrl,
             lastMovieClicked = {
-                lastMovieClicked.invoke()
+                lastMovieClicked.invoke(lastSuggestedMovieName)
             }
         )
         Spacer(modifier = Modifier.size(20.dp))
@@ -189,7 +189,7 @@ fun MovieSuggestionCard(
                         .fillMaxHeight(0.78F)
                         .scale(scale)
                         .clickable {
-                            openMovieDetails.invoke()
+                            openMovieDetails.invoke(title)
                         },
                     shape = RoundedCornerShape(15.dp),
                     elevation = 24.dp

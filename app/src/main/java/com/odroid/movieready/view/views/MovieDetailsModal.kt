@@ -42,6 +42,7 @@ import com.odroid.movieready.view.components.IshaaraBottomSheetScaffold
 import com.odroid.movieready.view.components.MovieChipsSection
 import com.odroid.movieready.view.components.MovieLongTextSection
 import com.odroid.movieready.view.components.MoviesHorizontalCardSection
+import com.odroid.movieready.view.sideEffect.OneShotEffect
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.spec.DestinationStyle
 

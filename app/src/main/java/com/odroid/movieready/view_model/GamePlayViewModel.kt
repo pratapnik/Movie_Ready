@@ -3,7 +3,7 @@ package com.odroid.movieready.view_model
 import androidx.lifecycle.ViewModel
 import com.odroid.movieready.entity.MovieResponse
 import com.odroid.movieready.network.BollywoodMovieService
-import com.odroid.movieready.util.Analytics
+import com.odroid.movieready.analytics.Analytics
 import com.odroid.movieready.util.toMovieSuggestionModel
 import com.odroid.movieready.view.view_state.GamePlayUiState
 import com.odroid.movieready.view.view_state.GamePlayViewState
@@ -20,7 +20,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class GamePlayViewModel @Inject constructor(): ViewModel() {
+class GamePlayViewModel @Inject constructor() : ViewModel() {
 
     private val _gamePlayUiState =
         MutableStateFlow(GamePlayUiState.default)
@@ -77,6 +77,10 @@ class GamePlayViewModel @Inject constructor(): ViewModel() {
                 }
             }
         }
+    }
+
+    fun trackMovieDetailModalOpen(source: String, movieName: String) {
+        Analytics.trackMovieDetailModalOpen(movieName = movieName, from = source)
     }
 
     private fun updateRandomMovie() {
