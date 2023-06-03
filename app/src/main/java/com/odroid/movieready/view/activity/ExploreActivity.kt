@@ -30,13 +30,17 @@ import com.google.android.material.composethemeadapter.MdcTheme
 import com.odroid.movieready.R
 import com.odroid.movieready.theming.bottomNavColor
 import com.odroid.movieready.theming.primaryAppTextColor
-import com.odroid.movieready.view.views.NavGraphs
-import com.odroid.movieready.view.views.appCurrentDestinationAsState
-import com.odroid.movieready.view.views.destinations.*
-import com.odroid.movieready.view.views.startAppDestination
+import com.odroid.movieready.view.NavGraphs
+import com.odroid.movieready.view.appCurrentDestinationAsState
+import com.odroid.movieready.view.destinations.NowPlayingMoviesScreenDestination
+import com.odroid.movieready.view.destinations.PopularMoviesScreenDestination
+import com.odroid.movieready.view.destinations.TopRatedMoviesScreenDestination
+import com.odroid.movieready.view.destinations.UpcomingMoviesScreenDestination
+import com.odroid.movieready.view.startAppDestination
 import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
+import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.dependency
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.popBackStack
@@ -67,7 +71,7 @@ class ExploreActivity : ComponentActivity() {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             bottomBar = { BottomBar(navController) },
-            backgroundColor = Color.White
+            backgroundColor = Color.White,
         ) {
             DestinationsNavHost(
                 navController = navController,
@@ -83,7 +87,7 @@ class ExploreActivity : ComponentActivity() {
     @Composable
     fun BottomBar(navController: NavController) {
         val bottomNavItems = exploreViewModel.getMoviesCategories()
-        val currentDestination: Destination =
+        val currentDestination =
             navController.appCurrentDestinationAsState().value
                 ?: NavGraphs.root.startAppDestination
         when (currentDestination) {

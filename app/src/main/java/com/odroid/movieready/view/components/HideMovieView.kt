@@ -32,7 +32,7 @@ fun HideMovieView(onUnHideClick: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "movie hidden",
+                text = "movie is hidden",
                 style = TextStyle(
                     color = primaryButtonTextColor,
                     fontSize = 20.sp, fontFamily = fontBold
