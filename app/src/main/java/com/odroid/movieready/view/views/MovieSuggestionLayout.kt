@@ -34,6 +34,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -45,6 +46,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,7 +54,9 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
 import com.odroid.movieready.theming.IshaaraColors
+import com.odroid.movieready.theming.IshaaraShapes
 import com.odroid.movieready.theming.fontBold
+import com.odroid.movieready.theming.fontMedium
 import com.odroid.movieready.theming.primaryAppTextColor
 import com.odroid.movieready.view.components.ButtonIcon
 import com.odroid.movieready.view.components.CommonButton
@@ -151,9 +155,7 @@ fun MovieSuggestionCard(
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.Center
     ) {
         val infiniteTransition = rememberInfiniteTransition()
@@ -174,7 +176,12 @@ fun MovieSuggestionCard(
             }
         )
         Spacer(modifier = Modifier.size(20.dp))
-        Box(contentAlignment = Alignment.TopStart) {
+        Box(
+            contentAlignment = Alignment.TopStart,
+            modifier = Modifier
+                .padding(start = 20.dp, end = 20.dp)
+                .align(Alignment.CenterHorizontally)
+        ) {
             Box(modifier = Modifier.padding(top = 20.dp, start = 12.dp, end = 12.dp)) {
                 Card(
                     modifier = modifier
@@ -250,6 +257,29 @@ fun MovieSuggestionCard(
                                 tint = Color.White
                             )
                         }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .padding(12.dp),
+                        contentAlignment = Alignment.TopCenter
+                    ) {
+                        Text(
+                            text = "tap movie know more",
+                            style = TextStyle(
+                                fontFamily = fontMedium,
+                                fontSize = 10.sp,
+                                color = IshaaraColors.primary_app_light_text_color
+                            ),
+                            modifier = Modifier
+                                .clip(IshaaraShapes.default.roundedCornerXSmall)
+                                .background(
+                                    color = IshaaraColors.bottom_sheet_background_0E1110.copy(
+                                        alpha = 0.5F
+                                    )
+                                )
+                                .padding(vertical = 4.dp, horizontal = 12.dp),
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }
