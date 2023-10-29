@@ -27,7 +27,7 @@ import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination
+@Destination(navGraph = "explore_graph")
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun WatchlistMoviesScreen(

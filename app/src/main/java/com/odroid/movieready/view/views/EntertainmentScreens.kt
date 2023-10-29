@@ -7,7 +7,7 @@ import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination
+@Destination(navGraph = "explore_graph", start = true)
 @Composable
 fun PopularMoviesScreen(navigator: DestinationsNavigator,
                         exploreViewModel: ExploreViewModel) {
@@ -17,7 +17,7 @@ fun PopularMoviesScreen(navigator: DestinationsNavigator,
     )
 }
 
-@Destination
+@Destination(navGraph = "explore_graph")
 @Composable
 fun TopRatedMoviesScreen(navigator: DestinationsNavigator,
                         exploreViewModel: ExploreViewModel) {
@@ -27,7 +27,7 @@ fun TopRatedMoviesScreen(navigator: DestinationsNavigator,
     )
 }
 
-@Destination
+@Destination(navGraph = "explore_graph")
 @Composable
 fun NowPlayingMoviesScreen(navigator: DestinationsNavigator,
                          exploreViewModel: ExploreViewModel) {
@@ -37,7 +37,7 @@ fun NowPlayingMoviesScreen(navigator: DestinationsNavigator,
     )
 }
 
-@Destination
+@Destination(navGraph = "explore_graph")
 @Composable
 fun UpcomingMoviesScreen(navigator: DestinationsNavigator,
                            exploreViewModel: ExploreViewModel) {

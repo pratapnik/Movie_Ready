@@ -5,14 +5,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.TweenSpec
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,7 +29,9 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.plusAssign
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.navigation.material.BottomSheetNavigator
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.android.material.composethemeadapter.MdcTheme
 import com.odroid.movieready.R
@@ -37,6 +44,7 @@ import com.odroid.movieready.view.destinations.PopularMoviesScreenDestination
 import com.odroid.movieready.view.destinations.TopRatedMoviesScreenDestination
 import com.odroid.movieready.view.destinations.UpcomingMoviesScreenDestination
 import com.odroid.movieready.view.startAppDestination
+import com.odroid.movieready.view.views.AppRouter
 import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
@@ -46,7 +54,9 @@ import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.popBackStack
 import com.ramcosta.composedestinations.navigation.popUpTo
 import com.ramcosta.composedestinations.utils.isRouteOnBackStack
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ExploreActivity : ComponentActivity() {
 
     private val exploreViewModel: ExploreViewModel by viewModels()
@@ -62,12 +72,25 @@ class ExploreActivity : ComponentActivity() {
 
     @OptIn(
         ExperimentalAnimationApi::class, ExperimentalComposeUiApi::class,
-        ExperimentalMaterialNavigationApi::class
+        ExperimentalMaterialNavigationApi::class, ExperimentalMaterialApi::class
     )
     @Composable
     fun ScaffoldWithBottomMenu() {
-        val navController = rememberAnimatedNavController()
+        val bottomSheetState = rememberModalBottomSheetState(
+            initialValue = ModalBottomSheetValue.Hidden,
+            animationSpec = TweenSpec(durationMillis = 500),
+            skipHalfExpanded = true
+        )
+        // BottomSheetNavigator to help navigate to bottom sheets
+        val bottomSheetNavigator =
+            remember { BottomSheetNavigator(sheetState = bottomSheetState) }
+        // Animated nav controller is required for bottom sheet navigator to work with compose destinations
+        val navController = rememberAnimatedNavController(bottomSheetNavigator)
+        // Animated navHost engine is required for bottom sheet navigator to work with compose destinations
         val navHostEngine = rememberAnimatedNavHostEngine()
+
+        navController.navigatorProvider += bottomSheetNavigator
+
         Scaffold(
             modifier = Modifier.fillMaxSize(),
             bottomBar = { BottomBar(navController) },
@@ -75,8 +98,10 @@ class ExploreActivity : ComponentActivity() {
         ) {
             DestinationsNavHost(
                 navController = navController,
-                navGraph = NavGraphs.root,
+                navGraph = NavGraphs.exploreGraph,
                 dependenciesContainerBuilder = {
+                    dependency(AppRouter(navController))
+                    dependency(bottomSheetState)
                     dependency(exploreViewModel)
                 }, engine = navHostEngine
             )
