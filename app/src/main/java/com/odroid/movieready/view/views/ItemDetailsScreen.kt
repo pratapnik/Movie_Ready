@@ -46,7 +46,7 @@ fun PreviewItemDetailsScreen() {
     }
 }
 
-@Destination
+@Destination(navGraph = "explore_graph")
 @Composable
 fun ItemDetailsScreen(
     navigator: DestinationsNavigator,

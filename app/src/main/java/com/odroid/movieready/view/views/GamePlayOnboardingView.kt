@@ -1,5 +1,6 @@
 package com.odroid.movieready.view.views
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,12 +13,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.odroid.movieready.R
 import com.odroid.movieready.theming.IshaaraColors
+import com.odroid.movieready.view.activity.ExploreActivity
 import com.odroid.movieready.view.components.ButtonIcon
 import com.odroid.movieready.view.components.CommonButton
 
@@ -29,6 +32,8 @@ fun PreviewGamePlayOnboardingView() {
 
 @Composable
 fun GamePlayOnboardingView(onStartClick: () -> Unit) {
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -39,7 +44,7 @@ fun GamePlayOnboardingView(onStartClick: () -> Unit) {
         TopGreeting(
             shouldShowExploreButton = false,
             onExploreButtonClick = {
-
+                context.startActivity(Intent(context, ExploreActivity::class.java))
             }
         )
         Image(

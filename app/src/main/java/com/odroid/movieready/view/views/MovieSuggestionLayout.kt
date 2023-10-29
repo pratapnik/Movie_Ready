@@ -74,7 +74,6 @@ fun TopGreeting(
             .padding(start = 24.dp, top = 24.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.Center
         ) {
             Text(

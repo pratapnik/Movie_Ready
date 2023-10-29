@@ -20,13 +20,16 @@ import com.odroid.movieready.view.destinations.PopularMoviesScreenDestination
 import com.odroid.movieready.view.destinations.TopRatedMoviesScreenDestination
 import com.odroid.movieready.view.destinations.UpcomingMoviesScreenDestination
 import com.odroid.movieready.view_intent.EntertainmentCategory
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ExploreViewModel : ViewModel() {
+@HiltViewModel
+class ExploreViewModel @Inject constructor(): ViewModel() {
 
     private val tmdbMovieRepository = TmdbMovieRepositoryImpl()
     private val _movieDetail = MutableLiveData<MovieDetail>()
