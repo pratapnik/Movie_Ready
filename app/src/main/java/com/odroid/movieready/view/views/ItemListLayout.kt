@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.items
 import com.odroid.movieready.R
 import com.odroid.movieready.entity.TmdbItem
 import com.odroid.movieready.theming.primaryAppColor
@@ -106,12 +105,12 @@ fun ItemListWidget(
                 }
             }
         }
-        items(moviesList) { movieItem ->
-            if (movieItem != null) {
+        items(moviesList.itemCount) { index ->
+            val movieItem = moviesList[index]
+            movieItem?.run {
                 VerticalItemWidget(
-                    navigator, movieItem, exploreViewModel
-                )
-                {
+                    navigator, this, exploreViewModel
+                ) {
                     exploreViewModel.updateListState(
                         headerTitle,
                         lazyListState
