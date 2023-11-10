@@ -45,6 +45,7 @@ import com.odroid.movieready.view.components.MoviesHorizontalCardSection
 import com.odroid.movieready.view.sideEffect.OneShotEffect
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.spec.DestinationStyle
+import com.ramcosta.composedestinations.spec.DestinationStyleBottomSheet
 
 @Preview
 @Composable
@@ -54,7 +55,7 @@ fun PreviewMovieDetailsModal() {
     )
 }
 
-@Destination(style = DestinationStyle.BottomSheet::class)
+@Destination(style = DestinationStyleBottomSheet::class)
 @Composable
 fun MovieDetailsModal(movieSuggestionModel: MovieSuggestionModel) {
     val movieActors = remember {
