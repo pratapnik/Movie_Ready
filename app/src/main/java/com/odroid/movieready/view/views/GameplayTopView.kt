@@ -1,7 +1,6 @@
 package com.odroid.movieready.view.views
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,7 +17,7 @@ fun GameplayTopView(
 ) {
     Column(modifier = Modifier, horizontalAlignment = Alignment.Start) {
         LastSuggestedMovieView(
-            modifier = Modifier.padding(end = 32.dp),
+            modifier = Modifier.padding(end = 32.dp, top = 8.dp),
             lastSuggestedMovieName = lastSuggestedMovieName,
             lastSuggestedMoviePosterUrl = lastSuggestedMoviePosterUrl,
             lastMovieClicked = {

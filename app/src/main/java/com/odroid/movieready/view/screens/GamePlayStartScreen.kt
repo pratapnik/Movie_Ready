@@ -15,6 +15,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.odroid.movieready.analytics.AnalyticsConstants
@@ -73,7 +74,7 @@ fun GamePlayStartScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = IshaaraColors.background_color_FFFFFF),
+                    .background(color = Color(0xFFFAF7F0)),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {

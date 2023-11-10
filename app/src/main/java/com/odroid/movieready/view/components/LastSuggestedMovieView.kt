@@ -30,6 +30,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,7 +50,7 @@ fun LastSuggestedMovieView(
     lastSuggestedMoviePosterUrl: String,
     lastMovieClicked: () -> Unit
 ) {
-    val animationTime = 300
+    val animationTime = 200
     AnimatedVisibility(
         visible = lastSuggestedMovieName.isNotEmpty(), enter = slideInHorizontally(
             initialOffsetX = { -600 }, // small slide 300px
@@ -68,8 +69,8 @@ fun LastSuggestedMovieView(
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
-                            Color(0xFF232526),
-                            Color(0xFF414345)
+                            Color(0xFF00b09b),
+                            Color(0xFF96c93d)
                         ),
                     ), shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
                 )
@@ -83,8 +84,8 @@ fun LastSuggestedMovieView(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
-                            .width(84.dp)
-                            .height(104.dp), contentAlignment = Alignment.BottomCenter
+                            .width(80.dp)
+                            .height(100.dp), contentAlignment = Alignment.BottomCenter
                     ) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
@@ -130,17 +131,17 @@ fun LastSuggestedMovieView(
                         Box(
                             modifier = Modifier
                                 .background(
-                                    color = IshaaraColors.background_color_FFFFFF,
+                                    color = Color(0xFF164863),
                                     shape = IshaaraShapes.default.roundedCornerMedium
                                 )
                                 .padding(horizontal = 10.dp, vertical = 2.dp)
                         ) {
                             Text(
-                                text = "previous movie",
+                                text = "previous",
                                 style = TextStyle(
                                     fontFamily = fontMedium,
                                     fontSize = 10.sp,
-                                    color = IshaaraColors.primary_app_dark_text_color
+                                    color = IshaaraColors.primary_app_light_text_color
                                 )
                             )
                         }
@@ -149,8 +150,9 @@ fun LastSuggestedMovieView(
                             text = lastSuggestedMovieName,
                             style = TextStyle(
                                 fontFamily = fontBold,
-                                fontSize = 18.sp,
-                                color = IshaaraColors.primary_app_light_text_color
+                                fontSize = 16.sp,
+                                color = IshaaraColors.primary_app_dark_text_color,
+                                fontStyle = FontStyle.Italic
                             ),
                             maxLines = 2
                         )
