@@ -176,7 +176,7 @@ fun MovieSuggestionCard(
         )
         Spacer(modifier = Modifier.size(20.dp))
         Box(
-            contentAlignment = Alignment.TopStart,
+            contentAlignment = Alignment.TopEnd,
             modifier = Modifier
                 .padding(start = 20.dp, end = 20.dp)
                 .align(Alignment.CenterHorizontally)
