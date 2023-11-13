@@ -1,9 +1,12 @@
 package com.odroid.movieready.view_model
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.odroid.movieready.analytics.Analytics
 import com.odroid.movieready.entity.MovieResponse
 import com.odroid.movieready.network.BollywoodMovieService
-import com.odroid.movieready.analytics.Analytics
+import com.odroid.movieready.repository.DumbCharadesRepository
 import com.odroid.movieready.util.toMovieSuggestionModel
 import com.odroid.movieready.view.view_state.GamePlayUiState
 import com.odroid.movieready.view.view_state.GamePlayViewState
@@ -20,7 +23,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class GamePlayViewModel @Inject constructor() : ViewModel() {
+class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: DumbCharadesRepository) : ViewModel() {
 
     private val _gamePlayUiState =
         MutableStateFlow(GamePlayUiState.default)
@@ -45,6 +48,12 @@ class GamePlayViewModel @Inject constructor() : ViewModel() {
     }
 
     fun getAllMov() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val movies = dumbCharadesRepository.getBollywoodMovies(1)
+            movies.map {
+                Log.d("nps_ishaara", "getAllMov: $it\n")
+            }
+        }
         _gamePlayUiState.update {
             it.copy(viewState = GamePlayViewState.LOADING)
         }
