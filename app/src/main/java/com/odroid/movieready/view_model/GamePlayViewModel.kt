@@ -49,10 +49,7 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
 
     fun getAllMov() {
         viewModelScope.launch(Dispatchers.IO) {
-            val movies = dumbCharadesRepository.getBollywoodMovies(1)
-            movies.map {
-                Log.d("nps_ishaara", "getAllMov: $it\n")
-            }
+            dumbCharadesRepository.fetchBollywoodMovies(1)
         }
         _gamePlayUiState.update {
             it.copy(viewState = GamePlayViewState.LOADING)

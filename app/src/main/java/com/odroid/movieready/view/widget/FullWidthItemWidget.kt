@@ -46,7 +46,10 @@ fun FullWidthItemWidget(
         shape = RoundedCornerShape(8.dp),
         elevation = 8.dp,
         onClick = {
-            navigator.navigate(ItemDetailsScreenDestination(tmdbMovie.id))
+            tmdbMovie.id?.run {
+                navigator.navigate(ItemDetailsScreenDestination(this))
+
+            }
         }
     ) {
         Box(
@@ -83,7 +86,7 @@ fun FullWidthItemWidget(
                 contentAlignment = Alignment.BottomStart
             ) {
                 Text(
-                    text = tmdbMovie.title,
+                    text = tmdbMovie.title ?: "",
                     style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.font_bold)),
                         fontSize = 14.sp,
@@ -93,7 +96,9 @@ fun FullWidthItemWidget(
             }
             IconButton(
                 onClick = {
-                    exploreViewModel.removeMovieFromWatchList(tmdbMovie.id)
+                    tmdbMovie.id?.run {
+                        exploreViewModel.removeMovieFromWatchList(this)
+                    }
                 }
             ) {
                 Icon(

@@ -1,5 +1,6 @@
 package com.odroid.movieready.di
 
+import com.odroid.movieready.database.DumbCharadesDao
 import com.odroid.movieready.repository.DumbCharadesRepository
 import com.odroid.movieready.repository.DumbCharadesRepositoryImpl
 import dagger.Module
@@ -13,7 +14,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 object RepositoryModule {
     @Provides
     @ViewModelScoped
-    fun providesDumbCharadesRepository(): DumbCharadesRepository {
-        return DumbCharadesRepositoryImpl()
+    fun providesDumbCharadesRepository(dumbCharadesDao: DumbCharadesDao): DumbCharadesRepository {
+        return DumbCharadesRepositoryImpl(dumbCharadesDao)
     }
 }

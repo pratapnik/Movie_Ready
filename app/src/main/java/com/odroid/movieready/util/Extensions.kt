@@ -1,6 +1,9 @@
 package com.odroid.movieready.util
 
+import com.odroid.movieready.database.DumbCharadeSuggestion
+import com.odroid.movieready.database.TmdbMovie
 import com.odroid.movieready.entity.MovieResponse
+import com.odroid.movieready.entity.TmdbItem
 import com.odroid.movieready.model.MovieSuggestionModel
 
 fun String?.posterUrl(): String {
@@ -35,4 +38,20 @@ fun String.getListFromStringUsingSeparator(separator: String): List<String> {
     return split(separator).filter {
         it.isNotEmpty()
     }
+}
+
+fun TmdbItem.toDumbCharadeSuggestion(): DumbCharadeSuggestion {
+    return DumbCharadeSuggestion(
+        id = id ?: -1,
+        title = title ?: "",
+        overview = description ?: "",
+        releaseDate = releaseDate ?: "",
+        posterPath = posterUrl ?: "",
+        avgRating = avgRating ?: 0f,
+        ratingCount = ratingCount ?: 0L,
+        isAdult = isAdult ?: false,
+        backDropPath = backDropPath ?: "",
+        genreIds = genreIds?.joinToString(",") ?: "",
+        popularity = popularity ?: 0.0
+    )
 }

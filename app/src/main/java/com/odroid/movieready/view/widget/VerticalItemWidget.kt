@@ -44,7 +44,9 @@ fun VerticalItemWidget(
         elevation = 12.dp,
         onClick = {
             onItemClick.invoke()
-            navigator.navigate(ItemDetailsScreenDestination(movieId = tmdbItem.id))
+            tmdbItem.id?.run {
+                navigator.navigate(ItemDetailsScreenDestination(movieId = this))
+            }
         }
     ) {
         Box(
@@ -86,7 +88,7 @@ fun VerticalItemWidget(
                         .padding(8.dp)
                 ) {
                     Text(
-                        text = tmdbItem.title,
+                        text = tmdbItem.title ?: "",
                         style = TextStyle(
                             fontFamily = fontBold,
                             fontSize = 16.sp,
@@ -95,7 +97,7 @@ fun VerticalItemWidget(
                         modifier = Modifier.padding(top = 8.dp)
                     )
                     Text(
-                        text = tmdbItem.description,
+                        text = tmdbItem.description ?: "",
                         style = TextStyle(
                             fontFamily = fontRegular,
                             fontSize = 12.sp,
