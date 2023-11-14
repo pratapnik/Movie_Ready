@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.odroid.movieready.analytics.Analytics
 import com.odroid.movieready.model.DumbCharadesSuggestionUiModel
 import com.odroid.movieready.repository.DumbCharadesRepository
+import com.odroid.movieready.util.coroutineExceptionHandler
 import com.odroid.movieready.util.toDumbCharadeSuggestionUiModel
 import com.odroid.movieready.view.view_state.GamePlayUiState
 import com.odroid.movieready.view.view_state.GamePlayViewState
+import com.odroid.movieready.view.view_state.OnScreenMessageState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,11 +28,25 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
 
     private var globalSuggestionsList: List<DumbCharadesSuggestionUiModel>? = null
 
+    private val _onScreenMessageState =
+        MutableStateFlow(OnScreenMessageState.default)
+
+    val onScreenMessageState = _onScreenMessageState.asStateFlow()
+
     fun startGame() {
-        _gamePlayUiState.update {
-            it.copy(viewState = GamePlayViewState.GAME_STARTED)
+        if(globalSuggestionsList.isNullOrEmpty()) {
+            _onScreenMessageState.update {
+                it.copy(
+                    message = "Please check your internet and RESTART the app!",
+                    isTriggered = true
+                )
+            }
+        } else {
+            _gamePlayUiState.update {
+                it.copy(viewState = GamePlayViewState.GAME_STARTED)
+            }
+            updateNewMovie()
         }
-        updateNewMovie()
     }
 
     fun newMovieClicked() {
@@ -44,14 +60,17 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
         viewModelScope.launch(Dispatchers.IO) {
             dumbCharadesRepository.getDumbCharadesSuggestionFromDb().collect { suggestionsList ->
                 if (suggestionsList.isNullOrEmpty().not()) {
-                    _gamePlayUiState.update {
-                        it.copy(viewState = GamePlayViewState.GAME_NOT_STARTED)
-                    }
                     globalSuggestionsList = suggestionsList?.map {
                         it.toDumbCharadeSuggestionUiModel()
                     }
                 }
             }
+        }
+    }
+
+    fun updateOnScreenMessageState(onScreenMessageState: OnScreenMessageState) {
+        viewModelScope.launch {
+            _onScreenMessageState.emit(onScreenMessageState)
         }
     }
 
@@ -64,7 +83,10 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
     }
 
     fun getAllMov() {
-        viewModelScope.launch(Dispatchers.IO) {
+        _gamePlayUiState.update {
+            it.copy(viewState = GamePlayViewState.GAME_NOT_STARTED)
+        }
+        viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             val lastPageNumber = dumbCharadesRepository.getLastDumbCharadesFetchPageNumberInPref()
             val pageNumber = if(lastPageNumber > 0) {
                 lastPageNumber + 1
@@ -72,9 +94,6 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
                 1
             }
             dumbCharadesRepository.fetchBollywoodMovies(page = pageNumber)
-        }
-        _gamePlayUiState.update {
-            it.copy(viewState = GamePlayViewState.LOADING)
         }
     }
 

@@ -5,6 +5,7 @@ import com.odroid.movieready.entity.MovieResponse
 import com.odroid.movieready.entity.TmdbItem
 import com.odroid.movieready.model.DumbCharadesSuggestionUiModel
 import com.odroid.movieready.model.MovieSuggestionModel
+import kotlinx.coroutines.CoroutineExceptionHandler
 
 fun String?.posterUrl(): String {
     return Constants.POSTER_BASE_URL.plus(this ?: "")
@@ -70,4 +71,8 @@ fun DumbCharadeSuggestion.toDumbCharadeSuggestionUiModel(): DumbCharadesSuggesti
         genreIds = genreIds,
         popularity = popularity
     )
+}
+
+val coroutineExceptionHandler = CoroutineExceptionHandler{_, throwable ->
+    throwable.printStackTrace()
 }

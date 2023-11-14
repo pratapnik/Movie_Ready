@@ -1,5 +1,6 @@
 package com.odroid.movieready.view.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,6 +42,7 @@ fun GamePlayStartScreen(
     viewModel: GamePlayViewModel = hiltViewModel()
 ) {
     val gamePlayUiState by viewModel.gamePlayUiState.collectAsState()
+    val onScreenMessageState by viewModel.onScreenMessageState.collectAsState()
     val movieCounter = remember {
         mutableIntStateOf(1)
     }
@@ -56,6 +58,13 @@ fun GamePlayStartScreen(
     OneShotEffect {
         viewModel.observeDumbCharadesSuggestions()
         viewModel.getAllMov()
+    }
+
+    LaunchedEffect(key1 = onScreenMessageState.isTriggered) {
+        if (onScreenMessageState.isTriggered) {
+            Toast.makeText(context, onScreenMessageState.message, Toast.LENGTH_SHORT).show()
+            viewModel.updateOnScreenMessageState(onScreenMessageState.copy(isTriggered = false))
+        }
     }
 
     when (gamePlayUiState.viewState) {
