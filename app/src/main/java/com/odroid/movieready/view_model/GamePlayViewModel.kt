@@ -65,7 +65,13 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
 
     fun getAllMov() {
         viewModelScope.launch(Dispatchers.IO) {
-            dumbCharadesRepository.fetchBollywoodMovies(1)
+            val lastPageNumber = dumbCharadesRepository.getLastDumbCharadesFetchPageNumberInPref()
+            val pageNumber = if(lastPageNumber > 0) {
+                lastPageNumber + 1
+            } else {
+                1
+            }
+            dumbCharadesRepository.fetchBollywoodMovies(page = pageNumber)
         }
         _gamePlayUiState.update {
             it.copy(viewState = GamePlayViewState.LOADING)
