@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.odroid.movieready.analytics.AnalyticsConstants
-import com.odroid.movieready.theming.IshaaraColors
 import com.odroid.movieready.util.ViewUtil
 import com.odroid.movieready.view.sideEffect.OneShotEffect
 import com.odroid.movieready.view.view_state.GamePlayViewState
@@ -57,7 +56,7 @@ fun GamePlayStartScreen(
 
     OneShotEffect {
         viewModel.observeDumbCharadesSuggestions()
-        viewModel.getAllMov()
+        viewModel.fetchMoviesFromRemote()
     }
 
     LaunchedEffect(key1 = onScreenMessageState.isTriggered) {
@@ -76,7 +75,7 @@ fun GamePlayStartScreen(
 
         GamePlayViewState.LOAD_ERROR -> {
             ErrorView(tryAgain = {
-                viewModel.getAllMov()
+                viewModel.fetchMoviesFromRemote()
             })
         }
 

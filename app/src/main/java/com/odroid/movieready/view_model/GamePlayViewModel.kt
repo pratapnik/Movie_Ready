@@ -1,10 +1,12 @@
 package com.odroid.movieready.view_model
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.odroid.movieready.analytics.Analytics
 import com.odroid.movieready.model.DumbCharadesSuggestionUiModel
 import com.odroid.movieready.repository.DumbCharadesRepository
+import com.odroid.movieready.util.SessionDataManager
 import com.odroid.movieready.util.coroutineExceptionHandler
 import com.odroid.movieready.util.toDumbCharadeSuggestionUiModel
 import com.odroid.movieready.view.view_state.GamePlayUiState
@@ -54,6 +56,13 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
             it.copy(previousMovie = it.currentMovie)
         }
         updateNewMovie()
+        Log.d("ishaara_logs", "newMovieClickedCount --> ${SessionDataManager.newMovieClickedCount}")
+        Log.d("ishaara_logs", "Final list size --> ${globalSuggestionsList?.size}")
+
+        if(SessionDataManager.newMovieClickedCount % 7 == 0) {
+            fetchMoviesFromRemote()
+        }
+        SessionDataManager.incrementNewMovieClickedCount()
     }
 
     fun observeDumbCharadesSuggestions() {
@@ -82,10 +91,7 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
         }
     }
 
-    fun getAllMov() {
-        _gamePlayUiState.update {
-            it.copy(viewState = GamePlayViewState.GAME_NOT_STARTED)
-        }
+    fun fetchMoviesFromRemote() {
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             val lastPageNumber = dumbCharadesRepository.getLastDumbCharadesFetchPageNumberInPref()
             val pageNumber = if(lastPageNumber > 0) {

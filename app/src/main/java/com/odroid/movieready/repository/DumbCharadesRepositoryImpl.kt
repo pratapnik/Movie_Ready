@@ -1,5 +1,6 @@
 package com.odroid.movieready.repository
 
+import android.util.Log
 import com.odroid.movieready.database.DumbCharadeSuggestion
 import com.odroid.movieready.database.DumbCharadesDao
 import com.odroid.movieready.network.RetrofitBuilder
@@ -14,6 +15,7 @@ class DumbCharadesRepositoryImpl @Inject constructor(val dumbCharadesDao: DumbCh
          RetrofitBuilder.dumbCharadesSuggestionApi.getBollywoodMovies(
             pageNumber = page
         ).let {
+             Log.d("ishaara_logs", "fetchBollywoodMoviesCalled with page no. ${it.pageNo}")
              it.moviesList.map { tmdbItem ->
                  dumbCharadesDao.insertSuggestion(tmdbItem.toDumbCharadeSuggestion())
              }
