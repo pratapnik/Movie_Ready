@@ -1,7 +1,9 @@
 package com.odroid.movieready.repository
 
-import com.odroid.movieready.entity.TmdbItem
+import com.odroid.movieready.database.DumbCharadeSuggestion
+import kotlinx.coroutines.flow.Flow
 
 interface DumbCharadesRepository {
     suspend fun fetchBollywoodMovies(page: Int)
+    suspend fun getDumbCharadesSuggestionFromDb(): Flow<List<DumbCharadeSuggestion>?>
 }

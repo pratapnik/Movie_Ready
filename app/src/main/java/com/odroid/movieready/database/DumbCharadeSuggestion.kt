@@ -29,5 +29,5 @@ data class DumbCharadeSuggestion(
     @ColumnInfo(name = "genre_ids")
     var genreIds: String,
     @ColumnInfo(name = "popularity")
-    var popularity: Double,
+    var popularity: Double
 )

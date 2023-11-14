@@ -47,13 +47,14 @@ fun GamePlayStartScreen(
 
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = gamePlayUiState.currentMovie.movieTitle) {
-        if (gamePlayUiState.currentMovie.movieTitle.isNotEmpty()) {
+    LaunchedEffect(key1 = gamePlayUiState.currentMovie.title) {
+        if (gamePlayUiState.currentMovie.title.isNotEmpty()) {
             ViewUtil.triggerSound(context, com.odroid.movieready.R.raw.movie_generation_sound)
         }
     }
 
     OneShotEffect {
+        viewModel.observeDumbCharadesSuggestions()
         viewModel.getAllMov()
     }
 
@@ -80,11 +81,11 @@ fun GamePlayStartScreen(
             ) {
                 MovieSuggestionCard(
                     contentDescription = "Movie Suggestion",
-                    title = gamePlayUiState.currentMovie.movieTitle,
-                    posterPath = gamePlayUiState.currentMovie.moviePoster,
+                    title = gamePlayUiState.currentMovie.title,
+                    posterPath = gamePlayUiState.currentMovie.posterPath,
                     movieCounterValue = movieCounter.intValue,
-                    lastSuggestedMovieName = gamePlayUiState.previousMovie.movieTitle,
-                    lastSuggestedMoviePosterUrl = gamePlayUiState.previousMovie.moviePoster,
+                    lastSuggestedMovieName = gamePlayUiState.previousMovie.title,
+                    lastSuggestedMoviePosterUrl = gamePlayUiState.previousMovie.posterPath,
                     onNewMovieButtonClick = {
                         movieCounter.intValue++
                         viewModel.newMovieClicked()
@@ -94,14 +95,14 @@ fun GamePlayStartScreen(
                             source = AnalyticsConstants.EventValues.CURRENT_MOVIE_BANNER,
                             movieName = it
                         )
-                        appRouter.openMovieDetailsBottomSheet(movieSuggestionModel = gamePlayUiState.currentMovie)
+//                        appRouter.openMovieDetailsBottomSheet(movieSuggestionModel = gamePlayUiState.currentMovie)
                     },
                     lastMovieClicked = {
                         viewModel.trackMovieDetailModalOpen(
                             source = AnalyticsConstants.EventValues.LAST_MOVIE_BANNER,
                             movieName = it
                         )
-                        appRouter.openMovieDetailsBottomSheet(movieSuggestionModel = gamePlayUiState.previousMovie)
+//                        appRouter.openMovieDetailsBottomSheet(movieSuggestionModel = gamePlayUiState.previousMovie)
                     }
                 )
             }

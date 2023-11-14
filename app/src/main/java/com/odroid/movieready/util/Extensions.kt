@@ -1,9 +1,9 @@
 package com.odroid.movieready.util
 
 import com.odroid.movieready.database.DumbCharadeSuggestion
-import com.odroid.movieready.database.TmdbMovie
 import com.odroid.movieready.entity.MovieResponse
 import com.odroid.movieready.entity.TmdbItem
+import com.odroid.movieready.model.DumbCharadesSuggestionUiModel
 import com.odroid.movieready.model.MovieSuggestionModel
 
 fun String?.posterUrl(): String {
@@ -53,5 +53,21 @@ fun TmdbItem.toDumbCharadeSuggestion(): DumbCharadeSuggestion {
         backDropPath = backDropPath ?: "",
         genreIds = genreIds?.joinToString(",") ?: "",
         popularity = popularity ?: 0.0
+    )
+}
+
+fun DumbCharadeSuggestion.toDumbCharadeSuggestionUiModel(): DumbCharadesSuggestionUiModel {
+    return DumbCharadesSuggestionUiModel(
+        id = id,
+        title = title,
+        overview = overview,
+        releaseDate = releaseDate,
+        posterPath = posterPath.posterUrl(),
+        avgRating = avgRating,
+        ratingCount = ratingCount,
+        isAdult = isAdult,
+        backDropPath = backDropPath,
+        genreIds = genreIds,
+        popularity = popularity
     )
 }
