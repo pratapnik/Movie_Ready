@@ -36,4 +36,20 @@ class DumbCharadesRepositoryImpl @Inject constructor(val dumbCharadesDao: DumbCh
     override suspend fun getLastDumbCharadesFetchPageNumberInPref(): Int {
         return PreferenceUtils.getIntegerPreference(PreferenceKeys.DUMB_CHARADES_LAST_FETCH_PAGE_NUMBER, -1)
     }
+
+    override suspend fun getNumberOfSuggestionsInDb(): Int {
+        return dumbCharadesDao.getNumberOfSuggestionsInDb()
+    }
+
+    override suspend fun saveFirstDumbCharadesApiCallTime(time: Long) {
+        PreferenceUtils.setLongPreference(PreferenceKeys.FIRST_DUMB_CHARADES_API_CALL_TIME, time)
+    }
+
+    override suspend fun getFirstDumbCharadesApiCallTime(): Long {
+        return PreferenceUtils.getLongPreference(PreferenceKeys.FIRST_DUMB_CHARADES_API_CALL_TIME, -1)
+    }
+
+    override suspend fun clearDb() {
+        dumbCharadesDao.clearDumbCharadesSuggestions()
+    }
 }

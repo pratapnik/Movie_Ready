@@ -14,7 +14,7 @@ import com.odroid.movieready.entity.SourceType
 import com.odroid.movieready.entity.TmdbItem
 import com.odroid.movieready.pagination.EntertainmentPagingSource
 import com.odroid.movieready.repository.TmdbMovieRepositoryImpl
-import com.odroid.movieready.util.Constants
+import com.odroid.movieready.entity.Constants
 import com.odroid.movieready.view.destinations.NowPlayingMoviesScreenDestination
 import com.odroid.movieready.view.destinations.PopularMoviesScreenDestination
 import com.odroid.movieready.view.destinations.TopRatedMoviesScreenDestination

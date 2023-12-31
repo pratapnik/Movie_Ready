@@ -56,7 +56,7 @@ fun GamePlayStartScreen(
 
     OneShotEffect {
         viewModel.observeDumbCharadesSuggestions()
-        viewModel.fetchMoviesFromRemote()
+        viewModel.refreshDB()
     }
 
     LaunchedEffect(key1 = onScreenMessageState.isTriggered) {

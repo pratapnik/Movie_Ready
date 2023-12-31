@@ -8,4 +8,8 @@ interface DumbCharadesRepository {
     suspend fun getDumbCharadesSuggestionFromDb(): Flow<List<DumbCharadeSuggestion>?>
     suspend fun updateLastDumbCharadesFetchPageNumberInPref(pageNumber: Int)
     suspend fun getLastDumbCharadesFetchPageNumberInPref(): Int
+    suspend fun getNumberOfSuggestionsInDb(): Int
+    suspend fun saveFirstDumbCharadesApiCallTime(time: Long)
+    suspend fun getFirstDumbCharadesApiCallTime(): Long
+    suspend fun clearDb()
 }

@@ -32,4 +32,12 @@ object PreferenceUtils {
     fun setIntegerPreference(key: String, value: Int) {
         prefs?.edit()?.putInt(key, value)?.apply()
     }
+
+    fun getLongPreference(key: String, defValue: Long): Long {
+        return prefs?.getLong(key, defValue) ?: -1L
+    }
+
+    fun setLongPreference(key: String, value: Long) {
+        prefs?.edit()?.putLong(key, value)?.apply()
+    }
 }

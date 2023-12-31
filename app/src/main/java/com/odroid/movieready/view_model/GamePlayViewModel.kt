@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.odroid.movieready.analytics.Analytics
+import com.odroid.movieready.entity.Constants
 import com.odroid.movieready.model.DumbCharadesSuggestionUiModel
 import com.odroid.movieready.repository.DumbCharadesRepository
 import com.odroid.movieready.util.SessionDataManager
@@ -36,7 +37,7 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
     val onScreenMessageState = _onScreenMessageState.asStateFlow()
 
     fun startGame() {
-        if(globalSuggestionsList.isNullOrEmpty()) {
+        if (globalSuggestionsList.isNullOrEmpty()) {
             _onScreenMessageState.update {
                 it.copy(
                     message = "Please check your internet and RESTART the app!",
@@ -59,7 +60,7 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
         Log.d("ishaara_logs", "newMovieClickedCount --> ${SessionDataManager.newMovieClickedCount}")
         Log.d("ishaara_logs", "Final list size --> ${globalSuggestionsList?.size}")
 
-        if(SessionDataManager.newMovieClickedCount % 7 == 0) {
+        if (SessionDataManager.newMovieClickedCount % 7 == 0) {
             fetchMoviesFromRemote()
         }
         SessionDataManager.incrementNewMovieClickedCount()
@@ -93,13 +94,43 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
 
     fun fetchMoviesFromRemote() {
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
-            val lastPageNumber = dumbCharadesRepository.getLastDumbCharadesFetchPageNumberInPref()
-            val pageNumber = if(lastPageNumber > 0) {
-                lastPageNumber + 1
-            } else {
-                1
+            val offlineAvailableSuggestionsCount =
+                dumbCharadesRepository.getNumberOfSuggestionsInDb()
+
+            Log.d(
+                "ishaara_logs",
+                "offlineAvailableSuggestionsCount --> $offlineAvailableSuggestionsCount"
+            )
+
+            if (offlineAvailableSuggestionsCount <= Constants.SUGGESTIONS_STORE_MAX_LIMIT) {
+                val lastPageNumber =
+                    dumbCharadesRepository.getLastDumbCharadesFetchPageNumberInPref()
+                val pageNumber = if (lastPageNumber > 0) {
+                    lastPageNumber + 1
+                } else {
+                    1
+                }
+                if (pageNumber == 1) {
+                    dumbCharadesRepository.saveFirstDumbCharadesApiCallTime(time = System.currentTimeMillis())
+                }
+                dumbCharadesRepository.fetchBollywoodMovies(page = pageNumber)
             }
-            dumbCharadesRepository.fetchBollywoodMovies(page = pageNumber)
+        }
+    }
+
+    fun refreshDB() {
+        viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+            val firstDumbCharadesApiCallTime =
+                dumbCharadesRepository.getFirstDumbCharadesApiCallTime()
+            Log.d("ishaara_logs", "firstDumbCharadesApiCallTime --> ${firstDumbCharadesApiCallTime}")
+
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - firstDumbCharadesApiCallTime >= Constants.REFRESH_SUGGESTIONS_TIME_PERIOD) {
+                Log.d("ishaara_logs", "refreshing DB --> ${currentTime - firstDumbCharadesApiCallTime}")
+                dumbCharadesRepository.updateLastDumbCharadesFetchPageNumberInPref(pageNumber = -1)
+                dumbCharadesRepository.clearDb()
+            }
+            fetchMoviesFromRemote()
         }
     }
 
