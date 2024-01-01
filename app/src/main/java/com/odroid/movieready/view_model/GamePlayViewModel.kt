@@ -1,106 +1,140 @@
 package com.odroid.movieready.view_model
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.odroid.movieready.entity.MovieResponse
-import com.odroid.movieready.network.BollywoodMovieService
+import androidx.lifecycle.viewModelScope
 import com.odroid.movieready.analytics.Analytics
-import com.odroid.movieready.util.toMovieSuggestionModel
+import com.odroid.movieready.entity.Constants
+import com.odroid.movieready.model.DumbCharadesSuggestionUiModel
+import com.odroid.movieready.repository.DumbCharadesRepository
+import com.odroid.movieready.util.SessionDataManager
+import com.odroid.movieready.util.coroutineExceptionHandler
+import com.odroid.movieready.util.toDumbCharadeSuggestionUiModel
 import com.odroid.movieready.view.view_state.GamePlayUiState
 import com.odroid.movieready.view.view_state.GamePlayViewState
+import com.odroid.movieready.view.view_state.OnScreenMessageState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class GamePlayViewModel @Inject constructor() : ViewModel() {
+class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: DumbCharadesRepository) :
+    ViewModel() {
 
     private val _gamePlayUiState =
         MutableStateFlow(GamePlayUiState.default)
     val gamePlayUiState = _gamePlayUiState.asStateFlow()
 
-    private var moviesList: List<MovieResponse>? = null
-    private var moviesWithPoster: List<MovieResponse>? = null
-    var job: Job? = null
+    private var globalSuggestionsList: List<DumbCharadesSuggestionUiModel>? = null
+
+    private val _onScreenMessageState =
+        MutableStateFlow(OnScreenMessageState.default)
+
+    val onScreenMessageState = _onScreenMessageState.asStateFlow()
 
     fun startGame() {
-        _gamePlayUiState.update {
-            it.copy(viewState = GamePlayViewState.GAME_STARTED)
+        if (globalSuggestionsList.isNullOrEmpty()) {
+            _onScreenMessageState.update {
+                it.copy(
+                    message = "Please check your internet and RESTART the app!",
+                    isTriggered = true
+                )
+            }
+        } else {
+            _gamePlayUiState.update {
+                it.copy(viewState = GamePlayViewState.GAME_STARTED)
+            }
+            updateNewMovie()
         }
-        updateRandomMovie()
     }
 
     fun newMovieClicked() {
         _gamePlayUiState.update {
             it.copy(previousMovie = it.currentMovie)
         }
-        updateRandomMovie()
+        updateNewMovie()
+        Log.d("ishaara_logs", "newMovieClickedCount --> ${SessionDataManager.newMovieClickedCount}")
+        Log.d("ishaara_logs", "Final list size --> ${globalSuggestionsList?.size}")
+
+        if (SessionDataManager.newMovieClickedCount % 7 == 0) {
+            fetchMoviesFromRemote()
+        }
+        SessionDataManager.incrementNewMovieClickedCount()
     }
 
-    fun getAllMov() {
-        _gamePlayUiState.update {
-            it.copy(viewState = GamePlayViewState.LOADING)
-        }
-        val bollywoodMovieApi = BollywoodMovieService.getBollywoodMovieService()
-
-        job = CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val response = bollywoodMovieApi.getAllMovies()
-                delay(500)
-                withContext(Dispatchers.Main) {
-                    if (response.isSuccessful) {
-                        moviesList = response.body()
-                        moviesWithPoster = moviesList?.filter {
-                            it.posterPath.isNullOrEmpty().not()
-                        }
-                        _gamePlayUiState.update {
-                            it.copy(viewState = GamePlayViewState.GAME_NOT_STARTED)
-                        }
-                    } else {
-                        _gamePlayUiState.update {
-                            it.copy(viewState = GamePlayViewState.LOAD_ERROR)
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    _gamePlayUiState.update {
-                        it.copy(viewState = GamePlayViewState.LOAD_ERROR)
+    fun observeDumbCharadesSuggestions() {
+        viewModelScope.launch(Dispatchers.IO) {
+            dumbCharadesRepository.getDumbCharadesSuggestionFromDb().collect { suggestionsList ->
+                if (suggestionsList.isNullOrEmpty().not()) {
+                    globalSuggestionsList = suggestionsList?.map {
+                        it.toDumbCharadeSuggestionUiModel()
                     }
                 }
             }
+        }
+    }
+
+    fun updateOnScreenMessageState(onScreenMessageState: OnScreenMessageState) {
+        viewModelScope.launch {
+            _onScreenMessageState.emit(onScreenMessageState)
+        }
+    }
+
+    private fun updateNewMovie() {
+        globalSuggestionsList?.shuffled()?.last()?.run {
+            _gamePlayUiState.update {
+                it.copy(currentMovie = this)
+            }
+        }
+    }
+
+    fun fetchMoviesFromRemote() {
+        viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+            val offlineAvailableSuggestionsCount =
+                dumbCharadesRepository.getNumberOfSuggestionsInDb()
+
+            Log.d(
+                "ishaara_logs",
+                "offlineAvailableSuggestionsCount --> $offlineAvailableSuggestionsCount"
+            )
+
+            if (offlineAvailableSuggestionsCount <= Constants.SUGGESTIONS_STORE_MAX_LIMIT) {
+                val lastPageNumber =
+                    dumbCharadesRepository.getLastDumbCharadesFetchPageNumberInPref()
+                val pageNumber = if (lastPageNumber > 0) {
+                    lastPageNumber + 1
+                } else {
+                    1
+                }
+                if (pageNumber == 1) {
+                    dumbCharadesRepository.saveFirstDumbCharadesApiCallTime(time = System.currentTimeMillis())
+                }
+                dumbCharadesRepository.fetchBollywoodMovies(page = pageNumber)
+            }
+        }
+    }
+
+    fun refreshDB() {
+        viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+            val firstDumbCharadesApiCallTime =
+                dumbCharadesRepository.getFirstDumbCharadesApiCallTime()
+            Log.d("ishaara_logs", "firstDumbCharadesApiCallTime --> ${firstDumbCharadesApiCallTime}")
+
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - firstDumbCharadesApiCallTime >= Constants.REFRESH_SUGGESTIONS_TIME_PERIOD) {
+                Log.d("ishaara_logs", "refreshing DB --> ${currentTime - firstDumbCharadesApiCallTime}")
+                dumbCharadesRepository.updateLastDumbCharadesFetchPageNumberInPref(pageNumber = -1)
+                dumbCharadesRepository.clearDb()
+            }
+            fetchMoviesFromRemote()
         }
     }
 
     fun trackMovieDetailModalOpen(source: String, movieName: String) {
         Analytics.trackMovieDetailModalOpen(movieName = movieName, from = source)
-    }
-
-    private fun updateRandomMovie() {
-        if (!moviesList.isNullOrEmpty()) {
-            val movie = getMovie()
-            val movieTitle = movie?.originalTitle ?: ""
-            Analytics.trackMovieUpdatedEvent(movieTitle)
-            _gamePlayUiState.update {
-                it.copy(currentMovie = movie.toMovieSuggestionModel())
-            }
-        }
-    }
-
-    private fun getMovie(): MovieResponse? {
-        moviesWithPoster?.let {
-            return it.shuffled().last()
-        }
-        moviesList?.let {
-            return it.shuffled().last()
-        }
-        return null
     }
 }

@@ -5,10 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [TmdbMovie::class], version = 1)
+@Database(entities = [TmdbMovie::class, DumbCharadeSuggestion::class], version = 1)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun watchlistDao(): WatchlistDao
+    abstract fun dumbCharadesDao(): DumbCharadesDao
 
     companion object {
         @Volatile
@@ -20,7 +21,6 @@ abstract class AppDatabase: RoomDatabase() {
                     applicationContext,
                     AppDatabase::class.java,
                     "app_database")
-                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

@@ -24,7 +24,7 @@ fun MovieCounterView(value: Int) {
     Box(
         modifier = Modifier
             .defaultMinSize(40.dp, 40.dp)
-            .background(color = Color(0xFF96c93d), shape = CircleShape)
+            .background(color = Color(0xFFf1ddbf), shape = CircleShape)
             .border(width = 1.dp, shape = CircleShape, color = scarpaFlowBorderColor)
             .padding(vertical = 4.dp, horizontal = 10.dp),
         contentAlignment = Alignment.Center

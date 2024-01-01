@@ -1,5 +1,6 @@
 package com.odroid.movieready.view.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.odroid.movieready.analytics.AnalyticsConstants
-import com.odroid.movieready.theming.IshaaraColors
 import com.odroid.movieready.util.ViewUtil
 import com.odroid.movieready.view.sideEffect.OneShotEffect
 import com.odroid.movieready.view.view_state.GamePlayViewState
@@ -41,20 +41,29 @@ fun GamePlayStartScreen(
     viewModel: GamePlayViewModel = hiltViewModel()
 ) {
     val gamePlayUiState by viewModel.gamePlayUiState.collectAsState()
+    val onScreenMessageState by viewModel.onScreenMessageState.collectAsState()
     val movieCounter = remember {
         mutableIntStateOf(1)
     }
 
     val context = LocalContext.current
 
-    LaunchedEffect(key1 = gamePlayUiState.currentMovie.movieTitle) {
-        if (gamePlayUiState.currentMovie.movieTitle.isNotEmpty()) {
+    LaunchedEffect(key1 = gamePlayUiState.currentMovie.title) {
+        if (gamePlayUiState.currentMovie.title.isNotEmpty()) {
             ViewUtil.triggerSound(context, com.odroid.movieready.R.raw.movie_generation_sound)
         }
     }
 
     OneShotEffect {
-        viewModel.getAllMov()
+        viewModel.observeDumbCharadesSuggestions()
+        viewModel.refreshDB()
+    }
+
+    LaunchedEffect(key1 = onScreenMessageState.isTriggered) {
+        if (onScreenMessageState.isTriggered) {
+            Toast.makeText(context, onScreenMessageState.message, Toast.LENGTH_SHORT).show()
+            viewModel.updateOnScreenMessageState(onScreenMessageState.copy(isTriggered = false))
+        }
     }
 
     when (gamePlayUiState.viewState) {
@@ -66,7 +75,7 @@ fun GamePlayStartScreen(
 
         GamePlayViewState.LOAD_ERROR -> {
             ErrorView(tryAgain = {
-                viewModel.getAllMov()
+                viewModel.fetchMoviesFromRemote()
             })
         }
 
@@ -80,11 +89,11 @@ fun GamePlayStartScreen(
             ) {
                 MovieSuggestionCard(
                     contentDescription = "Movie Suggestion",
-                    title = gamePlayUiState.currentMovie.movieTitle,
-                    posterPath = gamePlayUiState.currentMovie.moviePoster,
+                    title = gamePlayUiState.currentMovie.title,
+                    posterPath = gamePlayUiState.currentMovie.posterPath,
                     movieCounterValue = movieCounter.intValue,
-                    lastSuggestedMovieName = gamePlayUiState.previousMovie.movieTitle,
-                    lastSuggestedMoviePosterUrl = gamePlayUiState.previousMovie.moviePoster,
+                    lastSuggestedMovieName = gamePlayUiState.previousMovie.title,
+                    lastSuggestedMoviePosterUrl = gamePlayUiState.previousMovie.posterPath,
                     onNewMovieButtonClick = {
                         movieCounter.intValue++
                         viewModel.newMovieClicked()
@@ -94,14 +103,7 @@ fun GamePlayStartScreen(
                             source = AnalyticsConstants.EventValues.CURRENT_MOVIE_BANNER,
                             movieName = it
                         )
-                        appRouter.openMovieDetailsBottomSheet(movieSuggestionModel = gamePlayUiState.currentMovie)
-                    },
-                    lastMovieClicked = {
-                        viewModel.trackMovieDetailModalOpen(
-                            source = AnalyticsConstants.EventValues.LAST_MOVIE_BANNER,
-                            movieName = it
-                        )
-                        appRouter.openMovieDetailsBottomSheet(movieSuggestionModel = gamePlayUiState.previousMovie)
+                        appRouter.openMovieDetailsBottomSheet(dumbCharadesSuggestionUiModel = gamePlayUiState.currentMovie)
                     }
                 )
             }

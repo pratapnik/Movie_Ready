@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -16,8 +17,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,38 +31,32 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.odroid.movieready.R
-import com.odroid.movieready.model.MovieSuggestionModel
+import com.odroid.movieready.model.DumbCharadesSuggestionUiModel
 import com.odroid.movieready.theming.IshaaraColors
 import com.odroid.movieready.theming.fontBold
 import com.odroid.movieready.theming.fontRegular
-import com.odroid.movieready.util.ViewUtil
-import com.odroid.movieready.util.getListFromStringUsingSeparator
 import com.odroid.movieready.view.components.IshaaraBottomSheetScaffold
-import com.odroid.movieready.view.components.MovieChipsSection
 import com.odroid.movieready.view.components.MovieLongTextSection
-import com.odroid.movieready.view.components.MoviesHorizontalCardSection
-import com.odroid.movieready.view.sideEffect.OneShotEffect
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.spec.DestinationStyle
 import com.ramcosta.composedestinations.spec.DestinationStyleBottomSheet
 
 @Preview
 @Composable
 fun PreviewMovieDetailsModal() {
     MovieDetailsModal(
-        movieSuggestionModel = MovieSuggestionModel.preview
+        dumbCharadesSuggestionUiModel = DumbCharadesSuggestionUiModel.empty
     )
 }
 
 @Destination(style = DestinationStyleBottomSheet::class)
 @Composable
-fun MovieDetailsModal(movieSuggestionModel: MovieSuggestionModel) {
-    val movieActors = remember {
-        mutableStateOf(movieSuggestionModel.actors.getListFromStringUsingSeparator("|"))
-    }
-    val movieGenres = remember {
-        mutableStateOf(movieSuggestionModel.genres.getListFromStringUsingSeparator("|"))
-    }
+fun MovieDetailsModal(dumbCharadesSuggestionUiModel: DumbCharadesSuggestionUiModel) {
+//    val movieActors = remember {
+//        mutableStateOf(dumbCharadesSuggestionUiModel.actors.getListFromStringUsingSeparator("|"))
+//    }
+//    val movieGenres = remember {
+//        mutableStateOf(dumbCharadesSuggestionUiModel.genres.getListFromStringUsingSeparator("|"))
+//    }
     IshaaraBottomSheetScaffold(
         modifier = Modifier.background(IshaaraColors.bottom_sheet_background_0E1110),
         isTopNotchVisible = true
@@ -74,18 +67,18 @@ fun MovieDetailsModal(movieSuggestionModel: MovieSuggestionModel) {
                 .fillMaxWidth()
         ) {
             Column {
-                if (movieSuggestionModel.moviePoster.isNotEmpty()) {
+                if (dumbCharadesSuggestionUiModel.posterPath.isNotEmpty()) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(movieSuggestionModel.moviePoster)
+                            .data(dumbCharadesSuggestionUiModel.posterPath)
                             .crossfade(true)
                             .error(R.drawable.app_icon_img)
                             .build(),
                         placeholder = painterResource(R.drawable.app_icon_img),
                         contentDescription = "contentDescription",
-                        contentScale = ContentScale.Crop,
+                        contentScale = ContentScale.Inside,
                         modifier = Modifier
-                            .height(130.dp)
+                            .fillMaxHeight(0.40F)
                             .fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.size(20.dp))
@@ -95,7 +88,7 @@ fun MovieDetailsModal(movieSuggestionModel: MovieSuggestionModel) {
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp)
                 ) {
-                    if (movieSuggestionModel.moviePoster.isEmpty()) {
+                    if (dumbCharadesSuggestionUiModel.posterPath.isEmpty()) {
                         Spacer(modifier = Modifier.size(28.dp))
                     }
                     Column(
@@ -104,7 +97,7 @@ fun MovieDetailsModal(movieSuggestionModel: MovieSuggestionModel) {
                             .verticalScroll(rememberScrollState())
                     ) {
                         Text(
-                            text = movieSuggestionModel.movieTitle, style = TextStyle(
+                            text = dumbCharadesSuggestionUiModel.title, style = TextStyle(
                                 color = IshaaraColors.primary_app_light_text_color,
                                 fontSize = 28.sp,
                                 lineHeight = 32.sp,
@@ -112,39 +105,38 @@ fun MovieDetailsModal(movieSuggestionModel: MovieSuggestionModel) {
                             )
                         )
                         Spacer(modifier = Modifier.size(20.dp))
-                        if (movieSuggestionModel.imdbRating.isNotEmpty()) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.ic_star_rating_green),
-                                    contentDescription = "imdb rating"
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_star_rating_green),
+                                contentDescription = "imdb rating"
+                            )
+                            Spacer(modifier = Modifier.size(8.dp))
+                            Text(
+                                text = dumbCharadesSuggestionUiModel.avgRating.toString(),
+                                style = TextStyle(
+                                    color = IshaaraColors.primary_app_light_text_color,
+                                    fontSize = 16.sp,
+                                    fontFamily = fontRegular
                                 )
-                                Spacer(modifier = Modifier.size(8.dp))
-                                Text(
-                                    text = movieSuggestionModel.imdbRating,
-                                    style = TextStyle(
-                                        color = IshaaraColors.primary_app_light_text_color,
-                                        fontSize = 16.sp,
-                                        fontFamily = fontRegular
-                                    )
+                            )
+                            Spacer(modifier = Modifier.size(8.dp))
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_imdb),
+                                contentDescription = "",
+                                modifier = Modifier.height(20.dp)
+                            )
+                            Text(
+                                text = " Rating",
+                                style = TextStyle(
+                                    color = IshaaraColors.primary_app_light_text_color,
+                                    fontSize = 16.sp,
+                                    fontFamily = fontRegular
                                 )
-                                Spacer(modifier = Modifier.size(8.dp))
-                                Image(
-                                    painter = painterResource(id = R.drawable.ic_imdb),
-                                    contentDescription = "",
-                                    modifier = Modifier.height(20.dp)
-                                )
-                                Text(
-                                    text = " Rating",
-                                    style = TextStyle(
-                                        color = IshaaraColors.primary_app_light_text_color,
-                                        fontSize = 16.sp,
-                                        fontFamily = fontRegular
-                                    )
-                                )
-                            }
+                            )
+
                             Spacer(modifier = Modifier.size(20.dp))
                         }
-                        if (movieSuggestionModel.imdbVotes.isNotEmpty()) {
+                        if (dumbCharadesSuggestionUiModel.ratingCount > 0) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_people),
@@ -153,7 +145,7 @@ fun MovieDetailsModal(movieSuggestionModel: MovieSuggestionModel) {
                                 )
                                 Spacer(modifier = Modifier.size(8.dp))
                                 Text(
-                                    text = "Rated by ${movieSuggestionModel.imdbVotes}",
+                                    text = "Rated by ${dumbCharadesSuggestionUiModel.ratingCount}",
                                     style = TextStyle(
                                         color = IshaaraColors.primary_app_light_text_color,
                                         fontSize = 16.sp,
@@ -163,7 +155,7 @@ fun MovieDetailsModal(movieSuggestionModel: MovieSuggestionModel) {
                             }
                             Spacer(modifier = Modifier.size(20.dp))
                         }
-                        if (movieSuggestionModel.releaseDate.isNotEmpty()) {
+                        if (dumbCharadesSuggestionUiModel.releaseDate.isNotEmpty()) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_calendar_tick),
@@ -172,7 +164,7 @@ fun MovieDetailsModal(movieSuggestionModel: MovieSuggestionModel) {
                                 )
                                 Spacer(modifier = Modifier.size(8.dp))
                                 Text(
-                                    text = movieSuggestionModel.releaseDate,
+                                    text = dumbCharadesSuggestionUiModel.releaseDate,
                                     style = TextStyle(
                                         color = IshaaraColors.primary_app_light_text_color,
                                         fontSize = 16.sp,
@@ -182,24 +174,24 @@ fun MovieDetailsModal(movieSuggestionModel: MovieSuggestionModel) {
                             }
                             Spacer(modifier = Modifier.size(20.dp))
                         }
-                        if (movieSuggestionModel.genres.isNotEmpty()) {
-                            MovieChipsSection(
-                                title = "Genres",
-                                items = movieGenres.value
-                            )
-                            Spacer(modifier = Modifier.size(20.dp))
-                        }
-                        if (movieSuggestionModel.actors.isNotEmpty()) {
-                            MoviesHorizontalCardSection(
-                                title = "Cast (".plus(movieActors.value.size).plus(")"),
-                                items = movieActors.value
-                            )
-                            Spacer(modifier = Modifier.size(20.dp))
-                        }
-                        if (movieSuggestionModel.summary.isNotEmpty()) {
+//                        if (dumbCharadesSuggestionUiModel.genres.isNotEmpty()) {
+//                            MovieChipsSection(
+//                                title = "Genres",
+//                                items = movieGenres.value
+//                            )
+//                            Spacer(modifier = Modifier.size(20.dp))
+//                        }
+//                        if (dumbCharadesSuggestionUiModel.actors.isNotEmpty()) {
+//                            MoviesHorizontalCardSection(
+//                                title = "Cast (".plus(movieActors.value.size).plus(")"),
+//                                items = movieActors.value
+//                            )
+//                            Spacer(modifier = Modifier.size(20.dp))
+//                        }
+                        if (dumbCharadesSuggestionUiModel.overview.isNotEmpty()) {
                             MovieLongTextSection(
                                 title = "Summary",
-                                description = movieSuggestionModel.summary,
+                                description = dumbCharadesSuggestionUiModel.overview,
                                 shouldShowFull = false,
                                 maxLines = 4
                             )
