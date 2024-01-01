@@ -103,14 +103,7 @@ fun GamePlayStartScreen(
                             source = AnalyticsConstants.EventValues.CURRENT_MOVIE_BANNER,
                             movieName = it
                         )
-//                        appRouter.openMovieDetailsBottomSheet(movieSuggestionModel = gamePlayUiState.currentMovie)
-                    },
-                    lastMovieClicked = {
-                        viewModel.trackMovieDetailModalOpen(
-                            source = AnalyticsConstants.EventValues.LAST_MOVIE_BANNER,
-                            movieName = it
-                        )
-//                        appRouter.openMovieDetailsBottomSheet(movieSuggestionModel = gamePlayUiState.previousMovie)
+                        appRouter.openMovieDetailsBottomSheet(dumbCharadesSuggestionUiModel = gamePlayUiState.currentMovie)
                     }
                 )
             }

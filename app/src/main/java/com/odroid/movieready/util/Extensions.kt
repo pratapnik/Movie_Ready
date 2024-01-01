@@ -63,7 +63,7 @@ fun DumbCharadeSuggestion.toDumbCharadeSuggestionUiModel(): DumbCharadesSuggesti
         id = id,
         title = title,
         overview = overview,
-        releaseDate = releaseDate,
+        releaseDate = DateUtil.convertDateFormat(inputDate = releaseDate),
         posterPath = posterPath.posterUrl(),
         avgRating = avgRating,
         ratingCount = ratingCount,

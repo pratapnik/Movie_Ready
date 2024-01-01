@@ -1,5 +1,9 @@
 package com.odroid.movieready.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class DumbCharadesSuggestionUiModel(
     var id: Long,
     var title: String,
@@ -13,7 +17,7 @@ data class DumbCharadesSuggestionUiModel(
     var backDropPath: String,
     var genreIds: String,
     var popularity: Double
-) {
+): Parcelable {
     companion object {
         val empty = DumbCharadesSuggestionUiModel (
             id =  0L,
