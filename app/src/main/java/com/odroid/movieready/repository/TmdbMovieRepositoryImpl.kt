@@ -41,16 +41,18 @@ class TmdbMovieRepositoryImpl : TmdbMovieRepository {
 
     override suspend fun addToWatchlist(tmdbItem: TmdbItem) {
         appDatabase?.let {
-            val tmdbMovie = TmdbMovie(
-                tmdbItem.id,
-                tmdbItem.title,
-                tmdbItem.description,
-                tmdbItem.releaseDate,
-                tmdbItem.posterUrl,
-                tmdbItem.avgRating,
-                tmdbItem.ratingCount
-            )
-            it.watchlistDao().addMovieToWatchList(tmdbMovie)
+            tmdbItem.id?.run {
+                val tmdbMovie = TmdbMovie(
+                    this,
+                    tmdbItem.title ?: "",
+                    tmdbItem.description?: "",
+                    tmdbItem.releaseDate?: "",
+                    tmdbItem.posterUrl?: "",
+                    tmdbItem.avgRating?: 0F,
+                    tmdbItem.ratingCount?: 0L
+                )
+                it.watchlistDao().addMovieToWatchList(tmdbMovie)
+            }
         }
     }
 

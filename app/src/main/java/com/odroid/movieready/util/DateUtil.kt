@@ -20,4 +20,18 @@ object DateUtil {
             else -> day
         }
     }
+
+
+    fun convertDateFormat(inputDate: String): String {
+        inputDate.ifEmpty {
+            return "NA"
+        }
+        // Parse input date
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val date = inputFormat.parse(inputDate)
+
+        // Format output date
+        val outputFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+        return outputFormat.format(date)
+    }
 }

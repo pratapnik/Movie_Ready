@@ -2,7 +2,7 @@ package com.odroid.movieready.view.views
 
 import androidx.compose.runtime.Composable
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.odroid.movieready.util.Constants
+import com.odroid.movieready.entity.Constants
 import com.odroid.movieready.view_model.ExploreViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator

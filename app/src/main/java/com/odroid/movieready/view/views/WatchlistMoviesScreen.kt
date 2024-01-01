@@ -61,7 +61,7 @@ fun WatchlistMoviesScreen(
                 .padding(horizontal = 4.dp, vertical = 4.dp)
         ) {
             items(watchlistMoviesUiState, key = { item ->
-                item.id
+                item.id ?: -1
             }) { movie ->
                 if (movie != null) {
                     FullWidthItemWidget(

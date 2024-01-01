@@ -3,15 +3,13 @@ package com.odroid.movieready.view.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,14 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,12 +43,11 @@ fun LastSuggestedMovieView(
     modifier: Modifier = Modifier,
     lastSuggestedMovieName: String,
     lastSuggestedMoviePosterUrl: String,
-    lastMovieClicked: () -> Unit
 ) {
     val animationTime = 200
     AnimatedVisibility(
-        visible = lastSuggestedMovieName.isNotEmpty(), enter = slideInHorizontally(
-            initialOffsetX = { -600 }, // small slide 300px
+        visible = lastSuggestedMovieName.isNotEmpty(), enter = slideInVertically(
+            initialOffsetY = { -600 }, // small slide 300px
             animationSpec = tween(
                 durationMillis = animationTime,
                 easing = LinearEasing // interpolator
@@ -63,16 +57,9 @@ fun LastSuggestedMovieView(
         Box(
             modifier = modifier
                 .shadow(24.dp)
-                .clickable {
-                    lastMovieClicked.invoke()
-                }
                 .background(
-                    Brush.horizontalGradient(
-                        colors = listOf(
-                            Color(0xFF00b09b),
-                            Color(0xFF96c93d)
-                        ),
-                    ), shape = RoundedCornerShape(topEnd = 16.dp, bottomEnd = 16.dp)
+                    color = Color(0xFFf1ddbf),
+                    shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
                 )
         ) {
             Row(
@@ -84,8 +71,8 @@ fun LastSuggestedMovieView(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
-                            .width(80.dp)
-                            .height(100.dp), contentAlignment = Alignment.BottomCenter
+                            .width(48.dp)
+                            .height(60.dp), contentAlignment = Alignment.BottomCenter
                     ) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
@@ -98,63 +85,64 @@ fun LastSuggestedMovieView(
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .width(84.dp)
-                                .height(104.dp)
+                                .height(104.dp).clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
                         )
-                        Box(
-                            modifier = Modifier
-                                .padding(4.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "tap to know more",
-                                style = TextStyle(
-                                    fontFamily = fontMedium,
-                                    fontSize = 10.sp,
-                                    color = IshaaraColors.primary_app_light_text_color
-                                ),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clip(IshaaraShapes.default.roundedCornerXSmall)
-                                    .background(
-                                        color = IshaaraColors.bottom_sheet_background_0E1110.copy(
-                                            alpha = 0.5F
-                                        )
-                                    )
-                                    .padding(top = 4.dp, bottom = 4.dp),
-                                textAlign = TextAlign.Center
-                            )
-                        }
+//                        Box(
+//                            modifier = Modifier
+//                                .padding(4.dp),
+//                            contentAlignment = Alignment.Center
+//                        ) {
+//                            Text(
+//                                text = "tap to know more",
+//                                style = TextStyle(
+//                                    fontFamily = fontMedium,
+//                                    fontSize = 10.sp,
+//                                    color = IshaaraColors.primary_app_light_text_color
+//                                ),
+//                                modifier = Modifier
+//                                    .fillMaxWidth()
+//                                    .clip(IshaaraShapes.default.roundedCornerXSmall)
+//                                    .background(
+//                                        color = IshaaraColors.bottom_sheet_background_0E1110.copy(
+//                                            alpha = 0.5F
+//                                        )
+//                                    )
+//                                    .padding(top = 4.dp, bottom = 4.dp),
+//                                textAlign = TextAlign.Center
+//                            )
+//                        }
                     }
 
-                    Spacer(modifier = Modifier.size(16.dp))
+                    Spacer(modifier = Modifier.size(12.dp))
                     Column {
                         Box(
                             modifier = Modifier
                                 .background(
-                                    color = Color(0xFF164863),
+                                    color = Color(0xFF414a5e),
                                     shape = IshaaraShapes.default.roundedCornerMedium
                                 )
-                                .padding(horizontal = 10.dp, vertical = 2.dp)
+                                .padding(horizontal = 4.dp, vertical = 1.dp)
                         ) {
                             Text(
                                 text = "previous",
                                 style = TextStyle(
                                     fontFamily = fontMedium,
-                                    fontSize = 10.sp,
-                                    color = IshaaraColors.primary_app_light_text_color
+                                    fontSize = 8.sp,
+                                    color = IshaaraColors.primary_app_light_text_color,
+                                    letterSpacing = 0.4.sp
                                 )
                             )
                         }
-                        Spacer(modifier = Modifier.size(8.dp))
+                        Spacer(modifier = Modifier.size(4.dp))
                         Text(
                             text = lastSuggestedMovieName,
                             style = TextStyle(
                                 fontFamily = fontBold,
-                                fontSize = 16.sp,
-                                color = IshaaraColors.primary_app_dark_text_color,
-                                fontStyle = FontStyle.Italic
+                                fontSize = 14.sp,
+                                color = IshaaraColors.primary_app_dark_text_color
                             ),
-                            maxLines = 2
+                            maxLines = 2,
+                            modifier = Modifier.padding(end = 8.dp)
                         )
                     }
                 }
@@ -170,12 +158,11 @@ fun LastSuggestedMoviePreview() {
     Box(
         modifier = Modifier
             .background(color = IshaaraColors.background_color_FFFFFF)
-            .padding(end = 32.dp, bottom = 32.dp, top = 32.dp)
+            .padding(start = 32.dp, end = 32.dp)
     ) {
         LastSuggestedMovieView(
             lastSuggestedMovieName = "Race 3 Race 3 Race 3 Race 3 Race 3",
             lastSuggestedMoviePosterUrl = "https://upload.wikimedia.org/wikipedia/en/2/23/Ganga_Tere_Desh_Mein.jpg",
-            lastMovieClicked = {}
         )
     }
 }

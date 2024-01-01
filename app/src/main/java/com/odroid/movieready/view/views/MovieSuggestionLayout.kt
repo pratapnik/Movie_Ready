@@ -117,20 +117,19 @@ fun TopGreeting(
 @Composable
 fun LayoutPreview() {
     Column(modifier = Modifier.background(Color.White)) {
-        TopGreeting(
-            onExploreButtonClick = {},
-            shouldShowExploreButton = false
-        )
+//        TopGreeting(
+//            onExploreButtonClick = {},
+//            shouldShowExploreButton = false
+//        )
         MovieSuggestionCard(
             posterPath = "https://picsum.photos/500/300?random=1",
             contentDescription = "",
             title = "Cool Boy",
             onNewMovieButtonClick = { },
             movieCounterValue = 1,
-            lastSuggestedMovieName = "",
+            lastSuggestedMovieName = "Race 3",
             lastSuggestedMoviePosterUrl = "",
-            openMovieDetails = {},
-            lastMovieClicked = {}
+            openMovieDetails = {}
         )
     }
 }
@@ -145,8 +144,7 @@ fun MovieSuggestionCard(
     lastSuggestedMoviePosterUrl: String,
     modifier: Modifier = Modifier,
     onNewMovieButtonClick: () -> Unit,
-    openMovieDetails: (movieName: String) -> Unit,
-    lastMovieClicked: (movieName: String) -> Unit
+    openMovieDetails: (movieName: String) -> Unit
 ) {
     val movieVisibility = remember {
         mutableStateOf(true)
@@ -154,8 +152,7 @@ fun MovieSuggestionCard(
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.Center
+            .fillMaxWidth()
     ) {
         val infiniteTransition = rememberInfiniteTransition()
 
@@ -170,22 +167,19 @@ fun MovieSuggestionCard(
         GameplayTopView(
             lastSuggestedMovieName = lastSuggestedMovieName,
             lastSuggestedMoviePosterUrl = lastSuggestedMoviePosterUrl,
-            lastMovieClicked = {
-                lastMovieClicked.invoke(lastSuggestedMovieName)
-            }
         )
         Spacer(modifier = Modifier.size(20.dp))
         Box(
             contentAlignment = Alignment.TopEnd,
             modifier = Modifier
-                .padding(start = 20.dp, end = 20.dp)
+                .padding(start = 8.dp, end = 8.dp)
                 .align(Alignment.CenterHorizontally)
         ) {
             Box(modifier = Modifier.padding(top = 20.dp, start = 12.dp, end = 12.dp)) {
                 Card(
                     modifier = modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.78F)
+                        .fillMaxHeight(0.82F)
                         .scale(scale)
                         .clickable {
                             openMovieDetails.invoke(title)
@@ -256,29 +250,6 @@ fun MovieSuggestionCard(
                             )
                         }
                     }
-                    Box(
-                        modifier = Modifier
-                            .padding(12.dp),
-                        contentAlignment = Alignment.TopCenter
-                    ) {
-                        Text(
-                            text = "tap movie know more",
-                            style = TextStyle(
-                                fontFamily = fontMedium,
-                                fontSize = 10.sp,
-                                color = IshaaraColors.primary_app_light_text_color
-                            ),
-                            modifier = Modifier
-                                .clip(IshaaraShapes.default.roundedCornerXSmall)
-                                .background(
-                                    color = IshaaraColors.bottom_sheet_background_0E1110.copy(
-                                        alpha = 0.5F
-                                    )
-                                )
-                                .padding(vertical = 4.dp, horizontal = 12.dp),
-                            textAlign = TextAlign.Center
-                        )
-                    }
                 }
             }
 
@@ -294,13 +265,8 @@ fun MovieSuggestionCard(
             modifier = Modifier
                 .padding(8.dp)
                 .height(56.dp)
+                .fillMaxWidth(0.60F)
                 .align(Alignment.CenterHorizontally),
-            prefixIcon = ButtonIcon(
-                icon = R.drawable.ic_next,
-                iconSpacing = 10.dp,
-                iconSize = 24.dp,
-                iconColor = IshaaraColors.background_color_FFFFFF
-            ),
             label = stringResource(id = R.string.get_movie_button_label)
         )
         Spacer(modifier = Modifier.height(24.dp))

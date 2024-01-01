@@ -1,6 +1,7 @@
 package com.odroid.movieready.view.components
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -67,7 +68,14 @@ fun CommonButton(
             backgroundColor = IshaaraColors.app_button_background_primary
         ),
         shape = IshaaraShapes.default.roundedCornerMedium,
-        contentPadding = contentPadding
+        contentPadding = contentPadding,
+        border = BorderStroke(
+            width = 2.dp,
+            color = Color(0xFFf1ddbf)
+        ),
+        elevation = ButtonDefaults.elevation(
+            pressedElevation = 24.dp
+        )
     ) {
         if (prefixIcon.icon != 0) {
             Icon(
