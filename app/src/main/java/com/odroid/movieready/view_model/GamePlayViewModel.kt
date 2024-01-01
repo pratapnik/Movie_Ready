@@ -7,6 +7,7 @@ import com.odroid.movieready.analytics.Analytics
 import com.odroid.movieready.entity.Constants
 import com.odroid.movieready.model.DumbCharadesSuggestionUiModel
 import com.odroid.movieready.repository.DumbCharadesRepository
+import com.odroid.movieready.util.CommonUtil
 import com.odroid.movieready.util.SessionDataManager
 import com.odroid.movieready.util.coroutineExceptionHandler
 import com.odroid.movieready.util.toDumbCharadeSuggestionUiModel
@@ -60,7 +61,7 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
         Log.d("ishaara_logs", "newMovieClickedCount --> ${SessionDataManager.newMovieClickedCount}")
         Log.d("ishaara_logs", "Final list size --> ${globalSuggestionsList?.size}")
 
-        if (SessionDataManager.newMovieClickedCount % 7 == 0) {
+        if (SessionDataManager.newMovieClickedCount % 5 == 0) {
             fetchMoviesFromRemote()
         }
         SessionDataManager.incrementNewMovieClickedCount()
@@ -85,10 +86,15 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
     }
 
     private fun updateNewMovie() {
-        globalSuggestionsList?.shuffled()?.last()?.run {
-            _gamePlayUiState.update {
-                it.copy(currentMovie = this)
+        globalSuggestionsList?.run {
+            CommonUtil.getRandomUniqueItem(collection = this)?.run {
+                _gamePlayUiState.update {
+                    it.copy(currentMovie = this)
+                }
             }
+        }
+        globalSuggestionsList?.shuffled()?.last()?.run {
+
         }
     }
 
