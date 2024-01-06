@@ -87,14 +87,12 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
 
     private fun updateNewMovie() {
         globalSuggestionsList?.run {
-            CommonUtil.getRandomUniqueItem(collection = this)?.run {
+            CommonUtil.getRandomUniqueItem(collection = this, alreadySuggestedMovies = SessionDataManager.alreadySuggestedMovies)?.run {
+                SessionDataManager.alreadySuggestedMovies.add(this.id)
                 _gamePlayUiState.update {
                     it.copy(currentMovie = this)
                 }
             }
-        }
-        globalSuggestionsList?.shuffled()?.last()?.run {
-
         }
     }
 
