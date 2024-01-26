@@ -154,7 +154,7 @@ fun MovieSuggestionCard(
             .fillMaxHeight()
             .fillMaxWidth()
     ) {
-        val infiniteTransition = rememberInfiniteTransition()
+        val infiniteTransition = rememberInfiniteTransition(label = "")
 
         val scale by infiniteTransition.animateFloat(
             initialValue = 0.98f,
@@ -162,7 +162,7 @@ fun MovieSuggestionCard(
             animationSpec = infiniteRepeatable(
                 animation = tween(1000),
                 repeatMode = RepeatMode.Reverse,
-            )
+            ), label = ""
         )
         GameplayTopView(
             lastSuggestedMovieName = lastSuggestedMovieName,
@@ -221,7 +221,7 @@ fun MovieSuggestionCard(
                                 text = title,
                                 style = TextStyle(
                                     fontFamily = fontBold,
-                                    fontSize = 20.sp,
+                                    fontSize = 24.sp,
                                     color = Color.White
                                 ),
                                 modifier = Modifier.fillMaxWidth(0.85F)
