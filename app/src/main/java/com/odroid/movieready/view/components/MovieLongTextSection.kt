@@ -13,14 +13,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.odroid.movieready.model.MovieSuggestionModel
 import com.odroid.movieready.theming.IshaaraColors
-import com.odroid.movieready.theming.fontMedium
-import com.odroid.movieready.theming.fontRegular
+import com.odroid.movieready.theming.fontBold
 
 @Preview
 @Composable
 fun PreviewMovieLongTextSection() {
     MovieLongTextSection(
-        title = "Summary",
+        title = "Overview",
         description = MovieSuggestionModel.preview.summary,
         shouldShowFull = true,
         maxLines = 4
@@ -34,7 +33,7 @@ fun MovieLongTextSection(
     shouldShowFull: Boolean,
     maxLines: Int
 ) {
-    val maxLinesForDescription = if(shouldShowFull) {
+    val maxLinesForDescription = if (shouldShowFull) {
         Int.MAX_VALUE
     } else {
         maxLines
@@ -42,9 +41,9 @@ fun MovieLongTextSection(
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = title, style = TextStyle(
-                color = IshaaraColors.primary_app_light_text_color,
+                color = IshaaraColors.primary_app_dark_text_color,
                 fontSize = 24.sp,
-                fontFamily = fontMedium,
+                fontFamily = fontBold,
                 lineHeight = 28.sp
             )
         )

@@ -73,7 +73,6 @@ class HomeActivity : BaseActivity<ActivityMainBinding>() {
                     // ModalBottomSheetLayout of accompanist library should be used to add support for bottom sheet with compose destinations
                     ModalBottomSheetLayout(
                         bottomSheetNavigator = bottomSheetNavigator,
-                        sheetShape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
                         modifier = Modifier.defaultMinSize(minHeight = 1.dp)
                     ) {
                         DestinationsNavHost(

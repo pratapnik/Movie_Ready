@@ -20,5 +20,6 @@ enum class GamePlayViewState {
     GAME_NOT_STARTED,
     LOAD_ERROR,
     GAME_STARTED,
-    LOADING
+    LOADING,
+    MOVIE_DETAIL
 }

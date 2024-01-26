@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.odroid.movieready.analytics.AnalyticsConstants
+import com.odroid.movieready.theming.IshaaraColors
 import com.odroid.movieready.util.ViewUtil
 import com.odroid.movieready.view.sideEffect.OneShotEffect
 import com.odroid.movieready.view.view_state.GamePlayViewState
@@ -27,6 +28,7 @@ import com.odroid.movieready.view.views.AppRouter
 import com.odroid.movieready.view.views.ErrorView
 import com.odroid.movieready.view.views.GamePlayOnboardingView
 import com.odroid.movieready.view.views.LaunchProgressView
+import com.odroid.movieready.view.views.MovieDetailsModal
 import com.odroid.movieready.view.views.MovieSuggestionCard
 import com.odroid.movieready.view_model.GamePlayViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -103,7 +105,7 @@ fun GamePlayStartScreen(
                             source = AnalyticsConstants.EventValues.CURRENT_MOVIE_BANNER,
                             movieName = it
                         )
-                        appRouter.openMovieDetailsBottomSheet(dumbCharadesSuggestionUiModel = gamePlayUiState.currentMovie)
+                        viewModel.updateUiState(gamePlayViewState = GamePlayViewState.MOVIE_DETAIL)
                     }
                 )
             }
@@ -116,6 +118,19 @@ fun GamePlayStartScreen(
             ) {
                 LaunchProgressView()
             }
+        }
+
+        GamePlayViewState.MOVIE_DETAIL -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize().background(color = IshaaraColors.background_color_FFFFFF)
+            ) {
+                MovieDetailsModal(dumbCharadesSuggestionUiModel = gamePlayUiState.currentMovie,
+                    onBackPressed = {
+                        viewModel.updateUiState(gamePlayViewState = GamePlayViewState.GAME_STARTED)
+                    })
+            }
+
         }
     }
 }

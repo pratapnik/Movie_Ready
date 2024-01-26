@@ -138,6 +138,14 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
         }
     }
 
+    fun updateUiState(gamePlayViewState: GamePlayViewState) {
+        _gamePlayUiState.update {
+            it.copy(
+                viewState = gamePlayViewState
+            )
+        }
+    }
+
     fun trackMovieDetailModalOpen(source: String, movieName: String) {
         Analytics.trackMovieDetailModalOpen(movieName = movieName, from = source)
     }
