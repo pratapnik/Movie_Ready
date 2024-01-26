@@ -2,6 +2,7 @@ package com.odroid.movieready.view.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -9,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -23,7 +25,7 @@ fun ExpandingText(modifier: Modifier = Modifier, text: String, minimizedMaxLines
     val textLayoutResultState = remember { mutableStateOf<TextLayoutResult?>(null) }
     var isClickable = remember { mutableStateOf(false) }
     var finalText = remember { mutableStateOf(buildAnnotatedString { append(text) }) }
-
+    val interactionSource = remember { MutableInteractionSource() }
     val textLayoutResult = textLayoutResultState.value
     LaunchedEffect(textLayoutResult) {
         if (textLayoutResult == null) return@LaunchedEffect
@@ -34,7 +36,7 @@ fun ExpandingText(modifier: Modifier = Modifier, text: String, minimizedMaxLines
                     append(text)
                     withStyle(
                         style = TextStyle(
-                            color = IshaaraColors.unknown_color_53E88B,
+                            color = Color(0xFFf28705),
                             fontSize = 16.sp,
                             fontFamily = fontRegular,
                             lineHeight = 21.sp
@@ -57,7 +59,7 @@ fun ExpandingText(modifier: Modifier = Modifier, text: String, minimizedMaxLines
                     append(adjustedText)
                     withStyle(
                         style = TextStyle(
-                            color = IshaaraColors.unknown_color_53E88B,
+                            color = Color(0xFFf28705),
                             fontSize = 16.sp,
                             fontFamily = fontRegular,
                             lineHeight = 21.sp
@@ -77,10 +79,14 @@ fun ExpandingText(modifier: Modifier = Modifier, text: String, minimizedMaxLines
         maxLines = if (isExpanded.value) Int.MAX_VALUE else minimizedMaxLines,
         onTextLayout = { textLayoutResultState.value = it },
         modifier = modifier
-            .clickable(enabled = isClickable.value) { isExpanded.value = !isExpanded.value }
+            .clickable(
+                enabled = isClickable.value,
+                interactionSource = interactionSource,
+                indication = null
+            ) { isExpanded.value = !isExpanded.value }
             .animateContentSize(),
         style = TextStyle(
-            color = IshaaraColors.primary_app_light_text_color,
+            color = IshaaraColors.primary_app_dark_text_color,
             fontSize = 16.sp,
             fontFamily = fontRegular,
             lineHeight = 21.sp
