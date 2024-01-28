@@ -1,6 +1,9 @@
 package com.odroid.movieready.network
 
+import android.util.Log
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.odroid.movieready.BuildConfig
+import com.odroid.movieready.base.IshaaraApplication
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -11,26 +14,34 @@ import retrofit2.create
 object RetrofitBuilder {
 
     private const val BASE_URL = "https://api.themoviedb.org/3/"
-
-
-    fun getOkHttpClient(): OkHttpClient.Builder {
-        val httpClient = OkHttpClient.Builder()
-        if (BuildConfig.DEBUG) {
-            val logging = HttpLoggingInterceptor()
-            logging.setLevel(HttpLoggingInterceptor.Level.BODY)
-            httpClient.addInterceptor(logging)
-        }
-        return httpClient
-    }
-
-    private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder()
+    private val retrofit: Retrofit by lazy {
+        Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(getOkHttpClient().build())
             .build()
     }
 
-    val tmdbMovieApiService: TmdbMovieApi = getRetrofit().create(TmdbMovieApi::class.java)
-    val dumbCharadesSuggestionApi: DumbCharadesSuggestionApi = getRetrofit().create(DumbCharadesSuggestionApi::class.java)
+    private fun getOkHttpClient(): OkHttpClient.Builder {
+        val httpClient = OkHttpClient.Builder()
+        val chuckerInterceptor =IshaaraApplication.context?.applicationContext?.run {
+            ChuckerInterceptor.Builder(this)
+                .maxContentLength(250_000L)
+                .alwaysReadResponseBody(true)
+                .createShortcut(false)
+                .build()
+        }
+        if (BuildConfig.DEBUG) {
+            val logging = HttpLoggingInterceptor()
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+            httpClient.addInterceptor(logging)
+            chuckerInterceptor?.run {
+                httpClient.addInterceptor(this)
+            }
+        }
+        return httpClient
+    }
+
+    val tmdbMovieApiService: TmdbMovieApi = retrofit.create(TmdbMovieApi::class.java)
+    val dumbCharadesSuggestionApi: DumbCharadesSuggestionApi = retrofit.create(DumbCharadesSuggestionApi::class.java)
 }
