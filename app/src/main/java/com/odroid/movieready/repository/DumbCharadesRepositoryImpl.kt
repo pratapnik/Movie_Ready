@@ -8,6 +8,7 @@ import com.odroid.movieready.model.MovieDetailModel
 import com.odroid.movieready.model.ProductionCompanyUiModel
 import com.odroid.movieready.network.RetrofitBuilder
 import com.odroid.movieready.util.CommonUtil.toIndianRupeeWithoutDecimals
+import com.odroid.movieready.util.CommonUtil.toUSDWithSuffix
 import com.odroid.movieready.util.DateUtil
 import com.odroid.movieready.util.PreferenceKeys
 import com.odroid.movieready.util.PreferenceUtils
@@ -91,8 +92,8 @@ class DumbCharadesRepositoryImpl @Inject constructor(val dumbCharadesDao: DumbCh
                     logoPath = it.logoPath ?: ""
                 )
             } ?: emptyList(),
-            budget = budget?.toIndianRupeeWithoutDecimals() ?: "",
-            revenue = revenue?.toIndianRupeeWithoutDecimals() ?: ""
+            budget = budget?.toUSDWithSuffix() ?: "",
+            revenue = revenue?.toUSDWithSuffix() ?: ""
         )
     }
 }

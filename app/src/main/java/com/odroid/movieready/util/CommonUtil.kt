@@ -2,6 +2,7 @@ package com.odroid.movieready.util
 
 import android.util.Log
 import com.odroid.movieready.model.DumbCharadesSuggestionUiModel
+import com.odroid.movieready.util.CommonUtil.toIndianRupeeWithoutDecimals
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -31,6 +32,18 @@ object CommonUtil {
         }
         val formatter = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
         return formatter.format(this).replace(".00", "")
+    }
+
+    fun Long.toUSDWithSuffix(): String {
+        if (this <= 0) {
+            return ""
+        }
+        return when {
+            this >= 1_000_000_000 -> String.format("$%.2fB", this / 1_000_000_000.0)
+            this >= 1_000_000 -> String.format("$%.2fM", this / 1_000_000.0)
+            this >= 1_000 -> String.format("$%.2fK", this / 1_000.0)
+            else -> "$$this"
+        }.replace(".00", "")
     }
 
 }
