@@ -1,6 +1,7 @@
 package com.odroid.movieready.repository
 
 import com.odroid.movieready.database.DumbCharadeSuggestion
+import com.odroid.movieready.model.MovieDetailModel
 import kotlinx.coroutines.flow.Flow
 
 interface DumbCharadesRepository {
@@ -12,4 +13,5 @@ interface DumbCharadesRepository {
     suspend fun saveFirstDumbCharadesApiCallTime(time: Long)
     suspend fun getFirstDumbCharadesApiCallTime(): Long
     suspend fun clearDb()
+    suspend fun getMovieDetails(movieId: Long): MovieDetailModel
 }

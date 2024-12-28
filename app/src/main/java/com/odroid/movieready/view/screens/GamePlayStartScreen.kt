@@ -105,7 +105,7 @@ fun GamePlayStartScreen(
                             source = AnalyticsConstants.EventValues.CURRENT_MOVIE_BANNER,
                             movieName = it
                         )
-                        viewModel.updateUiState(gamePlayViewState = GamePlayViewState.MOVIE_DETAIL)
+                        appRouter.navigateToMovieDetailScreen(movieId = gamePlayUiState.currentMovie.id)
                     }
                 )
             }

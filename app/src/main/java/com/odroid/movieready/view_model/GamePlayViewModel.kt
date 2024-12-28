@@ -87,7 +87,10 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
 
     private fun updateNewMovie() {
         globalSuggestionsList?.run {
-            CommonUtil.getRandomUniqueItem(collection = this, alreadySuggestedMovies = SessionDataManager.alreadySuggestedMovies)?.run {
+            CommonUtil.getRandomUniqueItem(
+                collection = this,
+                alreadySuggestedMovies = SessionDataManager.alreadySuggestedMovies
+            )?.run {
                 SessionDataManager.alreadySuggestedMovies.add(this.id)
                 _gamePlayUiState.update {
                     it.copy(currentMovie = this)
@@ -126,11 +129,17 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
         viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
             val firstDumbCharadesApiCallTime =
                 dumbCharadesRepository.getFirstDumbCharadesApiCallTime()
-            Log.d("ishaara_logs", "firstDumbCharadesApiCallTime --> ${firstDumbCharadesApiCallTime}")
+            Log.d(
+                "ishaara_logs",
+                "firstDumbCharadesApiCallTime --> ${firstDumbCharadesApiCallTime}"
+            )
 
             val currentTime = System.currentTimeMillis()
-            if (currentTime - firstDumbCharadesApiCallTime >= Constants.REFRESH_SUGGESTIONS_TIME_PERIOD) {
-                Log.d("ishaara_logs", "refreshing DB --> ${currentTime - firstDumbCharadesApiCallTime}")
+            if (firstDumbCharadesApiCallTime >= 0 && currentTime - firstDumbCharadesApiCallTime >= Constants.REFRESH_SUGGESTIONS_TIME_PERIOD) {
+                Log.d(
+                    "ishaara_logs",
+                    "refreshing DB --> ${currentTime - firstDumbCharadesApiCallTime}"
+                )
                 dumbCharadesRepository.updateLastDumbCharadesFetchPageNumberInPref(pageNumber = -1)
                 dumbCharadesRepository.clearDb()
             }

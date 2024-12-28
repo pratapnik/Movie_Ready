@@ -2,6 +2,8 @@ package com.odroid.movieready.util
 
 import android.util.Log
 import com.odroid.movieready.model.DumbCharadesSuggestionUiModel
+import java.text.NumberFormat
+import java.util.Locale
 
 object CommonUtil {
 
@@ -21,6 +23,14 @@ object CommonUtil {
         return shuffledList.firstOrNull {
             it.id !in alreadySuggestedMovies
         }
+    }
+
+    fun Long.toIndianRupeeWithoutDecimals(): String {
+        if (this <= 0) {
+            return ""
+        }
+        val formatter = NumberFormat.getCurrencyInstance(Locale("en", "IN"))
+        return formatter.format(this).replace(".00", "")
     }
 
 }
