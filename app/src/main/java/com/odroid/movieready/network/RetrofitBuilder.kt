@@ -1,6 +1,7 @@
 package com.odroid.movieready.network
 
 import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.odroid.movieready.BuildConfig
 import com.odroid.movieready.base.IshaaraApplication
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
