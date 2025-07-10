@@ -19,10 +19,16 @@ import javax.inject.Inject
 class DumbCharadesRepositoryImpl @Inject constructor(val dumbCharadesDao: DumbCharadesDao) :
     DumbCharadesRepository {
     override suspend fun fetchBollywoodMovies(page: Int) {
-        RetrofitBuilder.dumbCharadesSuggestionApi.getBollywoodMovies(
+        Log.d("ishaara_logs", "fetchBollywoodMoviesCalled with page no. ${page}")
+
+        val x = RetrofitBuilder.dumbCharadesSuggestionApi.getBollywoodMovies(
             pageNumber = page
-        ).let {
-            Log.d("ishaara_logs", "fetchBollywoodMoviesCalled with page no. ${it.pageNo}")
+        )
+        Log.d("ishaara_logs", "X object $x")
+
+        x.let {
+            Log.d("ishaara_logs", "movies list from api ${it.moviesList}")
+
             it.moviesList.map { tmdbItem ->
                 dumbCharadesDao.insertSuggestion(tmdbItem.toDumbCharadeSuggestion())
             }

@@ -47,6 +47,7 @@ fun GamePlayStartScreen(
     val movieCounter = remember {
         mutableIntStateOf(1)
     }
+    val isStartGameEnabled by viewModel.areMoviesAvailable.collectAsState()
 
     val context = LocalContext.current
 
@@ -70,7 +71,7 @@ fun GamePlayStartScreen(
 
     when (gamePlayUiState.viewState) {
         GamePlayViewState.GAME_NOT_STARTED -> {
-            GamePlayOnboardingView(onStartClick = {
+            GamePlayOnboardingView(isStartGameEnabled = isStartGameEnabled, onStartClick = {
                 viewModel.startGame()
             })
         }
@@ -123,9 +124,11 @@ fun GamePlayStartScreen(
         GamePlayViewState.MOVIE_DETAIL -> {
             Box(
                 modifier = Modifier
-                    .fillMaxSize().background(color = IshaaraColors.background_color_FFFFFF)
+                    .fillMaxSize()
+                    .background(color = IshaaraColors.background_color_FFFFFF)
             ) {
-                MovieDetailsModal(dumbCharadesSuggestionUiModel = gamePlayUiState.currentMovie,
+                MovieDetailsModal(
+                    dumbCharadesSuggestionUiModel = gamePlayUiState.currentMovie,
                     onBackPressed = {
                         viewModel.updateUiState(gamePlayViewState = GamePlayViewState.GAME_STARTED)
                     })

@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-    compileSdk 34
+    compileSdk 35
     buildToolsVersion "30.0.3"
 
     Properties properties = new Properties()
@@ -19,9 +19,9 @@ android {
     defaultConfig {
         applicationId "com.odroid.movieready"
         minSdkVersion 21
-        targetSdkVersion 34
-        versionCode 188
-        versionName "1.8.8"
+        targetSdkVersion 35
+        versionCode 189
+        versionName "1.8.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "API_KEY", "\"${properties.getProperty("API_KEY")}\""
     }
@@ -39,7 +39,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             manifestPlaceholders = [crashlyticsCollectionEnabled: "true"]
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

@@ -32,6 +32,10 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
 
     private var globalSuggestionsList: List<DumbCharadesSuggestionUiModel>? = null
 
+    private var _areMoviesAvailable= MutableStateFlow(false)
+
+    val areMoviesAvailable = _areMoviesAvailable.asStateFlow()
+
     private val _onScreenMessageState =
         MutableStateFlow(OnScreenMessageState.default)
 
@@ -74,6 +78,9 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
                     globalSuggestionsList = suggestionsList?.map {
                         it.toDumbCharadeSuggestionUiModel()
                     }
+                    _areMoviesAvailable.update {
+                        true
+                    }
                 }
             }
         }
@@ -112,6 +119,7 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
             if (offlineAvailableSuggestionsCount <= Constants.SUGGESTIONS_STORE_MAX_LIMIT) {
                 val lastPageNumber =
                     dumbCharadesRepository.getLastDumbCharadesFetchPageNumberInPref()
+
                 val pageNumber = if (lastPageNumber > 0) {
                     lastPageNumber + 1
                 } else {
@@ -120,6 +128,14 @@ class GamePlayViewModel @Inject constructor(private val dumbCharadesRepository: 
                 if (pageNumber == 1) {
                     dumbCharadesRepository.saveFirstDumbCharadesApiCallTime(time = System.currentTimeMillis())
                 }
+                Log.d(
+                    "ishaara_logs",
+                    "last page number --> $lastPageNumber"
+                )
+                Log.d(
+                    "ishaara_logs",
+                    "Page number --> $pageNumber"
+                )
                 dumbCharadesRepository.fetchBollywoodMovies(page = pageNumber)
             }
         }

@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Ishaara</string>
-    <string name="get_movie_button_label">get new movie</string>
+    <string name="get_movie_button_label">Next Movie, Please!</string>
     <string name="main_activity_title">DUMB CHARADES</string>
-    <string name="lets_play_label">start</string>
+    <string name="lets_play_label">Start the Drama</string>
     <string name="error_title">oops!</string>
     <string name="error_subtitle">please check your internet connection</string>
     <string name="retry_button_label">try again</string>

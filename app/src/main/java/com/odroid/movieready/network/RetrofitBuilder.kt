@@ -1,15 +1,12 @@
 package com.odroid.movieready.network
 
-import android.util.Log
 import com.chuckerteam.chucker.api.ChuckerInterceptor
-import com.odroid.movieready.BuildConfig
 import com.odroid.movieready.base.IshaaraApplication
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
-
+import java.util.concurrent.TimeUnit
 
 object RetrofitBuilder {
 
@@ -24,7 +21,10 @@ object RetrofitBuilder {
 
     private fun getOkHttpClient(): OkHttpClient.Builder {
         val httpClient = OkHttpClient.Builder()
-        val chuckerInterceptor =IshaaraApplication.context?.applicationContext?.run {
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+
+        val chuckerInterceptor = IshaaraApplication.context?.applicationContext?.run {
             ChuckerInterceptor.Builder(this)
                 .maxContentLength(250_000L)
                 .alwaysReadResponseBody(true)
@@ -43,5 +43,6 @@ object RetrofitBuilder {
     }
 
     val tmdbMovieApiService: TmdbMovieApi = retrofit.create(TmdbMovieApi::class.java)
-    val dumbCharadesSuggestionApi: DumbCharadesSuggestionApi = retrofit.create(DumbCharadesSuggestionApi::class.java)
+    val dumbCharadesSuggestionApi: DumbCharadesSuggestionApi =
+        retrofit.create(DumbCharadesSuggestionApi::class.java)
 }
